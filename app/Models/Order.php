@@ -11,8 +11,6 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
-        'guest_email',
-        'guest_name',
         'status',
         'total_price',
         'total_amount',
@@ -56,16 +54,6 @@ class Order extends Model
                 $order->total_amount = $order->total_price;
             }
         });
-        
-        // After creating an order, update the shipping address with the order_id
-        static::created(function ($order) {
-            if ($order->shipping_address_id) {
-                $shippingAddress = ShippingAddress::find($order->shipping_address_id);
-                if ($shippingAddress && empty($shippingAddress->order_id)) {
-                    $shippingAddress->update(['order_id' => $order->id]);
-                }
-            }
-        });
     }
 
     public function user()
@@ -80,7 +68,7 @@ class Order extends Model
 
     public function shippingAddress()
     {
-        return $this->belongsTo(ShippingAddress::class);
+        return $this->belongsTo(ShippingAddress::class)->withTrashed();
     }
 
     public function coupon()

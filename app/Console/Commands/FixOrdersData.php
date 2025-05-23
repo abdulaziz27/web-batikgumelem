@@ -68,13 +68,6 @@ class FixOrdersData extends Command
             // Fix shipping address relationship
             if ($order->shipping_address_id) {
                 $shippingAddress = ShippingAddress::find($order->shipping_address_id);
-                
-                if ($shippingAddress && empty($shippingAddress->order_id)) {
-                    $shippingAddress->order_id = $order->id;
-                    $shippingAddress->save();
-                    $addressesFixed++;
-                    $this->info("Fixed shipping address #{$shippingAddress->id} for order #{$order->id}");
-                }
             }
         }
         

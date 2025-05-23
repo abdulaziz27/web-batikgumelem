@@ -15,8 +15,7 @@ class ShippingAddressController extends Controller
     {
         $user = auth()->user();
         $addresses = ShippingAddress::where('user_id', $user->id)
-            ->whereNull('order_id') // Only get saved addresses, not ones tied to specific orders
-            ->orderBy('is_default', 'desc') // Default addresses first
+            ->orderBy('is_default', 'desc')
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -41,14 +40,12 @@ class ShippingAddressController extends Controller
     {
         $user = auth()->user();
         $address = ShippingAddress::where('user_id', $user->id)
-            ->whereNull('order_id')
             ->where('is_default', true)
             ->first();
 
         if (!$address) {
             // If no default, get the most recently created address
             $address = ShippingAddress::where('user_id', $user->id)
-                ->whereNull('order_id')
                 ->orderBy('created_at', 'desc')
                 ->first();
         }
@@ -75,7 +72,6 @@ class ShippingAddressController extends Controller
 
         if ($request->is_default) {
             ShippingAddress::where('user_id', $user->id)
-                ->whereNull('order_id')
                 ->update(['is_default' => false]);
         }
 
@@ -118,7 +114,6 @@ class ShippingAddressController extends Controller
 
         if ($request->is_default) {
             ShippingAddress::where('user_id', $user->id)
-                ->whereNull('order_id')
                 ->where('id', '!=', $id)
                 ->update(['is_default' => false]);
         }
@@ -170,7 +165,6 @@ class ShippingAddressController extends Controller
         
         // Reset all default addresses
         ShippingAddress::where('user_id', $user->id)
-            ->whereNull('order_id')
             ->update(['is_default' => false]);
         
         // Set the selected address as default

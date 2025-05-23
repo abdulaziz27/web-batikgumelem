@@ -121,4 +121,31 @@ class OrderController extends Controller
         $order->update(['status' => 'completed']);
         return redirect()->back()->with('success', 'Pesanan telah ditandai sebagai selesai');
     }
+
+    /**
+     * Cancel an order
+     */
+    public function cancel($id)
+    {
+        $user = auth()->user();
+        
+        $order = Order::where('user_id', $user->id)
+            ->findOrFail($id);
+
+        // Only allow cancellation of pending or processing orders
+        if (!in_array($order->status, ['pending', 'processing'])) {
+            return redirect()->back()->with('error', 'Hanya pesanan yang masih pending atau processing yang dapat dibatalkan');
+        }
+
+        // Update order status
+        $order->update([
+            'status' => 'cancelled',
+            'payment_status' => 'failed'
+        ]);
+
+        // Trigger order status changed event
+        event(new \App\Events\OrderStatusChanged($order, $order->status, 'cancelled'));
+
+        return redirect()->back()->with('success', 'Pesanan berhasil dibatalkan');
+    }
 }

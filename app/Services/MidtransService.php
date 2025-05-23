@@ -21,6 +21,10 @@ class MidtransService
     public function createTransaction(Order $order)
     {
         try {
+            if (!$order->user) {
+                throw new \Exception('Order must have a user for payment.');
+            }
+
             $items = [];
 
             foreach ($order->items as $item) {
@@ -58,8 +62,8 @@ class MidtransService
                     'gross_amount' => $order->total_amount ?? $order->total_price,
                 ],
                 'customer_details' => [
-                    'first_name' => $order->user_id ? $order->user->name : $order->guest_name,
-                    'email' => $order->user_id ? $order->user->email : $order->guest_email,
+                    'first_name' => $order->user->name,
+                    'email' => $order->user->email,
                     'phone' => $order->shippingAddress->phone,
                     'shipping_address' => [
                         'first_name' => $order->shippingAddress->full_name,
@@ -73,8 +77,27 @@ class MidtransService
                 'item_details' => $items,
             ];
 
-            // Create transaction token
-            $snapToken = Snap::getSnapToken($transactionData);
+            \Log::info('Creating Midtrans transaction', [
+                'order_id' => $order->id,
+                'amount' => $order->total_amount,
+                'items' => $items
+            ]);
+            
+            try {
+                $snapToken = Snap::getSnapToken($transactionData);
+                \Log::info('Snap token generated successfully', [
+                    'order_id' => $order->id,
+                    'token' => $snapToken
+                ]);
+            } catch (\Exception $e) {
+                \Log::error('Failed to generate Snap token', [
+                    'order_id' => $order->id,
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString()
+                ]);
+                throw $e;
+            }
+
             $snapUrl = config('services.midtrans.is_production')
                 ? 'https://app.midtrans.com/snap/v1/transactions/'
                 : 'https://app.sandbox.midtrans.com/snap/v1/transactions/';

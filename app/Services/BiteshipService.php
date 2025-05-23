@@ -15,17 +15,13 @@ class BiteshipService
         $this->baseUrl = config('services.biteship.url');
     }
 
-    public function getShippingCost($origin, $destination, $weight, $courier = null)
+    public function getShippingCost($origin, $destination, $weight, $courier = null, $cartItems = [])
     {
         try {
-            // Get cart data from session
-            $cart = session('cart', ['items' => [], 'total' => 0]);
-            
             // Prepare items for Biteship API
             $items = [];
             $totalValue = 0;
-            
-            foreach ($cart['items'] as $item) {
+            foreach ($cartItems as $item) {
                 $items[] = [
                     'name' => $item['name'],
                     'value' => $item['price'] * $item['quantity'],
@@ -34,7 +30,6 @@ class BiteshipService
                 ];
                 $totalValue += $item['price'] * $item['quantity'];
             }
-
             $requestData = [
                 'origin_postal_code' => (int)$origin,
                 'destination_postal_code' => (int)$destination,

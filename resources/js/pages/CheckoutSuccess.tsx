@@ -24,7 +24,6 @@ const CheckoutSuccess = ({ order }: Props) => {
 
     useEffect(() => {
         clearCart();
-        localStorage.removeItem('cart');
     }, []);
 
     // Auto-poll for payment status updates if not paid

@@ -27,7 +27,7 @@ interface AddressesProps {
 }
 
 export default function Addresses({ addresses = [] }: AddressesProps) {
-    const { auth } = usePage().props as any;
+    const { auth, csrf_token } = usePage().props as any;
     const [open, setOpen] = useState(false);
     const [editingAddress, setEditingAddress] = useState<Address | null>(null);
 
@@ -93,7 +93,7 @@ export default function Addresses({ addresses = [] }: AddressesProps) {
                                         </Button>
                                         {!address.is_default && (
                                             <Link
-                                                href={`/addresses/${address.id}/delete`}
+                                                href={`/addresses/${address.id}`}
                                                 method="delete"
                                                 as="button"
                                                 className="border-input bg-background ring-offset-background hover:bg-destructive hover:text-destructive-foreground inline-flex h-8 items-center justify-center rounded-md border px-3 text-xs font-medium transition-colors"
@@ -144,6 +144,8 @@ export default function Addresses({ addresses = [] }: AddressesProps) {
                     </DialogHeader>
 
                     <form action={editingAddress ? `/addresses/${editingAddress.id}` : '/addresses'} method="post">
+                        <input type="hidden" name="_token" value={csrf_token} />
+                        {editingAddress && <input type="hidden" name="_method" value="PUT" />}
                         <div className="grid gap-4 py-4">
                             <div className="grid grid-cols-4 items-center gap-4">
                                 <Label htmlFor="full_name" className="text-right">

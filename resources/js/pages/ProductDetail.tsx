@@ -5,9 +5,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useCart } from '@/hooks/useCart';
 import { formatRupiah } from '@/utils/formatters';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, usePage, router } from '@inertiajs/react';
 import { Minus, Plus, ShoppingCart } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 interface ProductImage {
     id: number;
@@ -51,6 +52,7 @@ interface ProductDetailProps {
 const ProductDetail = () => {
     const { product, relatedProducts } = usePage().props as unknown as ProductDetailProps;
     const { addToCart } = useCart();
+    const { auth } = usePage().props as any;
 
     // Default to first size if available
     const [selectedSize, setSelectedSize] = useState<string>(product.sizes && product.sizes.length > 0 ? product.sizes[0].size : '');
@@ -74,7 +76,11 @@ const ProductDetail = () => {
 
     const handleAddToCart = () => {
         if (isOutOfStock || quantity <= 0) return;
-
+        if (!auth?.user) {
+            toast.error('Anda harus login untuk menambah produk ke keranjang. Silakan login terlebih dahulu.');
+            router.visit('/login');
+            return;
+        }
         addToCart({
             id: product.id,
             name: product.name,

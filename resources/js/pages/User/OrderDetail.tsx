@@ -316,8 +316,14 @@ export default function OrderDetail({ order }: OrderDetailProps) {
                             </Link>
                         </Button>
 
-                        {order.payment_status !== 'paid' && order.payment_url && (
-                            <Button onClick={handlePayNow} variant="default" disabled={isLoading}>
+                        {order.payment_status !== 'paid' && 
+                         order.payment_url && 
+                         order.status !== 'cancelled' && (
+                            <Button
+                                onClick={handlePayNow}
+                                className="bg-green-600 hover:bg-green-700"
+                                disabled={isLoading}
+                            >
                                 {isLoading ? (
                                     <>
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />

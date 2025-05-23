@@ -2,7 +2,7 @@
 /bootstrap/ssr
 /node_modules
 # /public/build
-# /public/hot
+/public/hot
 # /public/css
 # /public/js
 /public/storage

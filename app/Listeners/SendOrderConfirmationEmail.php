@@ -16,14 +16,12 @@ class SendOrderConfirmationEmail implements ShouldQueue
     public function handle(OrderCreated $event): void
     {
         $order = $event->order;
-        $email = $order->user_id ? $order->user->email : $order->guest_email;
-        
-        if ($email) {
+        if ($order->user && $order->user->email) {
             // Kirim email konfirmasi
-            Mail::to($email)->send(new OrderConfirmation($order));
+            Mail::to($order->user->email)->send(new OrderConfirmation($order));
             
             // Kirim instruksi pembayaran
-            Mail::to($email)->send(new PaymentInstructions($order));
+            Mail::to($order->user->email)->send(new PaymentInstructions($order));
         }
     }
 }

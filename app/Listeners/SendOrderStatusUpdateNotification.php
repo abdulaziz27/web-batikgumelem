@@ -15,10 +15,8 @@ class SendOrderStatusUpdateNotification implements ShouldQueue
     public function handle(OrderStatusChanged $event): void
     {
         $order = $event->order;
-        $email = $order->user_id ? $order->user->email : $order->guest_email;
-        
-        if ($email) {
-            Mail::to($email)->send(new OrderStatusUpdate($order, $event->oldStatus, $event->newStatus));
+        if ($order->user && $order->user->email) {
+            Mail::to($order->user->email)->send(new OrderStatusUpdate($order, $event->oldStatus, $event->newStatus));
         }
     }
 }

@@ -1,9 +1,10 @@
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/hooks/useCart';
 import { formatRupiah } from '@/utils/formatters';
-import { Link } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { ShoppingCart, Star } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 interface ProductCardProps {
     product: {
@@ -21,11 +22,16 @@ interface ProductCardProps {
 const ProductCard = ({ product, className = '' }: ProductCardProps) => {
     const { addToCart, isLoading } = useCart();
     const [isHovering, setIsHovering] = useState(false);
+    const { auth } = usePage().props as any;
 
     const handleAddToCart = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-
+        if (!auth?.user) {
+            toast.error('Anda harus login untuk menambah produk ke keranjang. Silakan login terlebih dahulu.');
+            router.visit('/login');
+            return;
+        }
         addToCart({
             id: product.id,
             name: product.name,

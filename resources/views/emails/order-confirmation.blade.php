@@ -3,7 +3,7 @@
 @section('content')
 <div class="content">
     <h1>Pesanan Anda Telah Diterima</h1>
-    <p>Halo {{ $order->user ? $order->user->name : $order->guest_name }},</p>
+    <p>Halo {{ $order->user->name }},</p>
     
     <p>Terima kasih telah berbelanja di Batik Gumelem. Pesanan Anda dengan nomor <strong>#{{ $order->id }}</strong> telah berhasil dibuat.</p>
     

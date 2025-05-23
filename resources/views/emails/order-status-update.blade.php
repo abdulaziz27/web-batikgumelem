@@ -3,7 +3,7 @@
 @section('content')
 <div class="content">
     <h1>Status Pesanan Diperbarui</h1>
-    <p>Halo {{ $order->user ? $order->user->name : $order->guest_name }},</p>
+    <p>Halo {{ $order->user->name }},</p>
     
     <p>Status pesanan Anda <strong>#{{ $order->id }}</strong> telah diperbarui dari <strong>{{ ucfirst($oldStatus) }}</strong> menjadi <strong>{{ ucfirst($newStatus) }}</strong>.</p>
     

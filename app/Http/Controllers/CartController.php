@@ -21,8 +21,6 @@ class CartController extends Controller
     public function index()
     {
         $cart = $this->cartService->getCart();
-        \Log::info('Cart data in session:', ['cart' => $cart]);
-
         return Inertia::render('Cart', [
             'cart' => $cart,
         ]);
@@ -55,12 +53,9 @@ class CartController extends Controller
             'quantity' => 'required|integer|min:1',
             'size' => 'nullable|string',
         ]);
-
-        $this->cartService->addToCart($validated['product_id'], $validated['quantity'], $validated['size'] ?? null);
-
-        return back()->with('success', 'Produk berhasil ditambahkan ke keranjang');
+        $result = $this->cartService->addToCart($validated['product_id'], $validated['quantity'], $validated['size'] ?? null);
+        return back()->with('success', $result['message']);
     }
-
 
     /**
      * Display the specified resource.
@@ -87,13 +82,10 @@ class CartController extends Controller
             'item_key' => 'required|string',
             'quantity' => 'required|integer|min:1',
         ]);
-
         $result = $this->cartService->updateCartItem($request->item_key, $request->quantity);
-
-        // Mengembalikan Inertia response yang benar
         return Inertia::render('Cart', [
             'cart' => $result['cart'],
-            'message' => $result['message'], 
+            'message' => $result['message'],
         ]);
     }
 
@@ -105,20 +97,16 @@ class CartController extends Controller
         $request->validate([
             'item_key' => 'required|string',
         ]);
-
         $result = $this->cartService->removeCartItem($request->item_key);
-
-        // Mengembalikan Inertia response yang benar
         return Inertia::render('Cart', [
             'cart' => $result['cart'],
-            'message' => $result['message'], 
+            'message' => $result['message'],
         ]);
     }
 
     public function clear()
     {
         $result = $this->cartService->clearCart();
-        return back()->with('message', 'Keranjang berhasil dikosongkan');
+        return back()->with('message', $result['message']);
     }
-
 }

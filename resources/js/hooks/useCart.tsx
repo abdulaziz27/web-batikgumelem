@@ -31,28 +31,24 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export const CartProvider = ({ children }: { children: ReactNode }) => {
-    const [cartItems, setCartItems] = useState<CartItem[]>(() => {
-        const savedCart = localStorage.getItem('cart');
-        return savedCart ? JSON.parse(savedCart) : [];
-    });
-
+export const CartProvider = ({ children, user }: { children: ReactNode, user?: any }) => {
+    // Tidak lagi menggunakan usePage
+    const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
-    // Sync with server on mount
+    // Fetch cart setiap kali user berubah (login/logout)
     useEffect(() => {
-        // Get fresh cart data from server without navigation
+        if (!user) {
+            setCartItems([]);
+            return;
+        }
         setIsLoading(true);
         axios
             .get('/cart/data')
             .then((response) => {
                 const cartData = response.data.cart as CartData | undefined;
                 if (cartData?.items) {
-                    const serverCartItems = Object.values(cartData.items);
-                    if (serverCartItems.length > 0) {
-                        setCartItems(serverCartItems);
-                        localStorage.setItem('cart', JSON.stringify(serverCartItems));
-                    }
+                    setCartItems(Object.values(cartData.items));
                 }
             })
             .catch((error) => {
@@ -61,24 +57,22 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
             .finally(() => {
                 setIsLoading(false);
             });
-    }, []);
-
-    useEffect(() => {
-        localStorage.setItem('cart', JSON.stringify(cartItems));
-    }, [cartItems]);
+    }, [user]);
 
     const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
     const addToCart = (product: Omit<CartItem, 'quantity'> & { quantity?: number }) => {
+        if (!user) {
+            toast.error('Anda harus login untuk menambah ke keranjang');
+            router.visit('/login');
+            return;
+        }
         const quantity = product.quantity || 1;
         setIsLoading(true);
-
-        // Optimistic UI update
         setCartItems((prevItems) => {
             const existingItemIndex = prevItems.findIndex(
                 (item) => item.id === product.id && (product.size ? item.size === product.size : !item.size),
             );
-
             if (existingItemIndex >= 0) {
                 toast('Produk ditambahkan', {
                     description: `${prevItems[existingItemIndex].name} jumlahnya ditambahkan ke keranjang`,
@@ -91,8 +85,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
                 return [...prevItems, { ...product, quantity }];
             }
         });
-
-        // Send data to the server using Inertia visit
         router.visit('/cart', {
             method: 'post',
             data: {
@@ -106,14 +98,15 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const removeFromCart = (id: number, size?: string) => {
+        if (!user) {
+            toast.error('Anda harus login untuk menghapus dari keranjang');
+            router.visit('/login');
+            return;
+        }
         setIsLoading(true);
-
         setCartItems((prevItems) => prevItems.filter((item) => !(item.id === id && (size ? item.size === size : !item.size))));
-
         toast('Produk dihapus', { description: 'Item telah dihapus dari keranjang' });
-
         const itemKey = size ? `${id}-${size}` : `${id}`;
-
         router.visit('/cart', {
             method: 'delete',
             data: { item_key: itemKey },
@@ -123,19 +116,18 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const updateQuantity = (id: number, quantity: number, size?: string) => {
+        if (!user) {
+            toast.error('Anda harus login untuk mengubah jumlah keranjang');
+            router.visit('/login');
+            return;
+        }
         if (quantity < 1) return;
-
         setIsLoading(true);
-
-        // Optimistic UI update
         setCartItems((prevItems) =>
             prevItems.map((item) => (item.id === id && (size ? item.size === size : !item.size) ? { ...item, quantity } : item)),
         );
-
         toast('Jumlah produk diperbarui', { description: `Jumlah produk telah diperbarui menjadi ${quantity}` });
-
         const itemKey = size ? `${id}-${size}` : `${id}`;
-
         router.visit('/cart', {
             method: 'put',
             data: { item_key: itemKey, quantity },
@@ -145,16 +137,17 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const clearCart = () => {
+        if (!user) {
+            toast.error('Anda harus login untuk mengosongkan keranjang');
+            router.visit('/login');
+            return;
+        }
         setIsLoading(true);
         setCartItems([]);
-
         toast('Keranjang dikosongkan', { description: 'Semua item telah dihapus dari keranjang' });
-
         router.post('/cart/clear', {
             preserveState: true,
             preserveScroll: true,
-            // onSuccess: (page) => { ...update state jika perlu... }
-            // Tidak perlu onFinish navigasi
         });
     };
 

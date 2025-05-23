@@ -1,13 +1,10 @@
 import '../css/app.css';
-
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 import { Toaster } from './components/ui/sonner';
 import { initializeTheme } from './hooks/use-appearance';
-import { CartProvider } from './hooks/useCart';
-import { CouponProvider } from './hooks/useCoupon';
-import { ShippingProvider } from './hooks/useShipping';
+import { AppProviders } from './AppProviders'; // <-- Tambahkan ini
 
 const appName = import.meta.env.VITE_APP_NAME || 'BatikGumelem';
 
@@ -18,14 +15,12 @@ createInertiaApp({
         const root = createRoot(el);
 
         root.render(
-            <CartProvider>
-                <CouponProvider>
-                    <ShippingProvider>
-                        <App {...props} />
-                        <Toaster />
-                    </ShippingProvider>
-                </CouponProvider>
-            </CartProvider>,
+            <>
+                <AppProviders> {/* <-- Tambahkan ini */}
+                    <App {...props} />
+                    <Toaster />
+                </AppProviders> {/* <-- Dan ini */}
+            </>
         );
     },
     progress: {
@@ -33,5 +28,4 @@ createInertiaApp({
     },
 });
 
-// This will set light / dark mode on load...
 initializeTheme();

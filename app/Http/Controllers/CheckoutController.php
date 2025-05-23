@@ -35,30 +35,19 @@ class CheckoutController extends Controller
      */
     public function index()
     {
-        \Log::info('Checkout page accessed');
         $cart = $this->cartService->getCart();
-
-        \Log::info('Cart structure on checkout', ['cart' => $cart]);
-
         if (empty($cart['items'])) {
-            \Log::info('Cart is empty, redirecting to cart page');
             return redirect()->route('cart.index')->with('error', 'Your cart is empty');
         }
-
-        // Ambil shippingOptions dari session jika ada
         $shippingOptions = session('shippingOptions', []);
-        session()->forget('shippingOptions'); // Pastikan ini ada untuk membersihkan session
-    
-        // Get saved addresses for authenticated users
+        session()->forget('shippingOptions');
         $savedAddresses = [];
         if (auth()->check()) {
-            $savedAddresses = ShippingAddress::where('user_id', auth()->id())
-                ->whereNull('order_id') // Only get saved addresses, not ones tied to specific orders
+            $savedAddresses = \App\Models\ShippingAddress::where('user_id', auth()->id())
                 ->orderBy('is_default', 'desc')
                 ->orderBy('created_at', 'desc')
                 ->get();
         }
-    
         return Inertia::render('Checkout', [
             'cart' => $cart,
             'coupon' => session('coupon'),
@@ -106,7 +95,9 @@ class CheckoutController extends Controller
             $shippingOptions = $this->biteshipService->getShippingCost(
                 config('services.biteship.origin_postal_code'),
                 $request->postal_code,
-                $weightInKg
+                $weightInKg,
+                null,
+                array_values($cart['items'])
             );
 
             \Log::info('Shipping options response', ['response' => $shippingOptions]);
@@ -144,11 +135,9 @@ class CheckoutController extends Controller
     public function store(Request $request)
     {
         $cart = $this->cartService->getCart();
-
         if (empty($cart['items'])) {
             return redirect()->route('cart.index')->with('error', 'Your cart is empty');
         }
-
         $validationRules = [
             'shipping_method' => 'required|array',
             'shipping_method.id' => 'required|string',
@@ -158,8 +147,6 @@ class CheckoutController extends Controller
             'payment_method' => 'required|string|in:bank_transfer,e_wallet,cod',
             'notes' => 'nullable|string',
         ];
-        
-        // If using saved address, require address_id. Otherwise, require full address details.
         if ($request->has('saved_address_id') && $request->saved_address_id) {
             $validationRules['saved_address_id'] = 'required|exists:shipping_addresses,id';
         } else {
@@ -171,134 +158,92 @@ class CheckoutController extends Controller
             $validationRules['shipping_address.postal_code'] = 'required|string';
             $validationRules['shipping_address.phone'] = 'required|string';
         }
-        
         $request->validate($validationRules);
-
         // Start DB transaction
-        return DB::transaction(function () use ($request, $cart) {
-            // Calculate total with shipping and discount
+        return \DB::transaction(function () use ($request, $cart) {
             $subtotal = $cart['total'];
             $shippingCost = $request->shipping_method['price'];
             $discount = 0;
-
-            if (Session::has('coupon')) {
-                $coupon = Session::get('coupon');
+            if (session()->has('coupon')) {
+                $coupon = session('coupon');
                 $discount = ($subtotal * $coupon['discount_percent']) / 100;
             }
-
-            // Calculate totals
             $total = $subtotal + $shippingCost - $discount;
-
             // Create shipping address first
             if ($request->has('saved_address_id') && $request->saved_address_id && auth()->check()) {
-                // Find the saved address and verify it belongs to the current user
-                $savedAddress = ShippingAddress::where('id', $request->saved_address_id)
+                $savedAddress = \App\Models\ShippingAddress::where('id', $request->saved_address_id)
                     ->where('user_id', auth()->id())
-                    ->whereNull('order_id')
                     ->firstOrFail();
-                
-                // Clone the saved address for this order, without order_id for now
-                $shippingAddress = ShippingAddress::create([
+                $shippingAddress = $savedAddress->replicate();
+                $shippingAddress->save();
+            } else {
+                $shippingAddress = \App\Models\ShippingAddress::create([
                     'user_id' => auth()->id(),
-                    'full_name' => $savedAddress->full_name,
-                    'address' => $savedAddress->address,
-                    'city' => $savedAddress->city,
-                    'province' => $savedAddress->province,
-                    'postal_code' => $savedAddress->postal_code,
-                    'phone' => $savedAddress->phone,
+                    'full_name' => $request->shipping_address['full_name'],
+                    'address' => $request->shipping_address['address'],
+                    'city' => $request->shipping_address['city'],
+                    'province' => $request->shipping_address['province'],
+                    'postal_code' => $request->shipping_address['postal_code'],
+                    'phone' => $request->shipping_address['phone'],
                     'is_default' => false,
                 ]);
-            } else {
-                // Create or update shipping address
-                $shippingAddressData = $request->shipping_address;
-
-                if (auth()->check()) {
-                    $shippingAddressData['user_id'] = auth()->id();
-                }
-
-                $shippingAddress = ShippingAddress::create($shippingAddressData);
-                
-                // If the user wants to save this address for future use
-                if (auth()->check() && $request->input('save_address', false)) {
-                    $isDefault = $request->input('set_as_default', false);
-                    
-                    if ($isDefault) {
-                        // Unset any other default addresses
-                        ShippingAddress::where('user_id', auth()->id())
-                            ->whereNull('order_id')
-                            ->update(['is_default' => false]);
-                    }
-                    
-                    // Create a new record for the saved address (separate from the order-specific one)
-                    ShippingAddress::create([
-                        'user_id' => auth()->id(),
-                        'order_id' => null,
-                        'full_name' => $shippingAddressData['full_name'],
-                        'address' => $shippingAddressData['address'],
-                        'city' => $shippingAddressData['city'], 
-                        'province' => $shippingAddressData['province'],
-                        'postal_code' => $shippingAddressData['postal_code'],
-                        'phone' => $shippingAddressData['phone'],
-                        'is_default' => $isDefault,
-                    ]);
-                }
             }
-
-            // Create order with shipping_address_id
-            $order = Order::create([
-                'user_id' => auth()->check() ? auth()->id() : null,
-                'guest_email' => auth()->check() ? null : $request->input('email', 'guest@example.com'),
-                'guest_name' => auth()->check() ? null : $shippingAddress->full_name,
+            $order = \App\Models\Order::create([
+                'user_id' => auth()->id(),
                 'status' => 'pending',
-                'total_price' => $subtotal, // Subtotal before shipping and discount
-                'total_amount' => $total,   // Final total including shipping and discount
-                'shipping_address_id' => $shippingAddress->id, // Set shipping_address_id
+                'total_price' => $subtotal,
+                'total_amount' => $total,
+                'shipping_address_id' => $shippingAddress->id,
                 'shipping_method' => $request->shipping_method,
                 'shipping_cost' => $shippingCost,
                 'payment_method' => $request->payment_method,
                 'payment_status' => 'pending',
                 'discount' => $discount,
-                'coupon_id' => Session::has('coupon') ? Session::get('coupon')['id'] : null,
+                'coupon_id' => session('coupon.id') ?? null,
                 'notes' => $request->notes,
             ]);
-
-            // Now update shipping address with order_id to complete the relationship
-            $shippingAddress->order_id = $order->id;
-            $shippingAddress->save();
-
-            // Create order items
-            foreach ($cart['items'] as $key => $item) {
-                OrderItem::create([
+            foreach ($cart['items'] as $item) {
+                \App\Models\OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $item['id'],
                     'quantity' => $item['quantity'],
                     'price' => $item['price'],
-                    'size' => $item['size'] ?? null,
+                    'size' => $item['size'],
+                ]);
+            }
+            $this->cartService->clearCart();
+            session()->forget('coupon');
+
+            // TAMBAHKAN INI: Buat transaksi Midtrans
+            $transaction = $this->midtransService->createTransaction($order);
+
+            if (!$transaction['success']) {
+                // Log the error
+                \Log::error('Failed to create Midtrans transaction', [
+                    'order_id' => $order->id,
+                    'error' => $transaction['message'] ?? 'Unknown error'
                 ]);
             }
 
-            // Initialize payment with Midtrans
-            $paymentResponse = $this->midtransService->createTransaction($order);
 
-            if (!$paymentResponse['success']) {
-                throw new \Exception('Payment initialization failed');
-            }
-
-            // Clear cart and coupon after successful order
-            $this->cartService->clearCart();
-            Session::forget('coupon');
-
-            // Return payment URL for redirect
+            // Redirect dengan token yang baru dibuat
             return redirect()->route('checkout.payment', [
                 'order_id' => $order->id,
-                'payment_url' => $paymentResponse['redirect_url'],
+                'payment_url' => $transaction['success'] ? $transaction['redirect_url'] : null,
             ]);
         });
     }
 
     public function payment(Request $request)
     {
+        if (!$request->has('order_id') || !$request->order_id) {
+            return redirect()->route('home')->with('error', 'Invalid order data');
+        }
+
         $order = Order::findOrFail($request->order_id);
+
+        // Ensure payment_url never null
+        $paymentUrl = $request->payment_url ?? $order->payment_url ?? '';
         
         \Log::info('Payment page accessed', [
             'order_id' => $order->id,
@@ -308,7 +253,7 @@ class CheckoutController extends Controller
         
         return Inertia::render('CheckoutPayment', [
             'order' => $order,
-            'payment_url' => $request->payment_url ?? $order->payment_url,
+            'payment_url' => $paymentUrl,
         ]);
     }
 

@@ -50,9 +50,6 @@ class RoleAndPermissionSeeder extends Seeder
 
         // Create roles and assign permissions
         
-        // Guest role (no permissions needed as they're handled by public routes)
-        $guestRole = Role::create(['name' => 'guest']);
-        
         // Regular user role
         $userRole = Role::create(['name' => 'user']);
         $userRole->givePermissionTo([

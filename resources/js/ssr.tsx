@@ -3,9 +3,7 @@ import createServer from '@inertiajs/react/server';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import ReactDOMServer from 'react-dom/server';
 import { type RouteName, route } from 'ziggy-js';
-import { CartProvider } from './hooks/useCart'; // Pastikan CartProvider sudah di-import
-import { CouponProvider } from './hooks/useCoupon';
-import { ShippingProvider } from './hooks/useShipping';
+import { AppProviders } from './AppProviders';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -27,15 +25,11 @@ createServer((page) =>
                 });
             /* eslint-enable */
 
-            // Bungkus App dengan CartProvider, CouponProvider, ShippingProvider
+            // Gunakan AppProviders langsung
             return (
-                <CartProvider>
-                    <CouponProvider>
-                        <ShippingProvider>
-                            <App {...props} />
-                        </ShippingProvider>
-                    </CouponProvider>
-                </CartProvider>
+                <AppProviders>
+                    <App {...props} />
+                </AppProviders>
             );
         },
     }),

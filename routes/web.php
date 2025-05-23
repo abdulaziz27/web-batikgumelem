@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AIChatController;
 use App\Http\Controllers\UserDashboardController;
+use App\Http\Controllers\Admin\ReportController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -64,27 +65,30 @@ Route::get('/privacy', function () {
 })->name('privacy');
 
 // Cart Routes
-Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-Route::get('/cart/data', [CartController::class, 'getData'])->name('cart.data');
-Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
-Route::put('/cart', [CartController::class, 'update'])->name('cart.update');
-Route::delete('/cart', [CartController::class, 'destroy'])->name('cart.destroy');
-Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::get('/cart/data', [CartController::class, 'getData'])->name('cart.data');
+    Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
+    Route::put('/cart', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart', [CartController::class, 'destroy'])->name('cart.destroy');
+    Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
 
-// Checkout Routes
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-Route::post('/checkout/shipping', [CheckoutController::class, 'calculateShipping'])
-    ->name('checkout.shipping');
-Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
-Route::get('/checkout/payment', [CheckoutController::class, 'payment'])->name('checkout.payment');
-Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
-Route::get('/checkout/cancel', [CheckoutController::class, 'cancel'])->name('checkout.cancel');
-Route::post('/checkout/notification', [CheckoutController::class, 'notification'])
-    ->name('checkout.notification');
-Route::get('/checkout/check-status/{order_id}', [CheckoutController::class, 'checkPaymentStatus'])
-    ->name('checkout.check-status');
-Route::post('/checkout/coupon', [CheckoutController::class, 'applyCoupon'])->name('checkout.coupon.apply');
-Route::delete('/checkout/coupon', [CheckoutController::class, 'removeCoupon'])->name('checkout.coupon.remove');
+    // Checkout Routes
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout/shipping', [CheckoutController::class, 'calculateShipping'])
+        ->name('checkout.shipping');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::get('/checkout/payment', [CheckoutController::class, 'payment'])->name('checkout.payment');
+    Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
+    Route::get('/checkout/cancel', [CheckoutController::class, 'cancel'])->name('checkout.cancel');
+    Route::post('/checkout/notification', [CheckoutController::class, 'notification'])
+        ->name('checkout.notification');
+    Route::get('/checkout/check-status/{order_id}', [CheckoutController::class, 'checkPaymentStatus'])
+        ->name('checkout.check-status');
+    Route::post('/checkout/coupon', [CheckoutController::class, 'applyCoupon'])->name('checkout.coupon.apply');
+    Route::delete('/checkout/coupon', [CheckoutController::class, 'removeCoupon'])->name('checkout.coupon.remove');
+    Route::put('/orders/{id}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
+});
 
 // AI Chat API
 Route::post('/api/ai-chat', [AIChatController::class, 'ask'])->middleware('throttle:10,1');
@@ -127,4 +131,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     // Admin Blogs
     Route::resource('blogs', AdminBlogController::class);
+
+    // Reports
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/sales', [ReportController::class, 'sales'])->name('reports.sales');
 });

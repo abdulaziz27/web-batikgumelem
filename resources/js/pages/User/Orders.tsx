@@ -1,4 +1,4 @@
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import { Check, ChevronLeft, ChevronRight, Clock, CreditCard, Loader2, Package, ShoppingBag, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -288,7 +288,9 @@ export default function Orders({ orders }: OrdersProps) {
                                                         <Link href={`/orders/${order.id}`}>Lihat Detail</Link>
                                                     </Button>
 
-                                                    {order.payment_status !== 'paid' && order.payment_url && (
+                                                    {order.payment_status !== 'paid' && 
+                                                     order.payment_url && 
+                                                     order.status !== 'cancelled' && (
                                                         <Button
                                                             onClick={() => handlePayment(order.id)}
                                                             size="sm"
@@ -313,7 +315,12 @@ export default function Orders({ orders }: OrdersProps) {
                                                         <Link
                                                             href={`/orders/${order.id}/cancel`}
                                                             method="put"
+                                                            as="button"
                                                             className="bg-destructive text-destructive-foreground hover:bg-destructive/90 inline-flex h-8 items-center justify-center rounded-md px-3 py-1 text-xs font-medium shadow"
+                                                            onSuccess={() => {
+                                                                // Optionally refresh the page or update the order status locally
+                                                                router.reload();
+                                                            }}
                                                         >
                                                             Batalkan
                                                         </Link>

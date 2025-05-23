@@ -5,13 +5,63 @@ import { useCart } from '@/hooks/useCart';
 import { formatRupiah } from '@/utils/formatters';
 import { Link, router } from '@inertiajs/react';
 import { ArrowRight, ShoppingBag, Trash2 } from 'lucide-react';
+import React, { useState } from 'react';
 
-const Cart = () => {
-    const { cartItems, removeFromCart, updateQuantity, clearCart, totalPrice, isLoading } = useCart();
+class CartErrorBoundary extends React.Component<{ children: React.ReactNode }, { error: any, errorInfo: any }> {
+    constructor(props: { children: React.ReactNode }) {
+        super(props);
+        this.state = { error: null, errorInfo: null };
+    }
+    static getDerivedStateFromError(error: any) {
+        return { error, errorInfo: null };
+    }
+    componentDidCatch(error: any, errorInfo: any) {
+        this.setState({ error, errorInfo });
+    }
+    render() {
+        if (this.state.error) {
+            return (
+                <Layout>
+                    <div style={{ color: 'red', padding: 24 }}>
+                        <h2>Terjadi error di Cart:</h2>
+                        <pre>{this.state.error?.toString()}</pre>
+                        <pre>{this.state.errorInfo?.componentStack}</pre>
+                        <pre>{this.state.error?.stack}</pre>
+                    </div>
+                </Layout>
+            );
+        }
+        return this.props.children;
+    }
+}
 
-    if (cartItems.length === 0) {
+// Wrapper component yang menangkap error useCart
+const CartContent = () => {
+    const [error, setError] = useState<Error | null>(null);
+    
+    // Render empty cart jika terjadi error
+    if (error) {
         return (
-            <Layout>
+            <div className="container mx-auto px-4 py-16 sm:px-6 lg:px-8">
+                <div className="text-center">
+                    <ShoppingBag className="mx-auto h-16 w-16 text-gray-400" />
+                    <h2 className="mt-2 text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Keranjang Belanja Kosong</h2>
+                    <p className="mt-4 text-gray-500">Anda belum menambahkan produk apapun ke keranjang belanja.</p>
+                    <div className="mt-6">
+                        <Button asChild className="bg-batik-indigo hover:bg-batik-indigo/90">
+                            <Link href="/products">Lihat Produk</Link>
+                        </Button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+    
+    try {
+        const { cartItems, removeFromCart, updateQuantity, clearCart, totalPrice, isLoading } = useCart();
+
+        if (cartItems.length === 0) {
+            return (
                 <div className="container mx-auto px-4 py-16 sm:px-6 lg:px-8">
                     <div className="text-center">
                         <ShoppingBag className="mx-auto h-16 w-16 text-gray-400" />
@@ -24,12 +74,10 @@ const Cart = () => {
                         </div>
                     </div>
                 </div>
-            </Layout>
-        );
-    }
+            );
+        }
 
-    return (
-        <Layout>
+        return (
             <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
                 {/* {isLoading && (
                     <div className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center z-50">
@@ -173,8 +221,27 @@ const Cart = () => {
                     </div>
                 </div>
             </div>
+        );
+    } catch (err) {
+        console.error('Error in CartContent:', err);
+        // Set error untuk trigger render empty cart
+        setError(err as Error);
+        return null;
+    }
+};
+
+const Cart = () => {
+    return (
+        <Layout>
+            <CartContent />
         </Layout>
     );
 };
 
-export default Cart;
+export default function CartWithBoundary() {
+    return (
+        <CartErrorBoundary>
+            <Cart />
+        </CartErrorBoundary>
+    );
+}
