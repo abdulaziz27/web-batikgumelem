@@ -20,6 +20,8 @@ interface Props {
         payment_url: string;
     };
     payment_url: string;
+    midtrans_client_key: string;
+    is_production: boolean;
 }
 
 declare global {
@@ -28,7 +30,7 @@ declare global {
     }
 }
 
-const CheckoutPayment = ({ order, payment_url }: Props) => {
+const CheckoutPayment = ({ order, payment_url, midtrans_client_key, is_production }: Props) => {
     const [isLoading, setIsLoading] = useState(false);
     const [snapToken, setSnapToken] = useState('');
     const [error, setError] = useState<string | null>(null);
@@ -50,12 +52,8 @@ const CheckoutPayment = ({ order, payment_url }: Props) => {
             return;
         }
         
-        // Check if payment needs to be re-initialized
         if (!order.payment_token && !order.payment_url) {
             console.warn("Payment token/URL missing - this means the payment wasn't properly initialized");
-            
-            // Optional: Auto-redirect to reinitialize payment
-            // router.visit(`/checkout/initialize-payment/${order.id}`);
         }
     }, [order]);
 
@@ -74,8 +72,6 @@ const CheckoutPayment = ({ order, payment_url }: Props) => {
         }
 
         setSnapToken(token);
-        console.log('Payment token:', token || 'No token available');
-        console.log('Payment URL:', payment_url || 'No URL available');
     }, [order, payment_url, error]);
 
     // Load Snap.js
@@ -87,11 +83,14 @@ const CheckoutPayment = ({ order, payment_url }: Props) => {
             document.body.removeChild(existingScript);
         }
 
-        const midtransScriptUrl = 'https://app.sandbox.midtrans.com/snap/snap.js';
+        const midtransScriptUrl = is_production 
+            ? 'https://app.midtrans.com/snap/snap.js'
+            : 'https://app.sandbox.midtrans.com/snap/snap.js';
+            
         const script = document.createElement('script');
         script.id = 'midtrans-script';
         script.src = midtransScriptUrl;
-        script.setAttribute('data-client-key', 'SB-Mid-client-xo3JszBk1gen0AEn');
+        script.setAttribute('data-client-key', midtrans_client_key);
 
         script.onload = () => console.log('Snap.js loaded successfully');
         script.onerror = () => setError('Gagal memuat payment processor');
@@ -102,7 +101,7 @@ const CheckoutPayment = ({ order, payment_url }: Props) => {
             const scriptToRemove = document.getElementById('midtrans-script');
             if (scriptToRemove) document.body.removeChild(scriptToRemove);
         };
-    }, [snapToken, error]);
+    }, [snapToken, error, is_production, midtrans_client_key]);
 
     // Clear cart
     useEffect(() => {

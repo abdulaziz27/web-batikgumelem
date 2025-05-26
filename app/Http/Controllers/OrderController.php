@@ -38,6 +38,8 @@ class OrderController extends Controller
 
         return Inertia::render('User/Orders', [
             'orders' => $orders,
+            'midtrans_client_key' => config('services.midtrans.client_key'),
+            'is_production' => config('services.midtrans.is_production', false),
         ]);
     }
 

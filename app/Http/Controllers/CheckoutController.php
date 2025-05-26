@@ -254,6 +254,8 @@ class CheckoutController extends Controller
         return Inertia::render('CheckoutPayment', [
             'order' => $order,
             'payment_url' => $paymentUrl,
+            'midtrans_client_key' => config('services.midtrans.client_key'),
+            'is_production' => config('services.midtrans.is_production', false),
         ]);
     }
 

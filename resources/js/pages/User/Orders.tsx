@@ -62,9 +62,11 @@ interface OrdersProps {
         to: number;
         total: number;
     };
+    midtrans_client_key: string;
+    is_production: boolean;
 }
 
-export default function Orders({ orders }: OrdersProps) {
+export default function Orders({ orders, midtrans_client_key, is_production }: OrdersProps) {
     const { auth } = usePage().props as any;
     const [paymentTokens, setPaymentTokens] = useState<Record<number, string>>({});
     const [loadingOrder, setLoadingOrder] = useState<number | null>(null);
@@ -78,11 +80,14 @@ export default function Orders({ orders }: OrdersProps) {
         }
 
         // Load new script
-        const midtransScriptUrl = 'https://app.sandbox.midtrans.com/snap/snap.js';
+        const midtransScriptUrl = is_production 
+            ? 'https://app.midtrans.com/snap/snap.js'
+            : 'https://app.sandbox.midtrans.com/snap/snap.js';
+            
         const script = document.createElement('script');
         script.id = 'midtrans-script';
         script.src = midtransScriptUrl;
-        script.setAttribute('data-client-key', 'SB-Mid-client-xo3JszBk1gen0AEn');
+        script.setAttribute('data-client-key', midtrans_client_key);
 
         script.onload = () => {
             console.log('Snap.js loaded successfully');
@@ -101,7 +106,7 @@ export default function Orders({ orders }: OrdersProps) {
                 document.body.removeChild(scriptToRemove);
             }
         };
-    }, []);
+    }, [is_production, midtrans_client_key]);
 
     // Parse payment URLs for each order to extract tokens
     useEffect(() => {
