@@ -88,15 +88,15 @@ type IconMapping = {
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Dashboard',
+        title: 'Dasbor',
         href: '/admin/dashboard',
     },
     {
-        title: 'Orders',
+        title: 'Pesanan',
         href: '/admin/orders',
     },
     {
-        title: 'Order Details',
+        title: 'Detail Pesanan',
         href: '#',
     },
 ];
@@ -179,7 +179,7 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
 
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
-            <Head title={`Order #${order.order_number || order.id} Details`} />
+            <Head title={`Pesanan #${order.order_number || order.id}`} />
 
             <div className="space-y-6 p-3 sm:p-6">
                 <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center sm:gap-4">
@@ -190,206 +190,276 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
                             </a>
                         </Button>
                         <div>
-                            <h1 className="text-2xl font-bold tracking-tight">Order {order.order_number || `#${order.id}`}</h1>
-                            <p className="text-muted-foreground text-sm">Placed on {formatDate(order.created_at)}</p>
+                            <h1 className="text-2xl font-bold tracking-tight">Pesanan {order.order_number || `#${order.id}`}</h1>
+                            <p className="text-muted-foreground text-sm">Dibuat pada {formatDate(order.created_at)}</p>
                         </div>
                     </div>
                     <div className="mt-3 flex items-center gap-3 sm:mt-0">
-                        <Badge variant={getStatusBadgeVariant(order.status)}>{order.status.charAt(0).toUpperCase() + order.status.slice(1)}</Badge>
+                        <Badge variant={getStatusBadgeVariant(order.status)}>
+                            {order.status === 'pending'
+                                ? 'Menunggu'
+                                : order.status === 'processing'
+                                ? 'Diproses'
+                                : order.status === 'shipped'
+                                ? 'Dikirim'
+                                : order.status === 'delivered'
+                                ? 'Diterima'
+                                : order.status === 'cancelled'
+                                ? 'Dibatalkan'
+                                : order.status}
+                        </Badge>
                         <Badge variant={order.payment_status === 'paid' ? 'default' : 'secondary'}>
-                            Payment: {order.payment_status.charAt(0).toUpperCase() + order.payment_status.slice(1)}
+                            Pembayaran: {order.payment_status === 'paid' ? 'Dibayar' : order.payment_status === 'pending' ? 'Menunggu' : 'Gagal'}
                         </Badge>
                     </div>
                 </div>
 
-                <div className="grid gap-6 md:grid-cols-2">
-                    {/* Customer Information */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Customer Information</CardTitle>
-                        </CardHeader>
-                        <CardContent className="grid gap-4">
-                            <div>
-                                <div className="font-semibold">Customer</div>
-                                <div>
-                                    {order.user ? (
-                                        <>
-                                            <div>{order.user.name}</div>
-                                            <div className="text-muted-foreground text-sm">{order.user.email}</div>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <div>{order.guest_name || 'Guest'}</div>
-                                            <div className="text-muted-foreground text-sm">{order.guest_email}</div>
-                                        </>
-                                    )}
-                                </div>
-                            </div>
+                <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                    <div className="space-y-6 lg:col-span-2">
+                        {/* Order Items */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Detail Produk</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead>Produk</TableHead>
+                                            <TableHead className="text-right">Harga</TableHead>
+                                            <TableHead className="text-center">Jumlah</TableHead>
+                                            <TableHead className="text-right">Total</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {order.items.map((item) => (
+                                            <TableRow key={item.id}>
+                                                <TableCell>{item.product.name}</TableCell>
+                                                <TableCell className="text-right">{formatPrice(item.price)}</TableCell>
+                                                <TableCell className="text-center">{item.quantity}</TableCell>
+                                                <TableCell className="text-right">{formatPrice(item.price * item.quantity)}</TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                    <TableFooter>
+                                        <TableRow>
+                                            <TableCell colSpan={3}>Subtotal</TableCell>
+                                            <TableCell className="text-right">{formatPrice(subtotal)}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell colSpan={3}>Biaya Pengiriman</TableCell>
+                                            <TableCell className="text-right">{formatPrice(order.shipping_cost)}</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell colSpan={3} className="font-bold">
+                                                Total
+                                            </TableCell>
+                                            <TableCell className="text-right font-bold">{formatPrice(orderTotal)}</TableCell>
+                                        </TableRow>
+                                    </TableFooter>
+                                </Table>
+                            </CardContent>
+                        </Card>
 
-                            <div>
-                                <div className="font-semibold">Shipping Address</div>
-                                {order.shipping_address ? (
+                        {/* Customer Information */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Informasi Pelanggan</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="grid gap-6 sm:grid-cols-2">
                                     <div>
-                                        <div>{order.shipping_address.full_name}</div>
-                                        <div>{order.shipping_address.address_line1}</div>
-                                        {order.shipping_address.address_line2 && <div>{order.shipping_address.address_line2}</div>}
-                                        <div>
-                                            {order.shipping_address.city}, {order.shipping_address.state} {order.shipping_address.postal_code}
-                                        </div>
-                                        <div>{order.shipping_address.country}</div>
-                                        <div>{order.shipping_address.phone}</div>
+                                        <h3 className="text-muted-foreground mb-2 text-sm font-medium">Detail Pelanggan</h3>
+                                        <p className="font-medium">
+                                            {order.user ? order.user.name : order.guest_name || 'Tamu'}
+                                        </p>
+                                        <p className="text-muted-foreground text-sm">
+                                            {order.user ? order.user.email : order.guest_email}
+                                        </p>
                                     </div>
-                                ) : (
-                                    <div className="text-muted-foreground text-sm">No shipping address provided</div>
-                                )}
-                            </div>
-
-                            <div>
-                                <div className="font-semibold">Payment Information</div>
-                                <div>
-                                    <div>Method: {order.payment_method}</div>
-                                    <div>Status: {order.payment_status.charAt(0).toUpperCase() + order.payment_status.slice(1)}</div>
+                                    <div>
+                                        <h3 className="text-muted-foreground mb-2 text-sm font-medium">Metode Pembayaran</h3>
+                                        <p className="font-medium">{order.payment_method}</p>
+                                        <p className="text-muted-foreground text-sm">
+                                            Status: {order.payment_status === 'paid' ? 'Dibayar' : order.payment_status === 'pending' ? 'Menunggu' : 'Gagal'}
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                        </CardContent>
-                    </Card>
+                            </CardContent>
+                        </Card>
+
+                        {/* Shipping Information */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Informasi Pengiriman</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="grid gap-6 sm:grid-cols-2">
+                                    <div>
+                                        <h3 className="text-muted-foreground mb-2 text-sm font-medium">Alamat Pengiriman</h3>
+                                        {order.shipping_address ? (
+                                            <>
+                                                <p className="font-medium">{order.shipping_address.full_name}</p>
+                                                <p className="text-muted-foreground text-sm">
+                                                    {order.shipping_address.address_line1}
+                                                    {order.shipping_address.address_line2 && (
+                                                        <>
+                                                            <br />
+                                                            {order.shipping_address.address_line2}
+                                                        </>
+                                                    )}
+                                                    <br />
+                                                    {order.shipping_address.city}, {order.shipping_address.state} {order.shipping_address.postal_code}
+                                                    <br />
+                                                    {order.shipping_address.country}
+                                                    <br />
+                                                    Telepon: {order.shipping_address.phone}
+                                                </p>
+                                            </>
+                                        ) : (
+                                            <p className="text-muted-foreground">Tidak ada alamat pengiriman</p>
+                                        )}
+                                    </div>
+                                    <div>
+                                        <h3 className="text-muted-foreground mb-2 text-sm font-medium">Status Pengiriman</h3>
+                                        <p className="font-medium">
+                                            {order.status === 'pending'
+                                                ? 'Menunggu'
+                                                : order.status === 'processing'
+                                                ? 'Diproses'
+                                                : order.status === 'shipped'
+                                                ? 'Dikirim'
+                                                : order.status === 'delivered'
+                                                ? 'Diterima'
+                                                : order.status === 'cancelled'
+                                                ? 'Dibatalkan'
+                                                : order.status}
+                                        </p>
+                                        {order.tracking_number && (
+                                            <p className="text-muted-foreground text-sm">
+                                                No. Resi: {order.tracking_number}
+                                                {order.tracking_url && (
+                                                    <>
+                                                        <br />
+                                                        <a href={order.tracking_url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                                                            Lacak Pengiriman
+                                                        </a>
+                                                    </>
+                                                )}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
 
                     {/* Order Management */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Order Management</CardTitle>
-                            <CardDescription>Update order status and shipping information</CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="grid gap-2">
-                                <label htmlFor="status">Order Status</label>
-                                <Select value={orderStatus} onValueChange={setOrderStatus} disabled={isSubmitting}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select status" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="pending">Pending</SelectItem>
-                                        <SelectItem value="processing">Processing</SelectItem>
-                                        <SelectItem value="shipped">Shipped</SelectItem>
-                                        <SelectItem value="delivered">Delivered</SelectItem>
-                                        <SelectItem value="cancelled">Cancelled</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
+                    <div className="space-y-6">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Kelola Pesanan</CardTitle>
+                                <CardDescription>Perbarui status dan informasi pengiriman</CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="space-y-2">
+                                    <label htmlFor="status" className="text-sm font-medium">
+                                        Status Pesanan
+                                    </label>
+                                    <Select value={orderStatus} onValueChange={setOrderStatus}>
+                                        <SelectTrigger id="status">
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="pending">Menunggu</SelectItem>
+                                            <SelectItem value="processing">Diproses</SelectItem>
+                                            <SelectItem value="shipped">Dikirim</SelectItem>
+                                            <SelectItem value="delivered">Diterima</SelectItem>
+                                            <SelectItem value="cancelled">Dibatalkan</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
 
-                            <div className="grid gap-2">
-                                <label htmlFor="tracking-number">Tracking Number</label>
-                                <Input
-                                    id="tracking-number"
-                                    placeholder="Enter tracking number"
-                                    value={trackingNumber}
-                                    onChange={(e) => setTrackingNumber(e.target.value)}
-                                    disabled={isSubmitting}
-                                />
-                            </div>
+                                <div className="space-y-2">
+                                    <label htmlFor="tracking_number" className="text-sm font-medium">
+                                        Nomor Resi
+                                    </label>
+                                    <Input
+                                        id="tracking_number"
+                                        value={trackingNumber}
+                                        onChange={(e) => setTrackingNumber(e.target.value)}
+                                        placeholder="Masukkan nomor resi"
+                                    />
+                                </div>
 
-                            <div className="grid gap-2">
-                                <label htmlFor="tracking-url">Tracking URL</label>
-                                <Input
-                                    id="tracking-url"
-                                    placeholder="Enter tracking URL"
-                                    value={trackingUrl}
-                                    onChange={(e) => setTrackingUrl(e.target.value)}
-                                    disabled={isSubmitting}
-                                />
-                            </div>
+                                <div className="space-y-2">
+                                    <label htmlFor="tracking_url" className="text-sm font-medium">
+                                        Link Pelacakan
+                                    </label>
+                                    <Input
+                                        id="tracking_url"
+                                        value={trackingUrl}
+                                        onChange={(e) => setTrackingUrl(e.target.value)}
+                                        placeholder="Masukkan link pelacakan"
+                                    />
+                                </div>
 
-                            <div className="grid gap-2">
-                                <label htmlFor="notes">Admin Notes</label>
-                                <Textarea
-                                    id="notes"
-                                    placeholder="Add notes about this order"
-                                    value={notes}
-                                    onChange={(e) => setNotes(e.target.value)}
-                                    disabled={isSubmitting}
-                                    rows={4}
-                                />
-                            </div>
-                        </CardContent>
-                        <CardFooter>
-                            <Button onClick={handleUpdateOrder} disabled={isSubmitting} className="w-full">
-                                {isSubmitting ? 'Updating...' : 'Update Order'}
-                            </Button>
-                        </CardFooter>
-                    </Card>
-                </div>
+                                <div className="space-y-2">
+                                    <label htmlFor="notes" className="text-sm font-medium">
+                                        Catatan Admin
+                                    </label>
+                                    <Textarea
+                                        id="notes"
+                                        value={notes}
+                                        onChange={(e) => setNotes(e.target.value)}
+                                        placeholder="Tambahkan catatan internal"
+                                        rows={4}
+                                    />
+                                </div>
+                            </CardContent>
+                            <CardFooter>
+                                <Button onClick={handleUpdateOrder} disabled={isSubmitting} className="w-full">
+                                    {isSubmitting ? 'Menyimpan...' : 'Simpan Perubahan'}
+                                </Button>
+                            </CardFooter>
+                        </Card>
 
-                {/* Order Items */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Order Items</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead className="w-[400px]">Product</TableHead>
-                                    <TableHead className="text-right">Price</TableHead>
-                                    <TableHead className="text-right">Quantity</TableHead>
-                                    <TableHead className="text-right">Subtotal</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {order.items.map((item) => (
-                                    <TableRow key={item.id}>
-                                        <TableCell className="font-medium">{item.product.name}</TableCell>
-                                        <TableCell className="text-right">{formatPrice(item.price)}</TableCell>
-                                        <TableCell className="text-right">{item.quantity}</TableCell>
-                                        <TableCell className="text-right">{formatPrice(item.price * item.quantity)}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                            <TableFooter>
-                                <TableRow>
-                                    <TableCell colSpan={3}>Subtotal</TableCell>
-                                    <TableCell className="text-right">{formatPrice(subtotal)}</TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell colSpan={3}>Shipping</TableCell>
-                                    <TableCell className="text-right">{formatPrice(order.shipping_cost || 0)}</TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell colSpan={3}>Total</TableCell>
-                                    <TableCell className="text-right font-bold">{formatPrice(orderTotal)}</TableCell>
-                                </TableRow>
-                            </TableFooter>
-                        </Table>
-                    </CardContent>
-                </Card>
-
-                {/* Order Timeline */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Order Timeline</CardTitle>
-                        <CardDescription>Order status history</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="relative">
-                            <div className="bg-border absolute top-0 left-5 h-full w-px"></div>
-                            <ol className="relative space-y-6">
-                                {timeline.map((event, index) => (
-                                    <li key={index} className="relative flex gap-6">
-                                        <div className="bg-background z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border">
-                                            {displayIcon(event.icon)}
-                                        </div>
-                                        <div className="flex min-h-[40px] flex-col items-start justify-center">
-                                            <div className="flex items-center gap-2">
-                                                <span className="font-semibold">{event.status}</span>
-                                                <span className="text-muted-foreground text-sm">{formatDate(event.date)}</span>
+                        {/* Order Timeline */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Riwayat Pesanan</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="space-y-4">
+                                    {timeline.map((event, index) => (
+                                        <div key={index} className="flex gap-4">
+                                            <div className="text-muted-foreground flex h-6 w-6 items-center justify-center">
+                                                {displayIcon(event.icon)}
                                             </div>
-                                            <p className="text-muted-foreground text-sm">{event.description}</p>
+                                            <div>
+                                                <p className="font-medium">
+                                                    {event.status === 'pending'
+                                                        ? 'Menunggu'
+                                                        : event.status === 'processing'
+                                                        ? 'Diproses'
+                                                        : event.status === 'shipped'
+                                                        ? 'Dikirim'
+                                                        : event.status === 'delivered'
+                                                        ? 'Diterima'
+                                                        : event.status === 'cancelled'
+                                                        ? 'Dibatalkan'
+                                                        : event.status}
+                                                </p>
+                                                <p className="text-muted-foreground text-sm">{event.description}</p>
+                                                <p className="text-muted-foreground text-sm">{formatDate(event.date)}</p>
+                                            </div>
                                         </div>
-                                    </li>
-                                ))}
-                            </ol>
-                        </div>
-                    </CardContent>
-                </Card>
+                                    ))}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </div>
             </div>
         </AdminLayout>
     );

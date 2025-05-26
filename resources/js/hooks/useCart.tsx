@@ -63,7 +63,6 @@ export const CartProvider = ({ children, user }: { children: ReactNode, user?: a
 
     const addToCart = (product: Omit<CartItem, 'quantity'> & { quantity?: number }) => {
         if (!user) {
-            toast.error('Anda harus login untuk menambah ke keranjang');
             router.visit('/login');
             return;
         }
@@ -74,14 +73,8 @@ export const CartProvider = ({ children, user }: { children: ReactNode, user?: a
                 (item) => item.id === product.id && (product.size ? item.size === product.size : !item.size),
             );
             if (existingItemIndex >= 0) {
-                toast('Produk ditambahkan', {
-                    description: `${prevItems[existingItemIndex].name} jumlahnya ditambahkan ke keranjang`,
-                });
                 return prevItems.map((item, index) => (index === existingItemIndex ? { ...item, quantity: item.quantity + quantity } : item));
             } else {
-                toast('Produk ditambahkan', {
-                    description: `${product.name} ditambahkan ke keranjang`,
-                });
                 return [...prevItems, { ...product, quantity }];
             }
         });
@@ -99,13 +92,11 @@ export const CartProvider = ({ children, user }: { children: ReactNode, user?: a
 
     const removeFromCart = (id: number, size?: string) => {
         if (!user) {
-            toast.error('Anda harus login untuk menghapus dari keranjang');
             router.visit('/login');
             return;
         }
         setIsLoading(true);
         setCartItems((prevItems) => prevItems.filter((item) => !(item.id === id && (size ? item.size === size : !item.size))));
-        toast('Produk dihapus', { description: 'Item telah dihapus dari keranjang' });
         const itemKey = size ? `${id}-${size}` : `${id}`;
         router.visit('/cart', {
             method: 'delete',
@@ -117,7 +108,6 @@ export const CartProvider = ({ children, user }: { children: ReactNode, user?: a
 
     const updateQuantity = (id: number, quantity: number, size?: string) => {
         if (!user) {
-            toast.error('Anda harus login untuk mengubah jumlah keranjang');
             router.visit('/login');
             return;
         }
@@ -126,7 +116,6 @@ export const CartProvider = ({ children, user }: { children: ReactNode, user?: a
         setCartItems((prevItems) =>
             prevItems.map((item) => (item.id === id && (size ? item.size === size : !item.size) ? { ...item, quantity } : item)),
         );
-        toast('Jumlah produk diperbarui', { description: `Jumlah produk telah diperbarui menjadi ${quantity}` });
         const itemKey = size ? `${id}-${size}` : `${id}`;
         router.visit('/cart', {
             method: 'put',
@@ -138,13 +127,11 @@ export const CartProvider = ({ children, user }: { children: ReactNode, user?: a
 
     const clearCart = () => {
         if (!user) {
-            toast.error('Anda harus login untuk mengosongkan keranjang');
             router.visit('/login');
             return;
         }
         setIsLoading(true);
         setCartItems([]);
-        toast('Keranjang dikosongkan', { description: 'Semua item telah dihapus dari keranjang' });
         router.post('/cart/clear', {
             preserveState: true,
             preserveScroll: true,

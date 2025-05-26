@@ -11,11 +11,11 @@ import { ArrowRight, CheckCircle } from 'lucide-react';
 interface Product {
     id: number;
     name: string;
+    slug: string;
     price: number;
     image: string;
-    rating?: number;
-    description?: string;
-    slug: string;
+    description: string;
+    stock: number;
 }
 
 interface Blog {

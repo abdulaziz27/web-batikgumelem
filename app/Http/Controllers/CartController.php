@@ -54,7 +54,7 @@ class CartController extends Controller
             'size' => 'nullable|string',
         ]);
         $result = $this->cartService->addToCart($validated['product_id'], $validated['quantity'], $validated['size'] ?? null);
-        return back()->with('success', $result['message']);
+        return back()->with('success', 'Produk berhasil ditambahkan ke keranjang.');
     }
 
     /**
@@ -85,7 +85,7 @@ class CartController extends Controller
         $result = $this->cartService->updateCartItem($request->item_key, $request->quantity);
         return Inertia::render('Cart', [
             'cart' => $result['cart'],
-            'message' => $result['message'],
+            'message' => 'Jumlah produk di keranjang berhasil diperbarui.',
         ]);
     }
 
@@ -100,13 +100,13 @@ class CartController extends Controller
         $result = $this->cartService->removeCartItem($request->item_key);
         return Inertia::render('Cart', [
             'cart' => $result['cart'],
-            'message' => $result['message'],
+            'message' => 'Produk berhasil dihapus dari keranjang.',
         ]);
     }
 
     public function clear()
     {
         $result = $this->cartService->clearCart();
-        return back()->with('message', $result['message']);
+        return back()->with('message', 'Keranjang belanja berhasil dikosongkan.');
     }
 }

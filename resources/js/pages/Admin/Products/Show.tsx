@@ -46,11 +46,11 @@ interface ShowProps {
 export default function Show({ product }: ShowProps) {
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: 'Dashboard',
+            title: 'Dasbor',
             href: '/admin/dashboard',
         },
         {
-            title: 'Products',
+            title: 'Produk',
             href: '/admin/products',
         },
         {
@@ -84,22 +84,22 @@ export default function Show({ product }: ShowProps) {
 
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
-            <Head title={`Product: ${product.name}`} />
+            <Head title={`Produk: ${product.name}`} />
 
             <div className="space-y-6 p-6">
                 <div className="flex items-center justify-between">
-                    <h1 className="text-2xl font-bold tracking-tight">Product Details</h1>
+                    <h1 className="text-2xl font-bold tracking-tight">Detail Produk</h1>
                     <div className="flex space-x-2">
                         <Button variant="outline" asChild>
                             <Link href="/admin/products">
                                 <ArrowLeft className="mr-2 h-4 w-4" />
-                                Back to Products
+                                Kembali ke Produk
                             </Link>
                         </Button>
                         <Button asChild>
                             <Link href={`/admin/products/${product.id}/edit`}>
                                 <Edit className="mr-2 h-4 w-4" />
-                                Edit Product
+                                Edit Produk
                             </Link>
                         </Button>
                     </div>
@@ -112,7 +112,7 @@ export default function Show({ product }: ShowProps) {
                     <div className="space-y-6 md:col-span-1">
                         <Card>
                             <CardHeader>
-                                <CardTitle>Main Image</CardTitle>
+                                <CardTitle>Gambar Utama</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 {mainImageUrl ? (
@@ -121,7 +121,7 @@ export default function Show({ product }: ShowProps) {
                                     </div>
                                 ) : (
                                     <div className="bg-muted flex aspect-square items-center justify-center rounded-lg border">
-                                        <p className="text-muted-foreground">No image available</p>
+                                        <p className="text-muted-foreground">Tidak ada gambar</p>
                                     </div>
                                 )}
                             </CardContent>
@@ -130,7 +130,7 @@ export default function Show({ product }: ShowProps) {
                         {product.images.length > 1 && (
                             <Card>
                                 <CardHeader>
-                                    <CardTitle>All Images</CardTitle>
+                                    <CardTitle>Semua Gambar</CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <div className="grid grid-cols-3 gap-2">
@@ -150,14 +150,14 @@ export default function Show({ product }: ShowProps) {
                         {product.sizes.length > 0 && (
                             <Card>
                                 <CardHeader>
-                                    <CardTitle>Available Sizes</CardTitle>
+                                    <CardTitle>Ukuran yang Tersedia</CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <div className="grid grid-cols-2 gap-2">
                                         {product.sizes.map((size) => (
                                             <div key={size.id} className="rounded-md border p-3">
                                                 <div className="font-medium">{size.size}</div>
-                                                <div className="text-muted-foreground text-sm">Stock: {size.stock}</div>
+                                                <div className="text-muted-foreground text-sm">Stok: {size.stock}</div>
                                             </div>
                                         ))}
                                     </div>
@@ -169,12 +169,12 @@ export default function Show({ product }: ShowProps) {
                     {/* Product Information */}
                     <Card className="md:col-span-2">
                         <CardHeader>
-                            <CardTitle>Product Information</CardTitle>
+                            <CardTitle>Informasi Produk</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                 <div>
-                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">Name</h3>
+                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">Nama</h3>
                                     <p className="font-semibold">{product.name}</p>
                                 </div>
                                 <div>
@@ -182,39 +182,32 @@ export default function Show({ product }: ShowProps) {
                                     <p className="font-mono text-sm">{product.slug}</p>
                                 </div>
                                 <div>
-                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">Price</h3>
+                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">Harga</h3>
                                     <p className="font-semibold">{formatPrice(product.price)}</p>
                                 </div>
                                 <div>
-                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">Main Stock</h3>
+                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">Stok Utama</h3>
                                     <p className="font-semibold">{product.stock}</p>
                                 </div>
                                 <div>
                                     <h3 className="text-muted-foreground mb-1 text-sm font-medium">Status</h3>
-                                    <Badge variant={product.is_active ? 'default' : 'outline'}>{product.is_active ? 'Active' : 'Inactive'}</Badge>
+                                    <Badge variant={product.is_active ? 'default' : 'outline'}>{product.is_active ? 'Aktif' : 'Nonaktif'}</Badge>
                                 </div>
                                 <div>
-                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">Images</h3>
-                                    <p>{product.images.length} images</p>
+                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">Gambar</h3>
+                                    <p>{product.images.length} gambar</p>
+                                </div>
+                                <div className="col-span-2">
+                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">Deskripsi</h3>
+                                    <p className="whitespace-pre-wrap">{product.description}</p>
                                 </div>
                                 <div>
-                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">Created At</h3>
-                                    <p className="text-sm">{formatDate(product.created_at)}</p>
+                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">Dibuat pada</h3>
+                                    <p>{formatDate(product.created_at)}</p>
                                 </div>
                                 <div>
-                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">Last Updated</h3>
-                                    <p className="text-sm">{formatDate(product.updated_at)}</p>
-                                </div>
-                            </div>
-
-                            <div>
-                                <h3 className="text-muted-foreground mb-2 text-sm font-medium">Description</h3>
-                                <div className="border-border rounded-md border p-4">
-                                    {product.description ? (
-                                        <p className="whitespace-pre-line">{product.description}</p>
-                                    ) : (
-                                        <p className="text-muted-foreground">No description provided.</p>
-                                    )}
+                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">Diperbarui pada</h3>
+                                    <p>{formatDate(product.updated_at)}</p>
                                 </div>
                             </div>
                         </CardContent>

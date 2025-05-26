@@ -231,14 +231,12 @@ const CheckoutContent = ({ cart, coupon, shippingOptions: initialShippingOptions
     // Handler for placing order
     const handlePlaceOrder = () => {
         if (!selectedShipping || !shippingAddress) {
-            toast('Informasi tidak lengkap', {
-                description: 'Silakan lengkapi semua informasi pengiriman dan pembayaran',
-            });
+            // toast('Informasi tidak lengkap', {
+            //     description: 'Silakan lengkapi semua informasi pengiriman dan pembayaran',
+            // });
             return;
         }
-
         setIsProcessingOrder(true);
-
         const orderData = {
             shipping_address: {
                 full_name: shippingAddress.fullName,
@@ -261,15 +259,14 @@ const CheckoutContent = ({ cart, coupon, shippingOptions: initialShippingOptions
             ...(addressType === 'saved' && selectedAddressId ? { saved_address_id: selectedAddressId } : {}),
             ...(addressType === 'new' && !auth?.check ? { save_address: saveNewAddress, set_as_default: setAsDefault } : {}),
         };
-
         router.post('/checkout', orderData, {
             onSuccess: () => {
                 // Cart akan otomatis kosong setelah backend proses order
             },
             onError: (errors) => {
-                toast.error('Gagal membuat pesanan', {
-                    description: errors.message || 'Terjadi kesalahan saat membuat pesanan',
-                });
+                // toast.error('Gagal membuat pesanan', {
+                //     description: errors.message || 'Terjadi kesalahan saat membuat pesanan',
+                // });
             },
             onFinish: () => {
                 setIsProcessingOrder(false);

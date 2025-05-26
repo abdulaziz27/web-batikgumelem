@@ -38,9 +38,9 @@ class AIChatController extends Controller
         })->implode("\n\n");
 
         // 3. Produk (detail lengkap)
-        $products = Product::select('name','description','price','stock','image','rating')->get();
+        $products = Product::select('name','description','price','stock','image')->get();
         $productText = $products->map(function($p, $i) {
-            return ($i+1) . ". {$p->name}\nDeskripsi: {$p->description}\nHarga: Rp{$p->price}\nStok: {$p->stock}\nRating: " . ($p->rating ?? '-') . "\nGambar: " . ($p->image ?? '-');
+            return ($i+1) . ". {$p->name}\nDeskripsi: {$p->description}\nHarga: Rp{$p->price}\nStok: {$p->stock}\nGambar: " . ($p->image ?? '-');
         })->implode("\n\n");
 
         // 4. Blog (judul saja)

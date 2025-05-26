@@ -150,16 +150,16 @@ class ProductController extends Controller
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
-            'is_active' => 'boolean',
+            'is_active' => 'sometimes|boolean',
             'new_images' => 'nullable|array',
-            'new_images.*' => 'image|max:2048',
+            'new_images.*' => 'nullable|image|max:2048',
             'sizes' => 'nullable|array',
-            'sizes.*.id' => 'nullable|exists:product_sizes,id',
+            'sizes.*.id' => 'nullable|integer|exists:product_sizes,id,product_id,'.$product->id,
             'sizes.*.size' => 'required|string',
             'sizes.*.stock' => 'required|integer|min:0',
             'deleted_image_ids' => 'nullable|array',
-            'deleted_image_ids.*' => 'exists:product_images,id',
-            'primary_image_id' => 'nullable|exists:product_images,id',
+            'deleted_image_ids.*' => 'nullable|integer|exists:product_images,id,product_id,'.$product->id,
+            'primary_image_id' => 'nullable|integer',
         ]);
 
         return DB::transaction(function () use ($request, $product, $validated) {
@@ -170,21 +170,8 @@ class ProductController extends Controller
                 'description' => $validated['description'],
                 'price' => $validated['price'],
                 'stock' => $validated['stock'],
-                'is_active' => $validated['is_active'] ?? true,
+                'is_active' => $validated['is_active'] ?? $product->is_active,
             ]);
-
-            // Process new images
-            if ($request->hasFile('new_images')) {
-                foreach ($request->file('new_images') as $image) {
-                    $path = $image->store('products', 'public');
-                    
-                    ProductImage::create([
-                        'product_id' => $product->id,
-                        'image' => $path,
-                        'is_primary' => false,
-                    ]);
-                }
-            }
 
             // Delete images if requested
             if ($request->has('deleted_image_ids') && is_array($request->deleted_image_ids)) {
@@ -202,8 +189,22 @@ class ProductController extends Controller
                 }
             }
 
-            // Set primary image if requested
+            // Process new images
+            if ($request->hasFile('new_images')) {
+                foreach ($request->file('new_images') as $image) {
+                    $path = $image->store('products', 'public');
+                    
+                    ProductImage::create([
+                        'product_id' => $product->id,
+                        'image' => $path,
+                        'is_primary' => false,
+                    ]);
+                }
+            }
+
+            // Handle primary image setting
             if ($request->has('primary_image_id')) {
+                // First, remove primary status from all images
                 ProductImage::where('product_id', $product->id)
                     ->update(['is_primary' => false]);
 
@@ -226,14 +227,17 @@ class ProductController extends Controller
                 foreach ($request->sizes as $sizeData) {
                     if (isset($sizeData['id'])) {
                         // Update existing size
-                        ProductSize::where('id', $sizeData['id'])
+                        $size = ProductSize::where('id', $sizeData['id'])
                             ->where('product_id', $product->id)
-                            ->update([
+                            ->first();
+                        
+                        if ($size) {
+                            $size->update([
                                 'size' => $sizeData['size'],
                                 'stock' => $sizeData['stock'],
                             ]);
-
-                        $updatedSizeIds[] = $sizeData['id'];
+                            $updatedSizeIds[] = $size->id;
+                        }
                     } else {
                         // Create new size
                         $newSize = ProductSize::create([
@@ -241,7 +245,6 @@ class ProductController extends Controller
                             'size' => $sizeData['size'],
                             'stock' => $sizeData['stock'],
                         ]);
-
                         $updatedSizeIds[] = $newSize->id;
                     }
                 }

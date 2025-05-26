@@ -1,6 +1,6 @@
-import { Head, Link, useForm } from '@inertiajs/react';
-import { ArrowLeft, Minus, Plus, Save, Upload, X } from 'lucide-react';
-import React, { useState } from 'react';
+import { Head, Link, useForm, router } from '@inertiajs/react';
+import { ArrowLeft, Minus, Plus, Save, Star, Upload, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,6 +17,7 @@ interface ProductImage {
     product_id?: number;
     image: string;
     is_primary: boolean;
+    image_url?: string;
 }
 
 interface ProductSize {
@@ -60,22 +61,38 @@ type ProductFormData = {
     [key: string]: any; // Add index signature to satisfy useForm constraint
 };
 
+interface ImagePreview {
+    id?: number;
+    url: string;
+    is_primary: boolean;
+    is_new?: boolean;
+    file?: File;
+}
+
+interface UseFormOptions {
+    forceFormData?: boolean;
+    preserveScroll?: boolean;
+    preserveState?: boolean;
+    transform?: (data: any) => any;
+}
+
 export default function ProductForm({ product, isEdit = false }: ProductFormProps) {
     // Set up initial image previews from existing images
-    const initialPreviews =
+    const initialPreviews: ImagePreview[] =
         product?.images?.map((img) => ({
             id: img.id,
-            url: `/storage/${img.image}`,
+            url: img.image_url || `/storage/${img.image}`,
             is_primary: img.is_primary,
+            is_new: false,
         })) || [];
 
-    const [imagePreviews, setImagePreviews] = useState<Array<{ id?: number; url: string; is_primary: boolean }>>(initialPreviews);
-    const [newImages, setNewImages] = useState<File[]>([]);
+    const [imagePreviews, setImagePreviews] = useState<ImagePreview[]>(initialPreviews);
     const [deletedImageIds, setDeletedImageIds] = useState<number[]>([]);
-    const [primaryImageId, setPrimaryImageId] = useState<number | null>(product?.images?.find((img) => img.is_primary)?.id || null);
+    const [primaryImageId, setPrimaryImageId] = useState<number | null>(
+        product?.images?.find((img) => img.is_primary)?.id || null
+    );
 
-    // Initialize form with proper typings
-    const { data, setData, errors, processing, post, put } = useForm<ProductFormData>({
+    const [formData, setFormData] = useState<ProductFormData>({
         name: product?.name || '',
         slug: product?.slug || '',
         description: product?.description || '',
@@ -92,17 +109,93 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
         new_images: [],
     });
 
+    const [errors, setErrors] = useState<Record<string, string>>({});
+    const [processing, setProcessing] = useState(false);
+
+    const formOptions: UseFormOptions = {
+        forceFormData: true,
+        preserveScroll: true,
+        preserveState: true,
+        transform: (formData: ProductFormData) => {
+            const form = new FormData();
+            
+            // Add basic fields
+            form.append('name', formData.name);
+            form.append('slug', formData.slug);
+            form.append('description', formData.description);
+            form.append('price', formData.price.toString());
+            form.append('stock', formData.stock.toString());
+            form.append('is_active', formData.is_active ? '1' : '0');
+
+            // Add sizes
+            formData.sizes.forEach((size: { id?: number; size: string; stock: number }, index: number) => {
+                if (size.id) {
+                    form.append(`sizes[${index}][id]`, size.id.toString());
+                }
+                form.append(`sizes[${index}][size]`, size.size);
+                form.append(`sizes[${index}][stock]`, size.stock.toString());
+            });
+
+            // Add deleted image IDs
+            deletedImageIds.forEach((id: number, index: number) => {
+                form.append(`deleted_image_ids[${index}]`, id.toString());
+            });
+
+            // Add primary image ID if exists
+            if (primaryImageId !== null) {
+                form.append('primary_image_id', primaryImageId.toString());
+            }
+
+            // Add new images
+            const newFiles = imagePreviews
+                .filter(preview => preview.is_new && preview.file)
+                .map(preview => preview.file!);
+
+            newFiles.forEach((file: File, index: number) => {
+                form.append(`new_images[${index}]`, file);
+            });
+
+            return form;
+        }
+    };
+
+    // Sync deleted image IDs and primary image ID with form data
+    useEffect(() => {
+        setFormData(prev => ({
+            ...prev,
+            deleted_image_ids: deletedImageIds
+        }));
+    }, [deletedImageIds]);
+
+    useEffect(() => {
+        setFormData(prev => ({
+            ...prev,
+            primary_image_id: primaryImageId
+        }));
+    }, [primaryImageId]);
+
+    // Sync new images with form data
+    useEffect(() => {
+        const newFiles = imagePreviews
+            .filter(preview => preview.is_new && preview.file)
+            .map(preview => preview.file!);
+        setFormData(prev => ({
+            ...prev,
+            new_images: newFiles
+        }));
+    }, [imagePreviews]);
+
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: 'Dashboard',
+            title: 'Dasbor',
             href: '/admin/dashboard',
         },
         {
-            title: 'Products',
+            title: 'Produk',
             href: '/admin/products',
         },
         {
-            title: isEdit ? 'Edit Product' : 'Create Product',
+            title: isEdit ? 'Edit Produk' : 'Tambah Produk',
             href: isEdit ? `/admin/products/${product?.id}/edit` : '/admin/products/create',
         },
     ];
@@ -112,301 +205,388 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
         if (!files || files.length === 0) return;
 
         const newFilesArray = Array.from(files);
-        setNewImages([...newImages, ...newFilesArray]);
-
-        // Create image previews
+        
+        // Create new previews for the uploaded files
+        const newPreviews: ImagePreview[] = [];
+        
         newFilesArray.forEach((file) => {
             const reader = new FileReader();
             reader.onload = (event) => {
                 if (event.target?.result) {
-                    setImagePreviews((prev) => [
-                        ...prev,
-                        {
-                            url: event.target!.result as string,
-                            is_primary: imagePreviews.length === 0 && prev.length === 0,
-                        },
-                    ]);
+                    const newPreview: ImagePreview = {
+                        url: event.target.result as string,
+                        is_primary: imagePreviews.length === 0 && newPreviews.length === 0,
+                        is_new: true,
+                        file: file,
+                    };
+                    
+                    setImagePreviews(prev => [...prev, newPreview]);
                 }
             };
             reader.readAsDataURL(file);
         });
 
-        setData('new_images', [...newImages, ...newFilesArray]);
+        // Reset the input value so the same file can be selected again
+        e.target.value = '';
     };
 
-    const handleDeleteImage = (index: number, id?: number) => {
-        if (id) {
-            // For existing images
-            setDeletedImageIds([...deletedImageIds, id]);
-            setData('deleted_image_ids', [...deletedImageIds, id]);
-
-            if (primaryImageId === id) {
+    const handleDeleteImage = (index: number) => {
+        const imageToDelete = imagePreviews[index];
+        
+        if (imageToDelete.id && !imageToDelete.is_new) {
+            // It's an existing image, add to deletion list
+            setDeletedImageIds(prev => [...prev, imageToDelete.id!]);
+            
+            // If it was the primary image, reset primary image
+            if (primaryImageId === imageToDelete.id) {
                 setPrimaryImageId(null);
-                setData('primary_image_id', null);
             }
         }
 
         // Remove from previews
-        setImagePreviews(imagePreviews.filter((_, i) => i !== index));
-
-        // Remove from newImages if it's a new image
-        if (!id && index >= (initialPreviews.length || 0)) {
-            const newIndex = index - (initialPreviews.length || 0);
-            const updatedNewImages = [...newImages];
-            updatedNewImages.splice(newIndex, 1);
-            setNewImages(updatedNewImages);
-            setData('new_images', updatedNewImages);
-        }
+        setImagePreviews(prev => prev.filter((_, i) => i !== index));
     };
 
-    const handleSetPrimary = (index: number, id?: number) => {
-        setImagePreviews(
-            imagePreviews.map((img, i) => ({
+    const handleSetPrimary = (index: number) => {
+        const selectedImage = imagePreviews[index];
+        
+        // Update previews to show which one is primary
+        setImagePreviews(prev => 
+            prev.map((img, i) => ({
                 ...img,
                 is_primary: i === index,
-            })),
+            }))
         );
 
-        if (id) {
-            setPrimaryImageId(id);
-            setData('primary_image_id', id);
+        // Set the primary image ID (null for new images)
+        if (selectedImage.id && !selectedImage.is_new) {
+            setPrimaryImageId(selectedImage.id);
         } else {
             setPrimaryImageId(null);
         }
     };
 
     const handleGenerateSlug = () => {
-        if (typeof data.name === 'string') {
-            const slug = data.name
+        if (typeof formData.name === 'string') {
+            const slug = formData.name
                 .toLowerCase()
                 .replace(/[^\w ]+/g, '')
                 .replace(/ +/g, '-');
 
-            setData('slug', slug);
+            setFormData(prev => ({
+                ...prev,
+                slug
+            }));
         }
     };
 
     const addSizeField = () => {
-        setData('sizes', [...data.sizes, { size: '', stock: 0 }]);
+        setFormData(prev => ({
+            ...prev,
+            sizes: [...prev.sizes, { size: '', stock: 0 }]
+        }));
     };
 
     const removeSizeField = (index: number) => {
-        setData(
-            'sizes',
-            data.sizes.filter((_, i: number) => i !== index),
-        );
+        setFormData(prev => ({
+            ...prev,
+            sizes: prev.sizes.filter((_, i: number) => i !== index)
+        }));
     };
 
     const updateSizeField = (index: number, field: 'size' | 'stock', value: string | number) => {
-        const updatedSizes = [...data.sizes];
-        updatedSizes[index] = { ...updatedSizes[index], [field]: value };
-        setData('sizes', updatedSizes);
+        setFormData(prev => {
+            const updatedSizes = [...prev.sizes];
+            updatedSizes[index] = { ...updatedSizes[index], [field]: value };
+            return {
+                ...prev,
+                sizes: updatedSizes
+            };
+        });
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        setProcessing(true);
+
+        // Create FormData instance
+        const form = new FormData();
+            
+        // Add basic fields
+        form.append('name', formData.name);
+        form.append('slug', formData.slug);
+        form.append('description', formData.description);
+        form.append('price', formData.price.toString());
+        form.append('stock', formData.stock.toString());
+        form.append('is_active', formData.is_active ? '1' : '0');
+
+        // Add sizes
+        formData.sizes.forEach((size: { id?: number; size: string; stock: number }, index: number) => {
+            if (size.id) {
+                form.append(`sizes[${index}][id]`, size.id.toString());
+            }
+            form.append(`sizes[${index}][size]`, size.size);
+            form.append(`sizes[${index}][stock]`, size.stock.toString());
+        });
+
+        // Add deleted image IDs
+        deletedImageIds.forEach((id: number, index: number) => {
+            form.append(`deleted_image_ids[${index}]`, id.toString());
+        });
+
+        // Add primary image ID if exists
+        if (primaryImageId !== null) {
+            form.append('primary_image_id', primaryImageId.toString());
+        }
+
+        // Add new images
+        const newFiles = imagePreviews
+            .filter(preview => preview.is_new && preview.file)
+            .map(preview => preview.file!);
+
+        newFiles.forEach((file: File, index: number) => {
+            form.append(`new_images[${index}]`, file);
+        });
+
+        const options = {
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: () => {
+                setProcessing(false);
+                setErrors({});
+            },
+            onError: (errors: Record<string, string>) => {
+                setProcessing(false);
+                setErrors(errors);
+            },
+        };
 
         if (isEdit && product?.id) {
-            put(`/admin/products/${product.id}`);
+            form.append('_method', 'PUT');
+            router.post(`/admin/products/${product.id}`, form, options);
         } else {
-            post('/admin/products');
+            router.post('/admin/products', form, options);
         }
+    };
+
+    const handleInputChange = (field: keyof ProductFormData, value: any) => {
+        setFormData(prev => ({
+            ...prev,
+            [field]: value
+        }));
     };
 
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
-            <Head title={isEdit ? 'Edit Product' : 'Create Product'} />
+            <Head title={isEdit ? 'Edit Produk' : 'Tambah Produk'} />
 
             <div className="space-y-6 p-6">
                 <div className="flex items-center justify-between">
-                    <h1 className="text-2xl font-bold tracking-tight">{isEdit ? 'Edit Product' : 'Create Product'}</h1>
-                    <Button variant="outline" asChild>
-                        <Link href="/admin/products">
-                            <ArrowLeft className="mr-2 h-4 w-4" />
-                            Back to Products
-                        </Link>
-                    </Button>
+                    <h1 className="text-2xl font-bold tracking-tight">{isEdit ? 'Edit Produk' : 'Tambah Produk'}</h1>
+                    <div className="flex space-x-2">
+                        <Button variant="outline" asChild>
+                            <Link href="/admin/products">
+                                <ArrowLeft className="mr-2 h-4 w-4" />
+                                Kembali ke Produk
+                            </Link>
+                        </Button>
+                        <Button type="submit" form="product-form">
+                            <Save className="mr-2 h-4 w-4" />
+                            Simpan Produk
+                        </Button>
+                    </div>
                 </div>
 
                 <Separator />
 
-                <form onSubmit={handleSubmit} className="space-y-8">
+                <form id="product-form" onSubmit={handleSubmit} className="space-y-6">
                     <Card>
                         <CardHeader>
-                            <CardTitle>Product Details</CardTitle>
+                            <CardTitle>Informasi Dasar</CardTitle>
                         </CardHeader>
-                        <CardContent className="space-y-6">
-                            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                        <CardContent className="space-y-4">
+                            <div className="grid gap-4 md:grid-cols-2">
                                 <div className="space-y-2">
-                                    <Label htmlFor="name">Name</Label>
-                                    <Input
-                                        id="name"
-                                        value={data.name}
-                                        onChange={(e) => setData('name', e.target.value)}
-                                        onBlur={handleGenerateSlug}
-                                        placeholder="Product Name"
-                                    />
-                                    {errors.name && <p className="text-destructive text-sm">{errors.name}</p>}
+                                    <Label htmlFor="name">Nama Produk</Label>
+                                    <div className="space-y-1">
+                                        <Input
+                                            id="name"
+                                            type="text"
+                                            value={formData.name}
+                                            onChange={(e) => handleInputChange('name', e.target.value)}
+                                        />
+                                    </div>
                                 </div>
 
                                 <div className="space-y-2">
                                     <Label htmlFor="slug">Slug</Label>
-                                    <Input id="slug" value={data.slug} onChange={(e) => setData('slug', e.target.value)} placeholder="product-slug" />
-                                    {errors.slug && <p className="text-destructive text-sm">{errors.slug}</p>}
+                                    <div className="space-y-1">
+                                        <div className="flex gap-2">
+                                            <Input
+                                                id="slug"
+                                                type="text"
+                                                value={formData.slug}
+                                                onChange={(e) => handleInputChange('slug', e.target.value)}
+                                            />
+                                            <Button type="button" variant="outline" onClick={handleGenerateSlug}>
+                                                Generate
+                                            </Button>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="price">Price (IDR)</Label>
-                                    <Input
-                                        id="price"
-                                        type="number"
-                                        value={data.price}
-                                        onChange={(e) => setData('price', Number(e.target.value))}
-                                        placeholder="0"
-                                        min="0"
-                                    />
-                                    {errors.price && <p className="text-destructive text-sm">{errors.price}</p>}
+                                    <Label htmlFor="price">Harga</Label>
+                                    <div className="space-y-1">
+                                        <Input
+                                            id="price"
+                                            type="number"
+                                            min="0"
+                                            value={formData.price}
+                                            onChange={(e) => handleInputChange('price', e.target.value)}
+                                        />
+                                    </div>
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="stock">Stock</Label>
-                                    <Input
-                                        id="stock"
-                                        type="number"
-                                        value={data.stock}
-                                        onChange={(e) => setData('stock', Number(e.target.value))}
-                                        placeholder="0"
-                                        min="0"
-                                    />
-                                    {errors.stock && <p className="text-destructive text-sm">{errors.stock}</p>}
-                                </div>
-
-                                <div className="flex items-center space-x-2">
-                                    <Switch
-                                        id="is_active"
-                                        checked={data.is_active}
-                                        onCheckedChange={(checked: boolean) => setData('is_active', checked)}
-                                    />
-                                    <Label htmlFor="is_active">Active</Label>
-                                    {errors.is_active && <p className="text-destructive text-sm">{errors.is_active}</p>}
+                                    <Label htmlFor="stock">Stok</Label>
+                                    <div className="space-y-1">
+                                        <Input
+                                            id="stock"
+                                            type="number"
+                                            min="0"
+                                            value={formData.stock}
+                                            onChange={(e) => handleInputChange('stock', e.target.value)}
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="description">Description</Label>
-                                <Textarea
-                                    id="description"
-                                    value={data.description}
-                                    onChange={(e) => setData('description', e.target.value)}
-                                    rows={5}
-                                    placeholder="Product description..."
-                                />
-                                {errors.description && <p className="text-destructive text-sm">{errors.description}</p>}
+                                <Label htmlFor="description">Deskripsi</Label>
+                                <div className="space-y-1">
+                                    <Textarea
+                                        id="description"
+                                        value={formData.description}
+                                        onChange={(e) => handleInputChange('description', e.target.value)}
+                                        rows={5}
+                                    />
+                                </div>
                             </div>
 
-                            <div className="space-y-4">
-                                <div className="flex items-center justify-between">
-                                    <Label>Product Images</Label>
-                                    <Button type="button" variant="outline" size="sm" onClick={() => document.getElementById('images')?.click()}>
-                                        <Upload className="mr-2 h-4 w-4" />
-                                        Add Images
-                                    </Button>
-                                    <Input id="images" type="file" multiple className="hidden" accept="image/*" onChange={handleImagesChange} />
-                                </div>
+                            <div className="flex items-center space-x-2">
+                                <Switch
+                                    id="is_active"
+                                    checked={formData.is_active}
+                                    onCheckedChange={(checked) => handleInputChange('is_active', checked)}
+                                />
+                                <Label htmlFor="is_active">Produk Aktif</Label>
+                            </div>
+                        </CardContent>
+                    </Card>
 
-                                {errors.new_images && <p className="text-destructive text-sm">{errors.new_images}</p>}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Gambar Produk</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="flex items-center justify-center">
+                                <Label
+                                    htmlFor="images"
+                                    className="border-border hover:bg-muted flex h-32 w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed transition-colors"
+                                >
+                                    <Upload className="h-8 w-8" />
+                                    <span className="text-muted-foreground text-sm">Klik untuk mengunggah gambar</span>
+                                    <span className="text-muted-foreground text-xs">PNG, JPG atau JPEG (maks. 2MB)</span>
+                                </Label>
+                                <Input
+                                    id="images"
+                                    type="file"
+                                    accept="image/png,image/jpeg,image/jpg"
+                                    multiple
+                                    className="hidden"
+                                    onChange={handleImagesChange}
+                                />
+                            </div>
 
-                                <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+                            {imagePreviews.length > 0 && (
+                                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
                                     {imagePreviews.map((preview, index) => (
                                         <div
                                             key={index}
-                                            className={`relative aspect-square overflow-hidden rounded-md border ${
+                                            className={`group relative aspect-square overflow-hidden rounded-lg border ${
                                                 preview.is_primary ? 'ring-primary ring-2' : ''
                                             }`}
                                         >
-                                            <img src={preview.url} alt={`Preview ${index + 1}`} className="h-full w-full object-cover" />
-                                            <div className="absolute inset-0 bg-black/40 opacity-0 transition-opacity hover:opacity-100">
-                                                <div className="absolute right-2 bottom-2 left-2 flex justify-between">
-                                                    <Button
-                                                        type="button"
-                                                        variant={preview.is_primary ? 'default' : 'secondary'}
-                                                        size="sm"
-                                                        onClick={() => handleSetPrimary(index, preview.id)}
-                                                        disabled={preview.is_primary}
-                                                    >
-                                                        {preview.is_primary ? 'Primary' : 'Set Primary'}
-                                                    </Button>
-                                                    <Button
-                                                        type="button"
-                                                        variant="destructive"
-                                                        size="icon"
-                                                        onClick={() => handleDeleteImage(index, preview.id)}
-                                                    >
-                                                        <X className="h-4 w-4" />
-                                                    </Button>
-                                                </div>
+                                            <img src={preview.url} alt="" className="h-full w-full object-cover" />
+                                            <div className="bg-background/80 absolute inset-0 flex items-center justify-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+                                                <Button
+                                                    type="button"
+                                                    variant="secondary"
+                                                    size="icon"
+                                                    onClick={() => handleSetPrimary(index)}
+                                                    disabled={preview.is_primary}
+                                                >
+                                                    <Star className={preview.is_primary ? 'fill-primary' : ''} />
+                                                </Button>
+                                                <Button
+                                                    type="button"
+                                                    variant="destructive"
+                                                    size="icon"
+                                                    onClick={() => handleDeleteImage(index)}
+                                                >
+                                                    <X className="h-4 w-4" />
+                                                </Button>
                                             </div>
                                         </div>
                                     ))}
                                 </div>
-                            </div>
+                            )}
+                        </CardContent>
+                    </Card>
 
-                            <div className="space-y-4">
-                                <div className="flex items-center justify-between">
-                                    <Label>Product Sizes</Label>
-                                    <Button type="button" variant="outline" size="sm" onClick={addSizeField}>
-                                        <Plus className="mr-2 h-4 w-4" />
-                                        Add Size
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                            <CardTitle>Ukuran yang Tersedia</CardTitle>
+                            <Button type="button" variant="outline" size="sm" onClick={addSizeField}>
+                                <Plus className="mr-1 h-4 w-4" />
+                                Tambah Ukuran
+                            </Button>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            {formData.sizes.map((size, index) => (
+                                <div key={index} className="flex items-end gap-4">
+                                    <div className="flex-1 space-y-2">
+                                        <Label htmlFor={`size-${index}`}>Ukuran</Label>
+                                        <Input
+                                            id={`size-${index}`}
+                                            type="text"
+                                            value={size.size}
+                                            onChange={(e) => updateSizeField(index, 'size', e.target.value)}
+                                        />
+                                    </div>
+                                    <div className="flex-1 space-y-2">
+                                        <Label htmlFor={`stock-${index}`}>Stok</Label>
+                                        <Input
+                                            id={`stock-${index}`}
+                                            type="number"
+                                            min="0"
+                                            value={size.stock}
+                                            onChange={(e) => updateSizeField(index, 'stock', e.target.value)}
+                                        />
+                                    </div>
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="icon"
+                                        onClick={() => removeSizeField(index)}
+                                        disabled={formData.sizes.length === 1}
+                                    >
+                                        <Minus className="h-4 w-4" />
                                     </Button>
                                 </div>
-
-                                {data.sizes.map((size, index) => (
-                                    <div key={index} className="grid grid-cols-12 items-center gap-4">
-                                        <div className="col-span-5 space-y-2">
-                                            <Label htmlFor={`size-${index}`}>Size</Label>
-                                            <Input
-                                                id={`size-${index}`}
-                                                value={size.size}
-                                                onChange={(e) => updateSizeField(index, 'size', e.target.value)}
-                                                placeholder="XL, L, M, S, etc."
-                                            />
-                                        </div>
-                                        <div className="col-span-5 space-y-2">
-                                            <Label htmlFor={`stock-${index}`}>Stock</Label>
-                                            <Input
-                                                id={`stock-${index}`}
-                                                type="number"
-                                                value={size.stock}
-                                                onChange={(e) => updateSizeField(index, 'stock', Number(e.target.value))}
-                                                placeholder="0"
-                                                min="0"
-                                            />
-                                        </div>
-                                        <div className="col-span-2 pt-6">
-                                            <Button
-                                                type="button"
-                                                variant="ghost"
-                                                size="icon"
-                                                onClick={() => removeSizeField(index)}
-                                                disabled={data.sizes.length === 1}
-                                            >
-                                                <Minus className="h-4 w-4" />
-                                            </Button>
-                                        </div>
-                                    </div>
-                                ))}
-                                {errors.sizes && <p className="text-destructive text-sm">{errors.sizes}</p>}
-                            </div>
+                            ))}
                         </CardContent>
-                        <CardFooter className="flex justify-between">
-                            <Button variant="outline" type="button" asChild>
-                                <Link href="/admin/products">Cancel</Link>
-                            </Button>
-                            <Button type="submit" disabled={processing}>
-                                <Save className="mr-2 h-4 w-4" />
-                                {isEdit ? 'Update Product' : 'Create Product'}
-                            </Button>
-                        </CardFooter>
                     </Card>
                 </form>
             </div>

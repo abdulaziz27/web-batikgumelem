@@ -1,4 +1,4 @@
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { BarChart3, Download } from 'lucide-react';
 import { useState } from 'react';
 
@@ -13,7 +13,7 @@ import { formatRupiah } from '@/utils/formatters';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Dashboard',
+        title: 'Dasbor',
         href: '/admin/dashboard',
     },
     {
@@ -30,45 +30,24 @@ export default function ReportsIndex() {
     const [reportType, setReportType] = useState('daily');
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleDownload = async () => {
+    const handleDownload = () => {
         if (!dateRange.start_date || !dateRange.end_date) {
-            alert('Pilih rentang tanggal terlebih dahulu');
             return;
         }
 
         setIsLoading(true);
-        try {
-            const response = await fetch(`/admin/reports/sales?${new URLSearchParams({
-                start_date: dateRange.start_date,
-                end_date: dateRange.end_date,
-                type: reportType,
-                format: 'pdf'
-            })}`, {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/pdf',
-                },
-            });
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to download report');
-            }
-
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', `sales-report-${dateRange.start_date}-${dateRange.end_date}.pdf`);
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-        } catch (error) {
-            console.error('Error downloading report:', error);
-            alert(error instanceof Error ? error.message : 'Gagal mengunduh laporan');
-        } finally {
-            setIsLoading(false);
-        }
+        // Use Inertia's router.get with preserveState and preserveScroll
+        router.get('/admin/reports/sales', {
+            start_date: dateRange.start_date,
+            end_date: dateRange.end_date,
+            type: reportType,
+            format: 'pdf'
+        }, {
+            preserveState: true,
+            preserveScroll: true,
+            onFinish: () => setIsLoading(false),
+        });
     };
 
     return (

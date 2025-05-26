@@ -14,12 +14,11 @@ import { useState } from 'react';
 interface Product {
     id: number;
     name: string;
-    price: number;
-    description: string;
-    image: string;
-    rating?: number;
-    category?: string;
     slug: string;
+    price: number;
+    image: string;
+    description: string;
+    stock: number;
 }
 
 interface ProductsProps {

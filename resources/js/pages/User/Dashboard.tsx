@@ -9,7 +9,7 @@ import { formatRupiah } from '@/utils/formatters';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Dashboard',
+        title: 'Beranda',
         href: '/dashboard',
     },
 ];
@@ -96,7 +96,7 @@ export default function Dashboard({
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Dashboard" />
+            <Head title="Beranda" />
 
             <div className="space-y-6 p-6">
                 <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between md:space-y-0">

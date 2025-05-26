@@ -40,11 +40,11 @@ export default function BlogsShow({ blog }: BlogsShowProps) {
     // Create breadcrumbs
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: 'Dashboard',
+            title: 'Dasbor',
             href: '/admin/dashboard',
         },
         {
-            title: 'Blogs',
+            title: 'Blog',
             href: '/admin/blogs',
         },
         {
@@ -59,18 +59,18 @@ export default function BlogsShow({ blog }: BlogsShowProps) {
 
             <div className="space-y-6 p-3 sm:p-6">
                 <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-                    <h1 className="text-2xl font-bold tracking-tight">View Blog Post</h1>
+                    <h1 className="text-2xl font-bold tracking-tight">Lihat Blog</h1>
                     <div className="flex gap-2">
                         <Button variant="outline" asChild>
                             <Link href="/admin/blogs">
                                 <ArrowLeft className="mr-2 h-4 w-4" />
-                                Back to List
+                                Kembali ke Daftar
                             </Link>
                         </Button>
                         <Button asChild>
                             <Link href={`/admin/blogs/${blog.id}/edit`}>
                                 <Edit className="mr-2 h-4 w-4" />
-                                Edit Post
+                                Edit Blog
                             </Link>
                         </Button>
                     </div>
@@ -84,7 +84,7 @@ export default function BlogsShow({ blog }: BlogsShowProps) {
                                 <div className="mt-2 flex flex-wrap gap-2">
                                     <Badge variant="outline">{blog.category}</Badge>
                                     <span className="text-muted-foreground text-sm">
-                                        By {blog.author} • Published {formatDate(blog.created_at)}
+                                        Oleh {blog.author} • Dipublikasikan {formatDate(blog.created_at)}
                                     </span>
                                 </div>
                             </div>
@@ -98,14 +98,14 @@ export default function BlogsShow({ blog }: BlogsShowProps) {
                         )}
 
                         <div className="space-y-2">
-                            <h3 className="text-lg font-semibold">Excerpt</h3>
+                            <h3 className="text-lg font-semibold">Ringkasan</h3>
                             <p className="text-muted-foreground italic">{blog.excerpt}</p>
                         </div>
 
                         <Separator />
 
                         <div className="space-y-2">
-                            <h3 className="text-lg font-semibold">Content</h3>
+                            <h3 className="text-lg font-semibold">Konten</h3>
                             <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: blog.content }} />
                         </div>
 
@@ -113,11 +113,11 @@ export default function BlogsShow({ blog }: BlogsShowProps) {
 
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <p className="text-muted-foreground text-sm">Created At</p>
+                                <p className="text-muted-foreground text-sm">Dibuat pada</p>
                                 <p>{formatDate(blog.created_at)}</p>
                             </div>
                             <div>
-                                <p className="text-muted-foreground text-sm">Last Updated</p>
+                                <p className="text-muted-foreground text-sm">Terakhir diperbarui</p>
                                 <p>{formatDate(blog.updated_at)}</p>
                             </div>
                         </div>
@@ -126,7 +126,7 @@ export default function BlogsShow({ blog }: BlogsShowProps) {
                         <Button variant="outline" asChild>
                             <Link href={`/admin/blogs/${blog.id}/edit`}>
                                 <Edit className="mr-2 h-4 w-4" />
-                                Edit Post
+                                Edit Blog
                             </Link>
                         </Button>
                     </CardFooter>

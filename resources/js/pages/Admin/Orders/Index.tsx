@@ -86,11 +86,11 @@ interface OrdersIndexProps {
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Dashboard',
+        title: 'Dasbor',
         href: '/admin/dashboard',
     },
     {
-        title: 'Orders',
+        title: 'Pesanan',
         href: '/admin/orders',
     },
 ];
@@ -175,7 +175,7 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
             header: ({ column }) => (
                 <div className="flex items-center">
                     <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="p-0 hover:bg-transparent">
-                        Order #
+                        No. Pesanan
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 </div>
@@ -189,7 +189,7 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
             header: ({ column }) => (
                 <div className="flex items-center">
                     <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="p-0 hover:bg-transparent">
-                        Date
+                        Tanggal
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 </div>
@@ -204,7 +204,7 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
         {
             accessorFn: (row) => (row.user ? row.user.name : row.guest_name || 'Guest'),
             id: 'customer',
-            header: 'Customer',
+            header: 'Pelanggan',
             cell: ({ getValue }) => <span>{getValue<string>()}</span>,
             enableColumnFilter: true,
             filterFn: 'includesString',
@@ -241,7 +241,7 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
         },
         {
             accessorKey: 'payment_status',
-            header: 'Payment',
+            header: 'Pembayaran',
             cell: ({ row }) => {
                 const status = row.getValue('payment_status') as string;
                 return <Badge variant={status === 'paid' ? 'default' : 'secondary'}>{status.charAt(0).toUpperCase() + status.slice(1)}</Badge>;
@@ -249,7 +249,7 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
         },
         {
             id: 'actions',
-            header: 'Actions',
+            header: 'Aksi',
             cell: ({ row }) => {
                 const order = row.original;
                 return (
@@ -384,55 +384,55 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
 
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
-            <Head title="Order Management" />
+            <Head title="Manajemen Pesanan" />
 
             <div className="space-y-6 p-3 sm:p-6">
                 <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-                    <h1 className="text-2xl font-bold tracking-tight">Order Management</h1>
+                    <h1 className="text-2xl font-bold tracking-tight">Manajemen Pesanan</h1>
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-4">
                     <Card>
                         <CardHeader className="pb-2">
-                            <CardTitle>All Orders</CardTitle>
-                            <CardDescription>Order overview</CardDescription>
+                            <CardTitle>Semua Pesanan</CardTitle>
+                            <CardDescription>Ringkasan pesanan</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">{statusCounts.all}</div>
-                            <p className="text-muted-foreground text-xs">Total orders in system</p>
+                            <p className="text-muted-foreground text-xs">Total pesanan dalam sistem</p>
                         </CardContent>
                     </Card>
 
                     <Card>
                         <CardHeader className="pb-2">
-                            <CardTitle>Pending</CardTitle>
-                            <CardDescription>Orders to process</CardDescription>
+                            <CardTitle>Menunggu</CardTitle>
+                            <CardDescription>Pesanan yang perlu diproses</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">{statusCounts.pending}</div>
-                            <p className="text-muted-foreground text-xs">Waiting for processing</p>
+                            <p className="text-muted-foreground text-xs">Menunggu untuk diproses</p>
                         </CardContent>
                     </Card>
 
                     <Card>
                         <CardHeader className="pb-2">
-                            <CardTitle>Processing</CardTitle>
-                            <CardDescription>Orders in process</CardDescription>
+                            <CardTitle>Diproses</CardTitle>
+                            <CardDescription>Pesanan dalam proses</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">{statusCounts.processing}</div>
-                            <p className="text-muted-foreground text-xs">Currently being handled</p>
+                            <p className="text-muted-foreground text-xs">Sedang ditangani</p>
                         </CardContent>
                     </Card>
 
                     <Card>
                         <CardHeader className="pb-2">
-                            <CardTitle>Shipped</CardTitle>
-                            <CardDescription>Orders shipped</CardDescription>
+                            <CardTitle>Dikirim</CardTitle>
+                            <CardDescription>Pesanan terkirim</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">{statusCounts.shipped + statusCounts.delivered}</div>
-                            <p className="text-muted-foreground text-xs">Shipped or delivered orders</p>
+                            <p className="text-muted-foreground text-xs">Pesanan dikirim atau diterima</p>
                         </CardContent>
                     </Card>
                 </div>
@@ -448,7 +448,7 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
                                     <Input
                                         type="search"
                                         name="search"
-                                        placeholder="Search orders..."
+                                        placeholder="Cari pesanan..."
                                         value={searchValue}
                                         onChange={(e) => setSearchValue(e.target.value)}
                                         className="w-full pl-8"
@@ -459,22 +459,22 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
                             <Tabs value={activeTab} onValueChange={handleStatusChange}>
                                 <TabsList className="grid w-full auto-cols-max grid-flow-col overflow-x-auto sm:flex sm:w-auto">
                                     <TabsTrigger className="min-w-[100px] text-center" value="all">
-                                        All ({statusCounts.all})
+                                        Semua ({statusCounts.all})
                                     </TabsTrigger>
                                     <TabsTrigger className="min-w-[100px] text-center" value="pending">
-                                        Pending ({statusCounts.pending})
+                                        Menunggu ({statusCounts.pending})
                                     </TabsTrigger>
                                     <TabsTrigger className="min-w-[100px] text-center" value="processing">
-                                        Processing ({statusCounts.processing})
+                                        Diproses ({statusCounts.processing})
                                     </TabsTrigger>
                                     <TabsTrigger className="min-w-[100px] text-center" value="shipped">
-                                        Shipped ({statusCounts.shipped})
+                                        Dikirim ({statusCounts.shipped})
                                     </TabsTrigger>
                                     <TabsTrigger className="min-w-[100px] text-center" value="delivered">
-                                        Delivered ({statusCounts.delivered})
+                                        Diterima ({statusCounts.delivered})
                                     </TabsTrigger>
                                     <TabsTrigger className="min-w-[100px] text-center" value="cancelled">
-                                        Cancelled ({statusCounts.cancelled})
+                                        Dibatalkan ({statusCounts.cancelled})
                                     </TabsTrigger>
                                 </TabsList>
                             </Tabs>
@@ -486,7 +486,7 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
                                 {table.getRowModel().rows.length ? (
                                     renderOrderCards()
                                 ) : (
-                                    <div className="text-muted-foreground py-10 text-center">No orders found</div>
+                                    <div className="text-muted-foreground py-10 text-center">Tidak ada pesanan ditemukan</div>
                                 )}
                             </div>
                         ) : (
@@ -519,7 +519,7 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
                                         ) : (
                                             <TableRow>
                                                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                                                    No orders found
+                                                    Tidak ada pesanan ditemukan
                                                 </TableCell>
                                             </TableRow>
                                         )}
@@ -531,16 +531,16 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
                     <CardFooter className="border-t px-4 py-4 sm:px-6">
                         <div className="flex w-full flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                             <div className="text-muted-foreground text-center text-sm sm:text-left">
-                                Showing{' '}
+                                Menampilkan{' '}
                                 {table.getFilteredRowModel().rows.length > 0
                                     ? table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1
                                     : 0}{' '}
-                                to{' '}
+                                sampai{' '}
                                 {Math.min(
                                     (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
                                     table.getFilteredRowModel().rows.length,
                                 )}{' '}
-                                of {table.getFilteredRowModel().rows.length} orders
+                                dari {table.getFilteredRowModel().rows.length} pesanan
                             </div>
                             <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6 lg:gap-8">
                                 <div className="flex w-full items-center gap-2 sm:w-auto">
@@ -641,17 +641,17 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
             <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                        <AlertDialogTitle>Apakah Anda yakin?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            This will permanently delete order{' '}
-                            <span className="font-semibold">{orderToDelete?.order_number || `#${orderToDelete?.id}`}</span>. This action cannot be
-                            undone.
+                            Tindakan ini akan menghapus pesanan{' '}
+                            <span className="font-semibold">{orderToDelete?.order_number || `#${orderToDelete?.id}`}</span> secara permanen. 
+                            Tindakan ini tidak dapat dibatalkan.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogCancel>Batal</AlertDialogCancel>
                         <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                            Delete
+                            Hapus
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>

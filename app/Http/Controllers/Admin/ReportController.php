@@ -71,9 +71,7 @@ class ReportController extends Controller
             }
 
             if ($data->isEmpty()) {
-                return response()->json([
-                    'message' => 'Tidak ada data penjualan untuk periode yang dipilih'
-                ], 404);
+                return back()->with('error', 'Tidak ada data penjualan untuk periode yang dipilih');
             }
 
             // Generate PDF menggunakan DomPDF
@@ -88,9 +86,7 @@ class ReportController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Error generating sales report: ' . $e->getMessage());
-            return response()->json([
-                'message' => 'Terjadi kesalahan saat membuat laporan: ' . $e->getMessage()
-            ], 500);
+            return back()->with('error', 'Terjadi kesalahan saat membuat laporan: ' . $e->getMessage());
         }
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
 {
@@ -15,15 +16,14 @@ class Product extends Model
         'description',
         'price',
         'stock',
+        'is_active',
         'image',
-        'rating',
-        'is_active'
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
         'price' => 'float',
-        'stock' => 'integer'
+        'stock' => 'integer',
+        'is_active' => 'boolean',
     ];
 
     public function images()
@@ -44,5 +44,19 @@ class Product extends Model
     public function cartItems()
     {
         return $this->hasMany(\App\Models\CartItem::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($product) {
+            // Delete associated images from storage
+            foreach ($product->images as $image) {
+                if (Storage::disk('public')->exists($image->image)) {
+                    Storage::disk('public')->delete($image->image);
+                }
+            }
+        });
     }
 }

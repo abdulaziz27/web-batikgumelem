@@ -59,11 +59,11 @@ interface ProductsIndexProps {
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Dashboard',
+        title: 'Dasbor',
         href: '/admin/dashboard',
     },
     {
-        title: 'Products',
+        title: 'Produk',
         href: '/admin/products',
     },
 ];
@@ -102,7 +102,7 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
     const columns: ColumnDef<Product>[] = [
         {
             accessorKey: 'image_url',
-            header: 'Image',
+            header: 'Gambar',
             cell: ({ row }) => {
                 const imageUrl = row.getValue('image_url') as string;
                 const name = row.getValue('name') as string;
@@ -115,7 +115,7 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
             header: ({ column }) => {
                 return (
                     <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="hover:bg-transparent">
-                        Name
+                        Nama
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 );
@@ -129,7 +129,7 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
             header: ({ column }) => {
                 return (
                     <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="hover:bg-transparent">
-                        Price
+                        Harga
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 );
@@ -141,7 +141,7 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
             header: ({ column }) => {
                 return (
                     <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="hover:bg-transparent">
-                        Stock
+                        Stok
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 );
@@ -152,7 +152,7 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
             header: 'Status',
             cell: ({ row }) => {
                 const isActive = row.getValue('is_active') as boolean;
-                return <Badge variant={isActive ? 'default' : 'outline'}>{isActive ? 'Active' : 'Inactive'}</Badge>;
+                return <Badge variant={isActive ? 'default' : 'outline'}>{isActive ? 'Aktif' : 'Nonaktif'}</Badge>;
             },
             enableColumnFilter: true,
             filterFn: (row, id, value) => {
@@ -163,7 +163,7 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
         },
         {
             id: 'actions',
-            header: 'Actions',
+            header: 'Aksi',
             cell: ({ row }) => {
                 const product = row.original;
                 return (
@@ -253,18 +253,18 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
                             <div>
                                 <h3 className="text-lg font-medium">{product.name}</h3>
                                 <Badge variant={product.is_active ? 'default' : 'outline'} className="mt-1">
-                                    {product.is_active ? 'Active' : 'Inactive'}
+                                    {product.is_active ? 'Aktif' : 'Nonaktif'}
                                 </Badge>
                             </div>
                         </div>
 
                         <div className="my-2 grid grid-cols-2 gap-2">
                             <div>
-                                <p className="text-muted-foreground text-sm">Price</p>
+                                <p className="text-muted-foreground text-sm">Harga</p>
                                 <p className="font-medium">{formatPrice(product.price)}</p>
                             </div>
                             <div>
-                                <p className="text-muted-foreground text-sm">Stock</p>
+                                <p className="text-muted-foreground text-sm">Stok</p>
                                 <p className="font-medium">{product.stock}</p>
                             </div>
                         </div>
@@ -272,7 +272,7 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
                         <div className="mt-3 flex justify-end space-x-2">
                             <Button variant="outline" size="sm" asChild className="h-9 px-3 py-1">
                                 <Link href={`/admin/products/${product.id}`}>
-                                    <Eye className="mr-1 h-4 w-4" /> View
+                                    <Eye className="mr-1 h-4 w-4" /> Lihat
                                 </Link>
                             </Button>
                             <Button variant="outline" size="sm" asChild className="h-9 px-3 py-1">
@@ -281,7 +281,7 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
                                 </Link>
                             </Button>
                             <Button variant="outline" size="sm" className="h-9 px-3 py-1" onClick={() => confirmDelete(product)}>
-                                <Trash className="mr-1 h-4 w-4" /> Delete
+                                <Trash className="mr-1 h-4 w-4" /> Hapus
                             </Button>
                         </div>
                     </CardContent>
@@ -292,15 +292,15 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
 
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
-            <Head title="Product Management" />
+            <Head title="Manajemen Produk" />
 
             <div className="space-y-6 p-3 sm:p-6">
                 <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-                    <h1 className="text-2xl font-bold tracking-tight">Product Management</h1>
+                    <h1 className="text-2xl font-bold tracking-tight">Manajemen Produk</h1>
                     <Button asChild className="w-full sm:w-auto">
                         <Link href="/admin/products/create">
                             <PlusCircle className="mr-2 h-4 w-4" />
-                            Add Product
+                            Tambah Produk
                         </Link>
                     </Button>
                 </div>
@@ -314,29 +314,25 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
                                 <Search className="text-muted-foreground absolute top-2.5 left-2.5 h-4 w-4" />
                                 <Input
                                     type="search"
-                                    placeholder="Search by name..."
+                                    placeholder="Cari produk..."
                                     value={searchValue}
                                     onChange={(e) => setSearchValue(e.target.value)}
                                     className="w-full pl-8"
                                 />
                             </div>
-
-                            <div className="flex items-center gap-2">
-                                <span className="text-muted-foreground mr-2 text-sm">Status:</span>
-                                <Select
-                                    value={(table.getColumn('is_active')?.getFilterValue() as string) ?? 'all'}
-                                    onValueChange={(value) => table.getColumn('is_active')?.setFilterValue(value)}
-                                >
-                                    <SelectTrigger className="h-9 w-full sm:w-[140px]">
-                                        <SelectValue placeholder="Filter status" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="all">All</SelectItem>
-                                        <SelectItem value="active">Active</SelectItem>
-                                        <SelectItem value="inactive">Inactive</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
+                            <Select
+                                value={table.getColumn('is_active')?.getFilterValue() as string ?? 'all'}
+                                onValueChange={(value) => table.getColumn('is_active')?.setFilterValue(value)}
+                            >
+                                <SelectTrigger className="w-full sm:w-[180px]">
+                                    <SelectValue placeholder="Filter status" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="all">Semua Status</SelectItem>
+                                    <SelectItem value="active">Aktif</SelectItem>
+                                    <SelectItem value="inactive">Nonaktif</SelectItem>
+                                </SelectContent>
+                            </Select>
                         </div>
                     </CardHeader>
                     <CardContent className="px-4 sm:px-6">
@@ -345,7 +341,7 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
                                 {table.getRowModel().rows?.length ? (
                                     renderProductCards()
                                 ) : (
-                                    <div className="text-muted-foreground py-10 text-center">No products found</div>
+                                    <div className="text-muted-foreground py-10 text-center">Tidak ada produk ditemukan</div>
                                 )}
                             </div>
                         ) : (
@@ -378,7 +374,7 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
                                         ) : (
                                             <TableRow>
                                                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                                                    No products found
+                                                    Tidak ada produk ditemukan
                                                 </TableCell>
                                             </TableRow>
                                         )}
@@ -390,16 +386,14 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
                     <CardFooter className="px-4 py-4 sm:px-6">
                         <div className="flex w-full flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                             <div className="text-muted-foreground text-center text-sm sm:text-left">
-                                Showing {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} to{' '}
-                                {Math.min(
+                                Menampilkan {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} ke {Math.min(
                                     (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
                                     table.getFilteredRowModel().rows.length,
-                                )}{' '}
-                                of {table.getFilteredRowModel().rows.length} products
+                                )} dari {table.getFilteredRowModel().rows.length} produk
                             </div>
                             <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6 lg:gap-8">
                                 <div className="flex w-full items-center gap-2 sm:w-auto">
-                                    <p className="text-sm font-medium whitespace-nowrap">Rows per page</p>
+                                    <p className="text-sm font-medium whitespace-nowrap">Baris per halaman</p>
                                     <Select
                                         value={`${table.getState().pagination.pageSize}`}
                                         onValueChange={(value) => {
@@ -453,7 +447,7 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
                                             <ChevronLeft className="h-4 w-4" />
                                         </Button>
                                         <div className="flex items-center gap-1">
-                                            <span className="text-sm">Page</span>
+                                            <span className="text-sm">Halaman</span>
                                             <strong className="text-sm font-medium">
                                                 {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
                                             </strong>
@@ -501,16 +495,15 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
             <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                        <AlertDialogTitle>Apakah Anda yakin?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            This will permanently delete the product "{productToDelete?.name}". This action cannot be undone.
+                            Tindakan ini tidak dapat dibatalkan. Ini akan menghapus produk{' '}
+                            <span className="font-medium">{productToDelete?.name}</span> secara permanen dan menghapus datanya dari server.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground">
-                            Delete
-                        </AlertDialogAction>
+                        <AlertDialogCancel>Batal</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDelete}>Hapus</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

@@ -16,7 +16,6 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->integer('stock')->default(0);
             $table->string('image')->nullable();
-            $table->decimal('rating', 3, 1)->nullable();
             $table->timestamps();
         });
     }

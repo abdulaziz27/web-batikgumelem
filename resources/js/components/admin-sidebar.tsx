@@ -4,12 +4,12 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, LayoutGrid, Package, Pencil, ShoppingCart, BarChart3 } from 'lucide-react';
+import { BookOpen, LayoutGrid, Package, Pencil, ShoppingCart, BarChart3, Users } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const adminNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
+        title: 'Dasbor',
         href: '/admin/dashboard',
         icon: LayoutGrid,
     },
@@ -22,6 +22,11 @@ const adminNavItems: NavItem[] = [
         title: 'Pesanan',
         href: '/admin/orders',
         icon: ShoppingCart,
+    },
+    {
+        title: 'Pengguna',
+        href: '/admin/users',
+        icon: Users,
     },
     {
         title: 'Blog',
@@ -37,7 +42,7 @@ const adminNavItems: NavItem[] = [
 
 const footerNavItems: NavItem[] = [
     {
-        title: 'Toko',
+        title: 'Lihat Toko',
         href: '/',
         icon: ShoppingCart,
     },

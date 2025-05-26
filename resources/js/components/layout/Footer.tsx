@@ -15,61 +15,6 @@ const Footer = () => {
                             Melestarikan warisan budaya Batik Gumelem dari Banjarnegara, Jawa Tengah. Setiap kain batik kami dibuat dengan teknik
                             tradisional dan mengandung filosofi mendalam.
                         </p>
-                        <div className="mt-6 flex space-x-4">
-                            <a
-                                href="https://www.tokopedia.com"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="hover:text-batik-indigo text-gray-500 transition-colors"
-                            >
-                                <span className="sr-only">Tokopedia</span>
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    className="h-5 w-5"
-                                >
-                                    <path d="M9 10V6a3 3 0 0 1 3-3v0a3 3 0 0 1 3 3v4" />
-                                    <path d="M7 11v5a6 6 0 0 0 12 0v-5" />
-                                    <rect width="18" height="11" x="3" y="3" rx="2" />
-                                    <path d="M12 19v3" />
-                                    <path d="M10 22h4" />
-                                </svg>
-                            </a>
-                            <a
-                                href="https://www.youtube.com"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="hover:text-batik-indigo text-gray-500 transition-colors"
-                            >
-                                <span className="sr-only">Youtube</span>
-                                <Youtube className="h-5 w-5" />
-                            </a>
-                            <a
-                                href="https://www.instagram.com"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="hover:text-batik-indigo text-gray-500 transition-colors"
-                            >
-                                <span className="sr-only">Instagram</span>
-                                <Instagram className="h-5 w-5" />
-                            </a>
-                            <a
-                                href="https://www.facebook.com"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="hover:text-batik-indigo text-gray-500 transition-colors"
-                            >
-                                <span className="sr-only">Facebook</span>
-                                <Facebook className="h-5 w-5" />
-                            </a>
-                        </div>
                     </div>
 
                     {/* Quick Links Section */}

@@ -89,11 +89,11 @@ class ShippingAddressController extends Controller
         if ($request->wantsJson()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Address added successfully',
+                'message' => 'Alamat berhasil ditambahkan',
             ]);
         }
 
-        return redirect()->back()->with('success', 'Address added successfully');
+        return redirect()->back()->with('success', 'Alamat berhasil ditambahkan');
     }
 
     public function update(Request $request, $id)
@@ -135,7 +135,7 @@ class ShippingAddressController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'Address updated successfully');
+        return redirect()->route('addresses.index')->with('success', 'Alamat berhasil diperbarui');
     }
 
     public function destroy($id)
@@ -149,11 +149,11 @@ class ShippingAddressController extends Controller
         if (request()->wantsJson()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Address deleted successfully',
+                'message' => 'Alamat berhasil dihapus',
             ]);
         }
 
-        return redirect()->back()->with('success', 'Address deleted successfully');
+        return redirect()->back()->with('success', 'Alamat berhasil dihapus');
     }
 
     /**
@@ -176,10 +176,10 @@ class ShippingAddressController extends Controller
         if (request()->wantsJson()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Address set as default successfully',
+                'message' => 'Address telah diatur sebagai default',
             ]);
         }
         
-        return redirect()->back()->with('success', 'Address set as default successfully');
+        return redirect()->back()->with('success', 'Alamat telah diatur sebagai default');
     }
 }

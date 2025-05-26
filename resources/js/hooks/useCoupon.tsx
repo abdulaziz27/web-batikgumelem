@@ -44,14 +44,12 @@ export const CouponProvider = ({ children }: { children: ReactNode }) => {
 
     const applyCoupon = (code: string) => {
         if (!code) {
-            toast('Kode kupon tidak boleh kosong', {
-                description: 'Silakan masukkan kode kupon',
-            });
+            // toast('Kode kupon tidak boleh kosong', {
+            //     description: 'Silakan masukkan kode kupon',
+            // });
             return;
         }
-
         setIsLoading(true);
-
         router.post(
             '/checkout/coupon',
             { code },
@@ -61,19 +59,19 @@ export const CouponProvider = ({ children }: { children: ReactNode }) => {
                     if (page && page.props && page.props.coupon) {
                         const couponData = page.props.coupon;
                         setActiveCoupon(couponData);
-                        toast('Kupon berhasil diterapkan', {
-                            description: `Diskon ${couponData.discount_percent}% telah diterapkan ke pesanan Anda`,
-                        });
+                        // toast('Kupon berhasil diterapkan', {
+                        //     description: `Diskon ${couponData.discount_percent}% telah diterapkan ke pesanan Anda`,
+                        // });
                     } else {
-                        toast.error('Kupon tidak valid', {
-                            description: page.props.error || 'Kode kupon yang Anda masukkan tidak dapat digunakan',
-                        });
+                        // toast.error('Kupon tidak valid', {
+                        //     description: page.props.error || 'Kode kupon yang Anda masukkan tidak dapat digunakan',
+                        // });
                     }
                 },
                 onError: (errors: any) => {
-                    toast.error('Gagal menerapkan kupon', {
-                        description: errors.message || 'Terjadi kesalahan saat mencoba menerapkan kupon',
-                    });
+                    // toast.error('Gagal menerapkan kupon', {
+                    //     description: errors.message || 'Terjadi kesalahan saat mencoba menerapkan kupon',
+                    // });
                 },
                 onFinish: () => {
                     setIsLoading(false);
@@ -84,21 +82,19 @@ export const CouponProvider = ({ children }: { children: ReactNode }) => {
 
     const removeCoupon = () => {
         if (!activeCoupon) return;
-
         setIsLoading(true);
-
         router.delete('/checkout/coupon', {
             preserveState: true,
             onSuccess: (page: any) => {
                 setActiveCoupon(null);
-                toast('Kupon dihapus', {
-                    description: 'Kupon telah dihapus dari pesanan Anda',
-                });
+                // toast('Kupon dihapus', {
+                //     description: 'Kupon telah dihapus dari pesanan Anda',
+                // });
             },
             onError: (errors: any) => {
-                toast.error('Gagal menghapus kupon', {
-                    description: errors.message || 'Terjadi kesalahan saat mencoba menghapus kupon',
-                });
+                // toast.error('Gagal menghapus kupon', {
+                //     description: errors.message || 'Terjadi kesalahan saat mencoba menghapus kupon',
+                // });
             },
             onFinish: () => {
                 setIsLoading(false);

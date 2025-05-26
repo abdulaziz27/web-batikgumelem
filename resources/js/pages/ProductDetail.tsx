@@ -51,8 +51,20 @@ interface ProductDetailProps {
 
 const ProductDetail = () => {
     const { product, relatedProducts } = usePage().props as unknown as ProductDetailProps;
-    const { addToCart } = useCart();
     const { auth } = usePage().props as any;
+
+    // Safer cart access with try-catch (same pattern as other components)
+    let addToCart = (item: any) => {
+        console.warn("Cart provider not available, cannot add to cart");
+        toast.error('Fitur keranjang tidak tersedia saat ini');
+    };
+    
+    try {
+        const cart = useCart();
+        addToCart = cart.addToCart;
+    } catch (error) {
+        console.warn("Cart provider not available, using fallback");
+    }
 
     // Default to first size if available
     const [selectedSize, setSelectedSize] = useState<string>(product.sizes && product.sizes.length > 0 ? product.sizes[0].size : '');
@@ -81,14 +93,20 @@ const ProductDetail = () => {
             router.visit('/login');
             return;
         }
-        addToCart({
-            id: product.id,
-            name: product.name,
-            price: product.price,
-            image: product.image,
-            size: selectedSize,
-            quantity: quantity,
-        });
+        
+        try {
+            addToCart({
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                image: product.image,
+                size: selectedSize,
+                quantity: quantity,
+            });
+        } catch (error) {
+            console.error('Error adding to cart:', error);
+            toast.error('Gagal menambahkan produk ke keranjang');
+        }
     };
 
     const handleIncreaseQuantity = () => {
