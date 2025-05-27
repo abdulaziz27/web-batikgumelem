@@ -23,6 +23,7 @@ interface OrderItem {
         name: string;
         slug: string;
         images: string[];
+        image?: string;
     };
     quantity: number;
     price: number;
@@ -421,7 +422,7 @@ export default function OrderDetail({ order }: OrderDetailProps) {
                                         <div key={item.id} className="flex items-start space-x-4">
                                             <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border">
                                                 <img
-                                                    src={item.product.images[0] || '/images/placeholder.png'}
+                                                    src={item.product.image ? `/storage/${item.product.image}` : '/images/placeholder.png'}
                                                     alt={item.product.name}
                                                     className="h-full w-full object-cover object-center"
                                                 />

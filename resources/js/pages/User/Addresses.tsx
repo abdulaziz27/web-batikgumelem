@@ -196,24 +196,28 @@ export default function Addresses({ addresses = [] }: AddressesProps) {
                                 />
                             </div>
 
-                            {!editingAddress?.is_default && (
-                                <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label htmlFor="is_default" className="text-right">
-                                        Alamat Utama
-                                    </Label>
-                                    <div className="col-span-3 flex items-center space-x-2">
-                                        <input
-                                            type="checkbox"
-                                            id="is_default"
-                                            name="is_default"
-                                            value="1"
-                                            defaultChecked={editingAddress?.is_default || false}
-                                            className="text-primary focus:ring-primary h-4 w-4 rounded border-gray-300"
-                                        />
-                                        <span className="text-muted-foreground text-sm">Jadikan alamat utama</span>
-                                    </div>
+                            {/* Checkbox untuk alamat utama */}
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="is_default" className="text-right">
+                                    Alamat Utama
+                                </Label>
+                                <div className="col-span-3 flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        id="is_default"
+                                        name="is_default"
+                                        value="1"
+                                        defaultChecked={editingAddress?.is_default || false}
+                                        className="text-primary focus:ring-primary h-4 w-4 rounded border-gray-300"
+                                    />
+                                    <span className="text-muted-foreground text-sm">
+                                        {editingAddress?.is_default 
+                                            ? "Ini adalah alamat utama Anda" 
+                                            : "Jadikan sebagai alamat utama"}
+                                    </span>
                                 </div>
-                            )}
+                            </div>
+
                         </div>
                         <DialogFooter>
                             <Button type="submit">{editingAddress ? 'Simpan Perubahan' : 'Tambah Alamat'}</Button>

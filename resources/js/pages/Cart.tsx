@@ -109,7 +109,7 @@ const CartContent = () => {
                                             <TableCell>
                                                 <Link href={`/products/${item.slug || item.id}`}>
                                                     <img
-                                                        src={item.image}
+                                                        src={`/storage/${item.image}`}
                                                         alt={item.name}
                                                         className="h-24 w-24 rounded-md object-cover object-center"
                                                     />

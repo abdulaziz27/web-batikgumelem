@@ -132,7 +132,7 @@ class ShippingAddressController extends Controller
         if ($request->wantsJson()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Address updated successfully',
+                'message' => 'Alamat berhasil diperbarui',
             ]);
         }
 
@@ -163,24 +163,23 @@ class ShippingAddressController extends Controller
     public function setDefault($id)
     {
         $user = auth()->user();
-        
-        // Reset all default addresses
-        ShippingAddress::where('user_id', $user->id)
-            ->update(['is_default' => false]);
-        
-        // Set the selected address as default
         $address = ShippingAddress::where('user_id', $user->id)
             ->findOrFail($id);
-        
+
+        // Reset all addresses to non-default
+        ShippingAddress::where('user_id', $user->id)
+            ->update(['is_default' => false]);
+
+        // Set the selected address as default
         $address->update(['is_default' => true]);
-        
+
         if (request()->wantsJson()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Address telah diatur sebagai default',
+                'message' => 'Alamat utama berhasil diubah',
             ]);
         }
-        
-        return redirect()->back()->with('success', 'Alamat telah diatur sebagai default');
+
+        return redirect()->route('addresses.index')->with('success', 'Alamat utama berhasil diubah');
     }
 }
