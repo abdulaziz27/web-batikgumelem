@@ -106,7 +106,7 @@ const Blog = ({ blogs, filters }: BlogProps) => {
                             <Link key={post.id} href={`/blog/${post.slug}`} className="group product-card hover-lift animate-fade-in overflow-hidden">
                                 <div className="aspect-video overflow-hidden">
                                     <img
-                                        src={`/storage/${post.image}`}
+                                        src={post.image}
                                         alt={post.title}
                                         className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                                     />

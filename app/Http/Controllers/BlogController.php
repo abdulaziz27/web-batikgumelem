@@ -32,6 +32,12 @@ class BlogController extends Controller
 
         $blogs = $query->latest()->paginate(6);
 
+        // Transform blog images to include proper URLs
+        $blogs->through(function ($blog) {
+            $blog->image = $blog->image ? asset('storage/' . $blog->image) : null;
+            return $blog;
+        });
+
         return Inertia::render('Blog', [
             'blogs' => $blogs,
             'filters' => $request->only(['search', 'category']),
@@ -61,13 +67,20 @@ class BlogController extends Controller
     public function show($slug)
     {
         $blog = Blog::where('slug', $slug)->firstOrFail();
+        
+        // Add proper image URL
+        $blog->image = $blog->image ? asset('storage/' . $blog->image) : null;
 
         // Get related blogs
         $relatedBlogs = Blog::where('id', '!=', $blog->id)
             ->where('category', $blog->category)
             ->latest()
             ->take(3)
-            ->get();
+            ->get()
+            ->map(function ($blog) {
+                $blog->image = $blog->image ? asset('storage/' . $blog->image) : null;
+                return $blog;
+            });
 
         return Inertia::render('BlogDetail', [
             'blog' => $blog,

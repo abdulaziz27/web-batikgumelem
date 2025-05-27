@@ -49,7 +49,20 @@ class ProductController extends Controller
             $query->orderBy('created_at', 'desc');
         }
 
-        $products = $query->paginate(15)->withQueryString();
+        $products = $query->paginate(15)->through(function ($product) {
+            // Transform the product to include proper image URL
+            $product->image = $product->image ? asset('storage/' . $product->image) : null;
+            
+            // Transform product images if they exist
+            if ($product->images) {
+                $product->images->transform(function ($image) {
+                    $image->image = asset('storage/' . $image->image);
+                    return $image;
+                });
+            }
+            
+            return $product;
+        })->withQueryString();
 
         return Inertia::render('Products', [
             'products' => $products,
