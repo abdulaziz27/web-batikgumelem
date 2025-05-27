@@ -40,31 +40,67 @@ class ReportController extends Controller
             // Group by berdasarkan tipe laporan
             switch($request->type) {
                 case 'daily':
-                    $data = $query->groupBy(DB::raw('DATE(created_at)'))
-                        ->select(
-                            DB::raw('DATE(created_at) as date'),
-                            DB::raw('COUNT(*) as total_orders'),
-                            DB::raw('SUM(total_amount) as total_sales')
-                        )
-                        ->get();
+                    $data = $query->get()->groupBy(function($order) {
+                        return $order->created_at->format('Y-m-d');
+                    })->map(function($orders) {
+                        return [
+                            'date' => $orders->first()->created_at->format('Y-m-d'),
+                            'orders' => $orders->map(function($order) {
+                                return [
+                                    'id' => $order->id,
+                                    'order_number' => $order->order_number,
+                                    'status' => $order->status,
+                                    'total_amount' => $order->total_amount,
+                                    'created_at' => $order->created_at->format('d/m/Y H:i')
+                                ];
+                            }),
+                            'total_orders' => $orders->count(),
+                            'total_sales' => $orders->sum('total_amount'),
+                            'completed_sales' => $orders->where('status', 'completed')->sum('total_amount')
+                        ];
+                    })->values();
                     break;
                 case 'weekly':
-                    $data = $query->groupBy(DB::raw('YEARWEEK(created_at)'))
-                        ->select(
-                            DB::raw('YEARWEEK(created_at) as week'),
-                            DB::raw('COUNT(*) as total_orders'),
-                            DB::raw('SUM(total_amount) as total_sales')
-                        )
-                        ->get();
+                    $data = $query->get()->groupBy(function($order) {
+                        return $order->created_at->format('W');
+                    })->map(function($orders) {
+                        return [
+                            'week' => $orders->first()->created_at->format('W'),
+                            'orders' => $orders->map(function($order) {
+                                return [
+                                    'id' => $order->id,
+                                    'order_number' => $order->order_number,
+                                    'status' => $order->status,
+                                    'total_amount' => $order->total_amount,
+                                    'created_at' => $order->created_at->format('d/m/Y H:i')
+                                ];
+                            }),
+                            'total_orders' => $orders->count(),
+                            'total_sales' => $orders->sum('total_amount'),
+                            'completed_sales' => $orders->where('status', 'completed')->sum('total_amount')
+                        ];
+                    })->values();
                     break;
                 case 'monthly':
-                    $data = $query->groupBy(DB::raw('DATE_FORMAT(created_at, "%Y-%m")'))
-                        ->select(
-                            DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
-                            DB::raw('COUNT(*) as total_orders'),
-                            DB::raw('SUM(total_amount) as total_sales')
-                        )
-                        ->get();
+                    $data = $query->get()->groupBy(function($order) {
+                        return $order->created_at->format('Y-m');
+                    })->map(function($orders) {
+                        return [
+                            'month' => $orders->first()->created_at->format('Y-m'),
+                            'orders' => $orders->map(function($order) {
+                                return [
+                                    'id' => $order->id,
+                                    'order_number' => $order->order_number,
+                                    'status' => $order->status,
+                                    'total_amount' => $order->total_amount,
+                                    'created_at' => $order->created_at->format('d/m/Y H:i')
+                                ];
+                            }),
+                            'total_orders' => $orders->count(),
+                            'total_sales' => $orders->sum('total_amount'),
+                            'completed_sales' => $orders->where('status', 'completed')->sum('total_amount')
+                        ];
+                    })->values();
                     break;
                 default:
                     throw new \Exception('Invalid report type');

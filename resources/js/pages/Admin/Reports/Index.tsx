@@ -1,6 +1,7 @@
 import { Head, router } from '@inertiajs/react';
 import { Download } from 'lucide-react';
 import { useState } from 'react';
+import axios from 'axios';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -29,28 +30,39 @@ export default function ReportsIndex() {
     const [reportType, setReportType] = useState('daily');
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleDownload = () => {
+    const handleDownload = async () => {
         if (!dateRange.start_date || !dateRange.end_date) {
             return;
         }
 
         setIsLoading(true);
 
-        // Use Inertia's router.get with preserveState and preserveScroll
-        router.get(
-            '/admin/reports/sales',
-            {
-                start_date: dateRange.start_date,
-                end_date: dateRange.end_date,
-                type: reportType,
-                format: 'pdf',
-            },
-            {
-                preserveState: true,
-                preserveScroll: true,
-                onFinish: () => setIsLoading(false),
-            },
-        );
+        try {
+            const response = await axios.get('/admin/reports/sales', {
+                params: {
+                    start_date: dateRange.start_date,
+                    end_date: dateRange.end_date,
+                    type: reportType,
+                    format: 'pdf',
+                },
+                responseType: 'blob',
+            });
+
+            // Create download link
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'sales-report.pdf');
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Error downloading report:', error);
+            // You might want to show an error message to the user here
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
