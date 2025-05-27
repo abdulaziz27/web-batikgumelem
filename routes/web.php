@@ -67,7 +67,7 @@ Route::get('/privacy', function () {
 })->name('privacy');
 
 // Cart Routes
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::get('/cart/data', [CartController::class, 'getData'])->name('cart.data');
     Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
@@ -96,7 +96,7 @@ Route::middleware(['auth'])->group(function () {
 Route::post('/api/ai-chat', [AIChatController::class, 'ask'])->middleware('throttle:10,1');
 
 // Authenticated User Routes (both user and admin)
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
     Route::put('/orders/{id}/complete', [OrderController::class, 'markAsCompleted'])->name('orders.complete');
