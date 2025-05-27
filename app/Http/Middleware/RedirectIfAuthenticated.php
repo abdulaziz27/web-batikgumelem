@@ -26,8 +26,8 @@ class RedirectIfAuthenticated
                     return redirect()->route('admin.dashboard');
                 }
                 
-                // Otherwise, redirect to user dashboard
-                return redirect()->route('dashboard');
+                // Otherwise, redirect to home page
+                return redirect('/');
             }
         }
 
