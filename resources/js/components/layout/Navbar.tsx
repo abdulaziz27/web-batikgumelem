@@ -110,7 +110,7 @@ const Navbar = () => {
                                     <DropdownMenuSeparator />
                                     <DropdownMenuGroup>
                                         <DropdownMenuItem asChild>
-                                            <Link href="settings/profile" className="flex w-full cursor-pointer items-center">
+                                            <Link href="/settings/profile" className="flex w-full cursor-pointer items-center">
                                                 <User className="mr-2 h-4 w-4" />
                                                 <span>Profile</span>
                                             </Link>
@@ -197,7 +197,7 @@ const Navbar = () => {
                         {auth.user ? (
                             <>
                                 <Link
-                                    href="/profile"
+                                    href="/settings/profile"
                                     className="text-batik-brown hover:bg-batik-cream hover:text-batik-indigo block rounded-md px-3 py-2 text-base font-medium"
                                     onClick={() => setIsMenuOpen(false)}
                                 >
@@ -210,15 +210,16 @@ const Navbar = () => {
                                 >
                                     Pesanan Saya
                                 </Link>
-                                <Link
-                                    href={route('logout')}
-                                    method="post"
-                                    as="button"
-                                    className="block w-full rounded-md px-3 py-2 text-left text-base font-medium text-red-600 hover:bg-red-50"
-                                    onClick={() => setIsMenuOpen(false)}
+                                <Button
+                                    variant="ghost"
+                                    className="text-batik-brown hover:bg-batik-cream hover:text-batik-indigo block w-full rounded-md px-3 py-2 text-left text-base font-medium"
+                                    onClick={() => {
+                                        setIsMenuOpen(false);
+                                        window.history.back();
+                                    }}
                                 >
-                                    Keluar
-                                </Link>
+                                    Kembali
+                                </Button>
                             </>
                         ) : (
                             <Link

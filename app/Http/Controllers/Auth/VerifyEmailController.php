@@ -25,6 +25,6 @@ class VerifyEmailController extends Controller
             event(new Verified($user));
         }
 
-        return redirect()->intended('/?verified=1');
+        return redirect()->intended('/?verified=1')->with('success', 'Email berhasil diverifikasi! Sekarang Anda dapat mengakses semua fitur.');
     }
 }

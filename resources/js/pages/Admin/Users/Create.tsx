@@ -9,6 +9,7 @@ import { Separator } from '@/components/ui/separator';
 import AdminLayout from '@/layouts/admin-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Link } from '@inertiajs/react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -25,12 +26,17 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Create() {
+interface CreateProps {
+    roles: string[];
+}
+
+export default function Create({ roles }: CreateProps) {
     const { data, setData, post, processing, errors } = useForm({
         name: '',
         email: '',
         password: '',
         password_confirmation: '',
+        role: 'user',
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -83,6 +89,23 @@ export default function Create() {
                                         placeholder="Masukkan email"
                                     />
                                     {errors.email && <p className="text-destructive text-sm">{errors.email}</p>}
+                                </div>
+
+                                <div className="grid gap-2">
+                                    <Label htmlFor="role">Role</Label>
+                                    <Select value={data.role} onValueChange={(value) => setData('role', value)}>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Pilih role" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {roles.map((role) => (
+                                                <SelectItem key={role} value={role}>
+                                                    {role === 'admin' ? 'Admin' : 'User'}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    {errors.role && <p className="text-destructive text-sm">{errors.role}</p>}
                                 </div>
 
                                 <div className="grid gap-2">

@@ -327,62 +327,57 @@ class CheckoutController extends Controller
             // Simpan status lama sebelum update
             $oldStatus = $order->status;
             
-            // Fix: Define status code variable, it was missing
-            $statusCode = 200;
-            
             // Update order status berdasarkan transaction_status
-            if ($statusCode == 200) {
-                switch ($transactionStatus) {
-                    case 'capture':
-                        // Untuk kartu kredit, perlu cek fraud_status
-                        if ($fraudStatus == 'challenge') {
-                            $order->update([
-                                'payment_status' => 'challenge',
-                                'status' => 'pending'
-                            ]);
-                        } else {
-                            $order->update([
-                                'payment_status' => 'paid',
-                                'status' => 'processing'
-                            ]);
-                        }
-                        break;
-                        
-                    case 'settlement':
+            switch ($transactionStatus) {
+                case 'capture':
+                    // Untuk kartu kredit, perlu cek fraud_status
+                    if ($fraudStatus == 'challenge') {
+                        $order->update([
+                            'payment_status' => 'challenge',
+                            'status' => 'pending'
+                        ]);
+                    } else {
                         $order->update([
                             'payment_status' => 'paid',
                             'status' => 'processing'
                         ]);
-                        break;
-                        
-                    case 'pending':
-                        $order->update([
-                            'payment_status' => 'pending',
-                            'status' => 'pending'
-                        ]);
-                        break;
-                        
-                    case 'deny':
-                    case 'cancel':
-                    case 'expire':
-                        $order->update([
-                            'payment_status' => 'failed',
-                            'status' => 'cancelled'
-                        ]);
-                        break;
-                        
-                    default:
-                        $order->update([
-                            'payment_status' => 'pending',
-                            'status' => 'pending'
-                        ]);
-                        break;
-                }
+                    }
+                    break;
+                    
+                case 'settlement':
+                    $order->update([
+                        'payment_status' => 'paid',
+                        'status' => 'processing'
+                    ]);
+                    break;
+                    
+                case 'pending':
+                    $order->update([
+                        'payment_status' => 'pending',
+                        'status' => 'pending'
+                    ]);
+                    break;
+                    
+                case 'deny':
+                case 'cancel':
+                case 'expire':
+                    $order->update([
+                        'payment_status' => 'failed',
+                        'status' => 'cancelled'
+                    ]);
+                    break;
+                    
+                default:
+                    $order->update([
+                        'payment_status' => 'pending',
+                        'status' => 'pending'
+                    ]);
+                    break;
             }
             
             // Trigger event jika status berubah
-            if ($oldStatus !== 'processing') {
-                event(new OrderStatusChanged($order, $oldStatus, 'processing'));
+            if ($oldStatus !== $order->status) {
+                event(new OrderStatusChanged($order, $oldStatus, $order->status));
             }
             
             // Log status setelah update

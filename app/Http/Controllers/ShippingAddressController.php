@@ -112,7 +112,8 @@ class ShippingAddressController extends Controller
         $address = ShippingAddress::where('user_id', $user->id)
             ->findOrFail($id);
 
-        if ($request->is_default) {
+        // If setting as default, reset other addresses
+        if ($request->boolean('is_default')) {
             ShippingAddress::where('user_id', $user->id)
                 ->where('id', '!=', $id)
                 ->update(['is_default' => false]);
@@ -125,7 +126,7 @@ class ShippingAddressController extends Controller
             'province' => $request->province,
             'postal_code' => $request->postal_code,
             'phone' => $request->phone,
-            'is_default' => $request->is_default ?? false,
+            'is_default' => $request->boolean('is_default'),
         ]);
 
         if ($request->wantsJson()) {

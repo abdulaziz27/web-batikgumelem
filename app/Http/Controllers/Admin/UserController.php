@@ -14,6 +14,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::latest()
+            ->with('roles')
             ->select('id', 'name', 'email', 'created_at')
             ->get()
             ->map(function ($user) {
@@ -21,6 +22,7 @@ class UserController extends Controller
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
+                    'role' => $user->roles->first()?->name ?? 'user',
                     'created_at' => $user->created_at->format('d M Y'),
                 ];
             });
@@ -32,7 +34,10 @@ class UserController extends Controller
 
     public function create()
     {
-        return Inertia::render('Admin/Users/Create');
+        $roles = ['admin', 'user'];
+        return Inertia::render('Admin/Users/Create', [
+            'roles' => $roles,
+        ]);
     }
 
     public function store(Request $request)
@@ -41,13 +46,17 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => ['required', Password::defaults()],
+            'role' => 'required|string|in:admin,user',
         ]);
 
-        User::create([
+        $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
         ]);
+
+        // Assign role
+        $user->assignRole($validated['role']);
 
         return redirect()->route('admin.users.index')
             ->with('success', 'Pengguna berhasil ditambahkan');
@@ -55,14 +64,17 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        $user = User::findOrFail($id);
+        $user = User::with('roles')->findOrFail($id);
+        $roles = ['admin', 'user'];
 
         return Inertia::render('Admin/Users/Edit', [
             'user' => [
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
+                'role' => $user->roles->first()?->name ?? 'user',
             ],
+            'roles' => $roles,
         ]);
     }
 
@@ -74,6 +86,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $id,
             'password' => $request->filled('password') ? ['required', Password::defaults()] : '',
+            'role' => 'required|string|in:admin,user',
         ]);
 
         $updateData = [
@@ -86,6 +99,9 @@ class UserController extends Controller
         }
 
         $user->update($updateData);
+
+        // Update role
+        $user->syncRoles([$validated['role']]);
 
         return redirect()->route('admin.users.index')
             ->with('success', 'Pengguna berhasil diperbarui');

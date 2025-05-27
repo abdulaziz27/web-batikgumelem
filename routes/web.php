@@ -34,6 +34,11 @@ require __DIR__ . '/auth.php';
 // Settings Routes
 require __DIR__ . '/settings.php';
 
+// Midtrans notification endpoint (must be public)
+Route::post('/checkout/notification', [CheckoutController::class, 'notification'])
+    ->name('checkout.notification')
+    ->withoutMiddleware(['auth', 'verified']);
+
 // Products, Blogs, and Public Pages
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{slug}', [ProductController::class, 'show'])->name('products.show');
@@ -66,15 +71,18 @@ Route::get('/privacy', function () {
     return Inertia::render('Privacy');
 })->name('privacy');
 
-// Cart Routes
-Route::middleware(['auth', 'verified'])->group(function () {
+// Cart Routes (No verification required)
+Route::middleware(['auth'])->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::get('/cart/data', [CartController::class, 'getData'])->name('cart.data');
     Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
     Route::put('/cart', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart', [CartController::class, 'destroy'])->name('cart.destroy');
     Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+});
 
+// Routes that require email verification
+Route::middleware(['auth', 'verified'])->group(function () {
     // Checkout Routes
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout/shipping', [CheckoutController::class, 'calculateShipping'])
@@ -83,13 +91,24 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/checkout/payment', [CheckoutController::class, 'payment'])->name('checkout.payment');
     Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
     Route::get('/checkout/cancel', [CheckoutController::class, 'cancel'])->name('checkout.cancel');
-    Route::post('/checkout/notification', [CheckoutController::class, 'notification'])
-        ->name('checkout.notification');
     Route::get('/checkout/check-status/{order_id}', [CheckoutController::class, 'checkPaymentStatus'])
         ->name('checkout.check-status');
     Route::post('/checkout/coupon', [CheckoutController::class, 'applyCoupon'])->name('checkout.coupon.apply');
     Route::delete('/checkout/coupon', [CheckoutController::class, 'removeCoupon'])->name('checkout.coupon.remove');
     Route::put('/orders/{id}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
+
+    // Order Routes
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
+
+    // User Dashboard Routes
+    Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard');
+
+    // Shipping Address Routes
+    Route::get('/shipping-addresses', [ShippingAddressController::class, 'index'])->name('shipping-addresses.index');
+    Route::post('/shipping-addresses', [ShippingAddressController::class, 'store'])->name('shipping-addresses.store');
+    Route::put('/shipping-addresses/{id}', [ShippingAddressController::class, 'update'])->name('shipping-addresses.update');
+    Route::delete('/shipping-addresses/{id}', [ShippingAddressController::class, 'destroy'])->name('shipping-addresses.destroy');
 });
 
 // AI Chat API

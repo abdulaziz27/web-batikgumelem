@@ -10,18 +10,17 @@ use Inertia\Inertia;
 /**
  * Settings routes.
  */
-Route::middleware(['auth', 'verified'])->group(function () {
-    // Common settings routes for both users and admins
+Route::middleware('auth')->group(function () {
+    // Profile & Password Routes (No verification required)
     Route::get('/settings/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/settings/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/settings/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    // Password settings
+    
     Route::get('/settings/password', [PasswordController::class, 'edit'])->name('password.edit');
     Route::put('/settings/password', [PasswordController::class, 'update'])->name('password.update');
-    
-    // Address settings - only for regular users
-    Route::middleware(['role:user'])->group(function () {
+
+    // Address settings - only for regular users and verified email
+    Route::middleware(['role:user', 'verified'])->group(function () {
         Route::get('/settings/addresses', [ShippingAddressController::class, 'index'])->name('addresses.index');
         Route::post('/settings/addresses', [ShippingAddressController::class, 'store'])->name('addresses.store');
         Route::put('/settings/addresses/{address}', [ShippingAddressController::class, 'update'])->name('addresses.update');

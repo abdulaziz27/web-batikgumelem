@@ -6,6 +6,7 @@ import { formatRupiah } from '@/utils/formatters';
 import { router } from '@inertiajs/react';
 import { CreditCard, Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { Head } from '@inertiajs/react';
 
 interface Props {
     order: {
@@ -116,41 +117,6 @@ const CheckoutPayment = ({ order, payment_url, midtrans_client_key, is_productio
         console.log('Payment token:', order?.payment_token);
     }, [order, payment_url]);
 
-    const handlePayNow = () => {
-        if (error) return;
-        setIsLoading(true);
-
-        if (window.snap && snapToken) {
-            console.log('Opening Snap payment modal with token:', snapToken);
-            window.snap.pay(snapToken, {
-                onSuccess: (result: any) => {
-                    console.log('Payment success:', result);
-                    router.visit(`/checkout/success?order_id=${order.id}`);
-                },
-                onPending: (result: any) => {
-                    console.log('Payment pending:', result);
-                    router.visit(`/checkout/success?order_id=${order.id}`);
-                },
-                onError: (result: any) => {
-                    console.error('Payment error:', result);
-                    router.visit(`/checkout/cancel?order_id=${order.id}`);
-                },
-                onClose: () => {
-                    console.log('Payment widget closed');
-                    setIsLoading(false);
-                },
-            });
-        } else {
-            console.error('Snap.js not loaded or token not available');
-            if (payment_url && payment_url !== 'null') {
-                window.location.href = payment_url;
-            } else {
-                setError('Gateway pembayaran tidak tersedia');
-                setIsLoading(false);
-            }
-        }
-    };
-
     // Error UI
     if (error) {
         return (
@@ -178,8 +144,58 @@ const CheckoutPayment = ({ order, payment_url, midtrans_client_key, is_productio
         );
     }
 
+    const handlePayNow = () => {
+        if (error) return;
+        setIsLoading(true);
+
+        if (window.snap && snapToken) {
+            console.log('Opening Snap payment modal with token:', snapToken);
+            window.snap.pay(snapToken, {
+                onSuccess: (result: any) => {
+                    console.log('Payment success:', result);
+                    router.visit(`/checkout/success?order_id=${order.id}`, {
+                        preserveState: true,
+                        preserveScroll: true,
+                        replace: true
+                    });
+                },
+                onPending: (result: any) => {
+                    console.log('Payment pending:', result);
+                    router.visit(`/checkout/success?order_id=${order.id}`, {
+                        preserveState: true,
+                        preserveScroll: true,
+                        replace: true
+                    });
+                },
+                onError: (result: any) => {
+                    console.error('Payment error:', result);
+                    router.visit(`/checkout/cancel?order_id=${order.id}`, {
+                        preserveState: true,
+                        preserveScroll: true,
+                        replace: true
+                    });
+                },
+                onClose: () => {
+                    console.log('Payment widget closed');
+                    setIsLoading(false);
+                    // Refresh the page to get latest order status
+                    router.reload();
+                },
+            });
+        } else {
+            console.error('Snap.js not loaded or token not available');
+            if (payment_url && payment_url !== 'null') {
+                window.location.href = payment_url;
+            } else {
+                setError('Gateway pembayaran tidak tersedia');
+                setIsLoading(false);
+            }
+        }
+    };
+
     return (
         <Layout>
+            <Head title="Pembayaran" />
             <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
                 <div className="mx-auto max-w-3xl">
                     <div className="mb-8">

@@ -36,6 +36,7 @@ interface User {
     id: number;
     name: string;
     email: string;
+    role: string;
     created_at: string;
 }
 
@@ -80,6 +81,11 @@ export default function UsersIndex({ users }: UsersIndexProps) {
             accessorKey: 'email',
             header: 'Email',
             cell: ({ row }) => row.getValue('email'),
+        },
+        {
+            accessorKey: 'role',
+            header: 'Role',
+            cell: ({ row }) => row.getValue('role'),
         },
         {
             accessorKey: 'created_at',
