@@ -1,10 +1,10 @@
-import '../css/app.css';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
+import '../css/app.css';
+import { AppProviders } from './AppProviders'; // <-- Tambahkan ini
 import { Toaster } from './components/ui/sonner';
 import { initializeTheme } from './hooks/use-appearance';
-import { AppProviders } from './AppProviders'; // <-- Tambahkan ini
 
 const appName = import.meta.env.VITE_APP_NAME || 'BatikGumelem';
 
@@ -16,11 +16,14 @@ createInertiaApp({
 
         root.render(
             <>
-                <AppProviders> {/* <-- Tambahkan ini */}
+                <AppProviders>
+                    {' '}
+                    {/* <-- Tambahkan ini */}
                     <App {...props} />
                     <Toaster />
-                </AppProviders> {/* <-- Dan ini */}
-            </>
+                </AppProviders>{' '}
+                {/* <-- Dan ini */}
+            </>,
         );
     },
     progress: {

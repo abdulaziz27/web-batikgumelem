@@ -340,8 +340,8 @@ export default function UsersIndex({ users }: UsersIndexProps) {
                     <AlertDialogHeader>
                         <AlertDialogTitle>Apakah Anda yakin?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Tindakan ini tidak dapat dibatalkan. Ini akan menghapus pengguna{' '}
-                            <span className="font-medium">{userToDelete?.name}</span> secara permanen dan menghapus datanya dari server.
+                            Tindakan ini tidak dapat dibatalkan. Ini akan menghapus pengguna <span className="font-medium">{userToDelete?.name}</span>{' '}
+                            secara permanen dan menghapus datanya dari server.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -352,4 +352,4 @@ export default function UsersIndex({ users }: UsersIndexProps) {
             </AlertDialog>
         </AdminLayout>
     );
-} 
+}

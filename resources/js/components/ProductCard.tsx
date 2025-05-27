@@ -67,7 +67,7 @@ const ProductCard = ({ product, className = '' }: ProductCardProps) => {
                         <Button
                             onClick={handleAddToCart}
                             size="icon"
-                            className="bg-batik-brown hover:bg-batik-brown/90 ml-4 rounded-full transition-transform duration-300 hover:scale-110 flex-shrink-0"
+                            className="bg-batik-brown hover:bg-batik-brown/90 ml-4 flex-shrink-0 rounded-full transition-transform duration-300 hover:scale-110"
                             disabled={isLoading}
                         >
                             <ShoppingCart className="h-4 w-4" />

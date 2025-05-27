@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { Facebook, Instagram, Mail, MapPin, Phone, Youtube } from 'lucide-react';
+import { Mail, MapPin, Phone } from 'lucide-react';
 
 const Footer = () => {
     return (

@@ -3,9 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useCart } from '@/hooks/useCart';
 import { formatRupiah } from '@/utils/formatters';
-import { Link, usePage, router } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { Minus, Plus, ShoppingCart } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -53,59 +52,62 @@ const ProductDetail = () => {
     const { product, relatedProducts } = usePage().props as unknown as ProductDetailProps;
     const { auth } = usePage().props as any;
 
-    // Safer cart access with try-catch (same pattern as other components)
-    let addToCart = (item: any) => {
-        console.warn("Cart provider not available, cannot add to cart");
-        toast.error('Fitur keranjang tidak tersedia saat ini');
-    };
-    
-    try {
-        const cart = useCart();
-        addToCart = cart.addToCart;
-    } catch (error) {
-        console.warn("Cart provider not available, using fallback");
-    }
-
     // Default to first size if available
     const [selectedSize, setSelectedSize] = useState<string>(product.sizes && product.sizes.length > 0 ? product.sizes[0].size : '');
-
     const [quantity, setQuantity] = useState(1);
+    const [isLoading, setIsLoading] = useState(false);
 
     // Default to first image or main product image
     const mainImage =
-        product.images && product.images.length > 0 ? product.images.find((img) => img.is_primary)?.image || product.images[0].image : product.image;
+        product.images && product.images.length > 0
+            ? product.images.find((img) => img.is_primary)?.image || product.images[0].image
+            : `/storage/${product.image}`;
 
     const [selectedImage, setSelectedImage] = useState(mainImage);
 
     // Get all product images or use main image if no additional images
-    const allImages = product.images && product.images.length > 0 ? product.images.map((img) => img.image) : [product.image];
+    const allImages = product.images && product.images.length > 0 ? product.images.map((img) => img.image) : [`/storage/${product.image}`];
 
     // Check stock for selected size
     const selectedSizeObj = product.sizes && product.sizes.length > 0 ? product.sizes.find((size) => size.size === selectedSize) : null;
-
     const stockForSelectedSize = selectedSizeObj ? selectedSizeObj.stock : product.stock;
     const isOutOfStock = stockForSelectedSize <= 0;
 
-    const handleAddToCart = () => {
+    // Manual cart implementation using Laravel backend
+    const handleAddToCart = async () => {
         if (isOutOfStock || quantity <= 0) return;
+
         if (!auth?.user) {
             toast.error('Anda harus login untuk menambah produk ke keranjang. Silakan login terlebih dahulu.');
             router.visit('/login');
             return;
         }
-        
+
+        setIsLoading(true);
+
         try {
-            addToCart({
-                id: product.id,
-                name: product.name,
-                price: product.price,
-                image: product.image,
-                size: selectedSize,
-                quantity: quantity,
-            });
+            // Use Laravel route for adding to cart
+            router.post(
+                '/cart',
+                {
+                    product_id: product.id,
+                    quantity: quantity,
+                    size: selectedSize,
+                },
+                {
+                    onError: (errors) => {
+                        toast.error('Gagal menambahkan produk ke keranjang');
+                        console.error('Add to cart error:', errors);
+                    },
+                    onFinish: () => {
+                        setIsLoading(false);
+                    },
+                },
+            );
         } catch (error) {
             console.error('Error adding to cart:', error);
             toast.error('Gagal menambahkan produk ke keranjang');
+            setIsLoading(false);
         }
     };
 
@@ -120,13 +122,6 @@ const ProductDetail = () => {
             setQuantity(quantity - 1);
         }
     };
-
-    // Define breadcrumbs
-    const breadcrumbs = [
-        { title: 'Beranda', href: '/' },
-        { title: 'Produk', href: '/products' },
-        { title: product.name, href: '' },
-    ];
 
     return (
         <Layout>
@@ -269,11 +264,11 @@ const ProductDetail = () => {
 
                                 <Button
                                     className="bg-batik-brown hover:bg-batik-brown/90 hover-lift w-full"
-                                    disabled={isOutOfStock}
+                                    disabled={isOutOfStock || isLoading}
                                     onClick={handleAddToCart}
                                 >
                                     <ShoppingCart className="mr-2 h-5 w-5" />
-                                    Tambahkan ke Keranjang
+                                    {isLoading ? 'Menambahkan...' : 'Tambahkan ke Keranjang'}
                                 </Button>
                             </div>
                         </div>
@@ -315,11 +310,14 @@ const ProductDetail = () => {
                             <TabsContent value="care" className="mt-6">
                                 <div className="space-y-4">
                                     <h3 className="text-batik-brown text-sm font-medium">Panduan Perawatan</h3>
-                                    {product.details ? (
+                                    {product.details && product.details.care ? (
                                         <p className="text-sm text-gray-600">{product.details.care}</p>
                                     ) : (
                                         <p className="text-sm text-gray-600">
-                                            Cuci dengan tangan menggunakan deterjen lembut, hindari pemutih, jemur di tempat teduh
+                                            Jaga keindahan Batik Gumelem Anda: Cuci dengan tangan menggunakan sabun lembut (contohnya lerak) dan air
+                                            dingin. Hindari pemutih dan jangan diperas terlalu kuat. Jemur di tempat teduh, jauhkan dari sinar
+                                            matahari langsung. Setrika dengan suhu rendah pada bagian dalam kain atau gunakan kain pelapis. Simpan di
+                                            tempat yang sejuk dan kering.
                                         </p>
                                     )}
                                 </div>

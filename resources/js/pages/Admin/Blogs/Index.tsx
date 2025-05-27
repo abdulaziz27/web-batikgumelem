@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
@@ -370,7 +370,9 @@ export default function BlogsIndex({ blogs, categories }: BlogsIndexProps) {
                                             <TableRow key={headerGroup.id}>
                                                 {headerGroup.headers.map((header) => (
                                                     <TableHead key={header.id}>
-                                                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                                                        {header.isPlaceholder
+                                                            ? null
+                                                            : flexRender(header.column.columnDef.header, header.getContext())}
                                                     </TableHead>
                                                 ))}
                                             </TableRow>
@@ -381,7 +383,9 @@ export default function BlogsIndex({ blogs, categories }: BlogsIndexProps) {
                                             table.getRowModel().rows.map((row) => (
                                                 <TableRow key={row.id}>
                                                     {row.getVisibleCells().map((cell) => (
-                                                        <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                                                        <TableCell key={cell.id}>
+                                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                        </TableCell>
                                                     ))}
                                                 </TableRow>
                                             ))
@@ -497,8 +501,8 @@ export default function BlogsIndex({ blogs, categories }: BlogsIndexProps) {
                     <AlertDialogHeader>
                         <AlertDialogTitle>Apakah Anda yakin?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Tindakan ini tidak dapat dibatalkan. Ini akan menghapus blog{' '}
-                            <span className="font-medium">{blogToDelete?.title}</span> secara permanen dan menghapus datanya dari server.
+                            Tindakan ini tidak dapat dibatalkan. Ini akan menghapus blog <span className="font-medium">{blogToDelete?.title}</span>{' '}
+                            secara permanen dan menghapus datanya dari server.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>

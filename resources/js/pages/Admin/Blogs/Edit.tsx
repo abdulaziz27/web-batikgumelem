@@ -114,13 +114,7 @@ export default function BlogsEdit({ blog }: BlogsEditProps) {
                             <div className="grid gap-4 sm:grid-cols-2">
                                 <div className="space-y-2">
                                     <Label htmlFor="title">Judul</Label>
-                                    <Input
-                                        id="title"
-                                        value={title}
-                                        onChange={(e) => setTitle(e.target.value)}
-                                        placeholder="Judul Blog"
-                                        required
-                                    />
+                                    <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Judul Blog" required />
                                 </div>
 
                                 <div className="space-y-2">

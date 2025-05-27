@@ -1,6 +1,5 @@
 import { router } from '@inertiajs/react';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
-import { toast } from 'sonner';
 
 // Deklarasi interface untuk window
 declare global {

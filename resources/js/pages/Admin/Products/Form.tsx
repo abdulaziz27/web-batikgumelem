@@ -1,9 +1,9 @@
-import { Head, Link, useForm, router } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { ArrowLeft, Minus, Plus, Save, Star, Upload, X } from 'lucide-react';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
@@ -88,9 +88,7 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
 
     const [imagePreviews, setImagePreviews] = useState<ImagePreview[]>(initialPreviews);
     const [deletedImageIds, setDeletedImageIds] = useState<number[]>([]);
-    const [primaryImageId, setPrimaryImageId] = useState<number | null>(
-        product?.images?.find((img) => img.is_primary)?.id || null
-    );
+    const [primaryImageId, setPrimaryImageId] = useState<number | null>(product?.images?.find((img) => img.is_primary)?.id || null);
 
     const [formData, setFormData] = useState<ProductFormData>({
         name: product?.name || '',
@@ -118,7 +116,7 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
         preserveState: true,
         transform: (formData: ProductFormData) => {
             const form = new FormData();
-            
+
             // Add basic fields
             form.append('name', formData.name);
             form.append('slug', formData.slug);
@@ -147,41 +145,37 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
             }
 
             // Add new images
-            const newFiles = imagePreviews
-                .filter(preview => preview.is_new && preview.file)
-                .map(preview => preview.file!);
+            const newFiles = imagePreviews.filter((preview) => preview.is_new && preview.file).map((preview) => preview.file!);
 
             newFiles.forEach((file: File, index: number) => {
                 form.append(`new_images[${index}]`, file);
             });
 
             return form;
-        }
+        },
     };
 
     // Sync deleted image IDs and primary image ID with form data
     useEffect(() => {
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
-            deleted_image_ids: deletedImageIds
+            deleted_image_ids: deletedImageIds,
         }));
     }, [deletedImageIds]);
 
     useEffect(() => {
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
-            primary_image_id: primaryImageId
+            primary_image_id: primaryImageId,
         }));
     }, [primaryImageId]);
 
     // Sync new images with form data
     useEffect(() => {
-        const newFiles = imagePreviews
-            .filter(preview => preview.is_new && preview.file)
-            .map(preview => preview.file!);
-        setFormData(prev => ({
+        const newFiles = imagePreviews.filter((preview) => preview.is_new && preview.file).map((preview) => preview.file!);
+        setFormData((prev) => ({
             ...prev,
-            new_images: newFiles
+            new_images: newFiles,
         }));
     }, [imagePreviews]);
 
@@ -205,10 +199,10 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
         if (!files || files.length === 0) return;
 
         const newFilesArray = Array.from(files);
-        
+
         // Create new previews for the uploaded files
         const newPreviews: ImagePreview[] = [];
-        
+
         newFilesArray.forEach((file) => {
             const reader = new FileReader();
             reader.onload = (event) => {
@@ -219,8 +213,8 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
                         is_new: true,
                         file: file,
                     };
-                    
-                    setImagePreviews(prev => [...prev, newPreview]);
+
+                    setImagePreviews((prev) => [...prev, newPreview]);
                 }
             };
             reader.readAsDataURL(file);
@@ -232,11 +226,11 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
 
     const handleDeleteImage = (index: number) => {
         const imageToDelete = imagePreviews[index];
-        
+
         if (imageToDelete.id && !imageToDelete.is_new) {
             // It's an existing image, add to deletion list
-            setDeletedImageIds(prev => [...prev, imageToDelete.id!]);
-            
+            setDeletedImageIds((prev) => [...prev, imageToDelete.id!]);
+
             // If it was the primary image, reset primary image
             if (primaryImageId === imageToDelete.id) {
                 setPrimaryImageId(null);
@@ -244,18 +238,18 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
         }
 
         // Remove from previews
-        setImagePreviews(prev => prev.filter((_, i) => i !== index));
+        setImagePreviews((prev) => prev.filter((_, i) => i !== index));
     };
 
     const handleSetPrimary = (index: number) => {
         const selectedImage = imagePreviews[index];
-        
+
         // Update previews to show which one is primary
-        setImagePreviews(prev => 
+        setImagePreviews((prev) =>
             prev.map((img, i) => ({
                 ...img,
                 is_primary: i === index,
-            }))
+            })),
         );
 
         // Set the primary image ID (null for new images)
@@ -273,34 +267,34 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
                 .replace(/[^\w ]+/g, '')
                 .replace(/ +/g, '-');
 
-            setFormData(prev => ({
+            setFormData((prev) => ({
                 ...prev,
-                slug
+                slug,
             }));
         }
     };
 
     const addSizeField = () => {
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
-            sizes: [...prev.sizes, { size: '', stock: 0 }]
+            sizes: [...prev.sizes, { size: '', stock: 0 }],
         }));
     };
 
     const removeSizeField = (index: number) => {
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
-            sizes: prev.sizes.filter((_, i: number) => i !== index)
+            sizes: prev.sizes.filter((_, i: number) => i !== index),
         }));
     };
 
     const updateSizeField = (index: number, field: 'size' | 'stock', value: string | number) => {
-        setFormData(prev => {
+        setFormData((prev) => {
             const updatedSizes = [...prev.sizes];
             updatedSizes[index] = { ...updatedSizes[index], [field]: value };
             return {
                 ...prev,
-                sizes: updatedSizes
+                sizes: updatedSizes,
             };
         });
     };
@@ -311,7 +305,7 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
 
         // Create FormData instance
         const form = new FormData();
-            
+
         // Add basic fields
         form.append('name', formData.name);
         form.append('slug', formData.slug);
@@ -340,9 +334,7 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
         }
 
         // Add new images
-        const newFiles = imagePreviews
-            .filter(preview => preview.is_new && preview.file)
-            .map(preview => preview.file!);
+        const newFiles = imagePreviews.filter((preview) => preview.is_new && preview.file).map((preview) => preview.file!);
 
         newFiles.forEach((file: File, index: number) => {
             form.append(`new_images[${index}]`, file);
@@ -370,9 +362,9 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
     };
 
     const handleInputChange = (field: keyof ProductFormData, value: any) => {
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
-            [field]: value
+            [field]: value,
         }));
     };
 
@@ -529,12 +521,7 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
                                                 >
                                                     <Star className={preview.is_primary ? 'fill-primary' : ''} />
                                                 </Button>
-                                                <Button
-                                                    type="button"
-                                                    variant="destructive"
-                                                    size="icon"
-                                                    onClick={() => handleDeleteImage(index)}
-                                                >
+                                                <Button type="button" variant="destructive" size="icon" onClick={() => handleDeleteImage(index)}>
                                                     <X className="h-4 w-4" />
                                                 </Button>
                                             </div>

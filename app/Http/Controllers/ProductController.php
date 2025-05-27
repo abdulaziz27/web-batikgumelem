@@ -82,10 +82,23 @@ class ProductController extends Controller
             ->with(['images', 'sizes'])
             ->firstOrFail();
 
+        // Add image_url to main product
+        $product->image = $product->image ? asset('storage/' . $product->image) : null;
+        
+        // Add image_url to all images
+        $product->images->transform(function ($image) {
+            $image->image = asset('storage/' . $image->image);
+            return $image;
+        });
+
         $relatedProducts = Product::where('id', '!=', $product->id)
             ->inRandomOrder()
             ->take(3)
-            ->get();
+            ->get()
+            ->transform(function ($product) {
+                $product->image = asset('storage/' . $product->image);
+                return $product;
+            });
 
         return Inertia::render('ProductDetail', [
             'product' => $product,

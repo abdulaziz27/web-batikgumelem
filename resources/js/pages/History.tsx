@@ -1,7 +1,6 @@
 import Layout from '@/components/layout/Layout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { motion } from 'framer-motion';
-import { Play } from 'lucide-react';
 
 const History = () => {
     return (
@@ -47,21 +46,16 @@ const History = () => {
                         viewport={{ once: true }}
                         className="order-1 lg:order-2"
                     >
-                        <div className="relative aspect-video">
-                            <div className="group absolute inset-0 flex cursor-pointer items-center justify-center overflow-hidden rounded-xl bg-black/20">
+                        <div className="relative aspect-video w-full">
+                            <div className="absolute inset-0 overflow-hidden rounded-xl">
                                 <iframe
-                                    className="absolute inset-0 h-full w-full rounded-xl"
-                                    src="https://www.youtube.com/embed/dQw4w9WgXcQ?controls=0"
+                                    className="h-full w-full"
+                                    src="https://www.youtube.com//embed/SbFw3iD63dw"
                                     title="Sejarah Batik Gumelem"
                                     frameBorder="0"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                     allowFullScreen
                                 ></iframe>
-                                <div className="absolute inset-0 flex items-center justify-center bg-black/40 transition-colors group-hover:bg-black/20">
-                                    <div className="bg-batik-indigo flex h-16 w-16 items-center justify-center rounded-full transition-transform group-hover:scale-110">
-                                        <Play className="ml-1 h-8 w-8 text-white" />
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </motion.div>
@@ -267,11 +261,7 @@ const History = () => {
                     <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
                         <div className="hover-lift overflow-hidden rounded-xl bg-white shadow-sm">
                             <div className="aspect-video overflow-hidden">
-                                <img
-                                    src="https://images.unsplash.com/photo-1585944707493-4069f0a5ae05?q=80&w=1887"
-                                    alt="Pelatihan batik"
-                                    className="h-full w-full object-cover"
-                                />
+                                <img src="images/batik-gumelem-pelatihan.jpeg" alt="Pelatihan batik" className="h-full w-full object-cover" />
                             </div>
                             <div className="p-6">
                                 <h3 className="text-batik-indigo mb-2 text-lg font-semibold">Pelatihan dan Pendidikan</h3>
@@ -284,11 +274,7 @@ const History = () => {
 
                         <div className="hover-lift overflow-hidden rounded-xl bg-white shadow-sm">
                             <div className="aspect-video overflow-hidden">
-                                <img
-                                    src="https://images.unsplash.com/photo-1585944682150-e5b4f9156787?q=80&w=1887"
-                                    alt="Festival batik"
-                                    className="h-full w-full object-cover"
-                                />
+                                <img src="images/batik-gumelem-festival.png" alt="Festival batik" className="h-full w-full object-cover" />
                             </div>
                             <div className="p-6">
                                 <h3 className="text-batik-indigo mb-2 text-lg font-semibold">Festival dan Pameran</h3>
@@ -301,11 +287,7 @@ const History = () => {
 
                         <div className="hover-lift overflow-hidden rounded-xl bg-white shadow-sm">
                             <div className="aspect-video overflow-hidden">
-                                <img
-                                    src="https://images.unsplash.com/photo-1585944684602-f0195998a211?q=80&w=1887"
-                                    alt="Inovasi batik"
-                                    className="h-full w-full object-cover"
-                                />
+                                <img src="images/batik-gumelem-inovasi.jpeg" alt="Inovasi batik" className="h-full w-full object-cover" />
                             </div>
                             <div className="p-6">
                                 <h3 className="text-batik-indigo mb-2 text-lg font-semibold">Inovasi dan Pengembangan</h3>

@@ -1,5 +1,5 @@
 import { Head, router } from '@inertiajs/react';
-import { BarChart3, Download } from 'lucide-react';
+import { Download } from 'lucide-react';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -9,7 +9,6 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AdminLayout from '@/layouts/admin-layout';
 import { type BreadcrumbItem } from '@/types';
-import { formatRupiah } from '@/utils/formatters';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -38,16 +37,20 @@ export default function ReportsIndex() {
         setIsLoading(true);
 
         // Use Inertia's router.get with preserveState and preserveScroll
-        router.get('/admin/reports/sales', {
-            start_date: dateRange.start_date,
-            end_date: dateRange.end_date,
-            type: reportType,
-            format: 'pdf'
-        }, {
-            preserveState: true,
-            preserveScroll: true,
-            onFinish: () => setIsLoading(false),
-        });
+        router.get(
+            '/admin/reports/sales',
+            {
+                start_date: dateRange.start_date,
+                end_date: dateRange.end_date,
+                type: reportType,
+                format: 'pdf',
+            },
+            {
+                preserveState: true,
+                preserveScroll: true,
+                onFinish: () => setIsLoading(false),
+            },
+        );
     };
 
     return (
@@ -73,10 +76,12 @@ export default function ReportsIndex() {
                                         id="start_date"
                                         type="date"
                                         value={dateRange.start_date}
-                                        onChange={(e) => setDateRange(prev => ({
-                                            ...prev,
-                                            start_date: e.target.value
-                                        }))}
+                                        onChange={(e) =>
+                                            setDateRange((prev) => ({
+                                                ...prev,
+                                                start_date: e.target.value,
+                                            }))
+                                        }
                                     />
                                 </div>
                                 <div className="space-y-2">
@@ -85,20 +90,19 @@ export default function ReportsIndex() {
                                         id="end_date"
                                         type="date"
                                         value={dateRange.end_date}
-                                        onChange={(e) => setDateRange(prev => ({
-                                            ...prev,
-                                            end_date: e.target.value
-                                        }))}
+                                        onChange={(e) =>
+                                            setDateRange((prev) => ({
+                                                ...prev,
+                                                end_date: e.target.value,
+                                            }))
+                                        }
                                     />
                                 </div>
                             </div>
 
                             <div className="space-y-2">
                                 <Label htmlFor="report_type">Tipe Laporan</Label>
-                                <Select
-                                    value={reportType}
-                                    onValueChange={setReportType}
-                                >
+                                <Select value={reportType} onValueChange={setReportType}>
                                     <SelectTrigger>
                                         <SelectValue placeholder="Pilih tipe laporan" />
                                     </SelectTrigger>

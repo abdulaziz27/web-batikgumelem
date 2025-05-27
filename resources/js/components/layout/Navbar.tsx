@@ -22,7 +22,7 @@ const Navbar = () => {
     const { url } = usePage(); // Inertia way to get current URL
     const { auth } = usePage<SharedData>().props;
     const getInitials = useInitials();
-    
+
     // Gunakan try/catch untuk mengatasi kasus jika CartProvider tidak tersedia
     let cartItemCount = 0;
     try {
@@ -31,7 +31,7 @@ const Navbar = () => {
             cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
         }
     } catch (error) {
-        console.error("Error accessing cart:", error);
+        console.error('Error accessing cart:', error);
         // Fallback jika ada error
         cartItemCount = 0;
     }
@@ -158,7 +158,9 @@ const Navbar = () => {
                             <Button variant="ghost" size="icon">
                                 <ShoppingCart className="h-5 w-5" />
                             </Button>
-                            {auth.user && cartItemCount > 0 && <Badge className="bg-batik-indigo absolute -top-1 -right-1 text-white">{cartItemCount}</Badge>}
+                            {auth.user && cartItemCount > 0 && (
+                                <Badge className="bg-batik-indigo absolute -top-1 -right-1 text-white">{cartItemCount}</Badge>
+                            )}
                         </Link>
                         <div className="-mr-2 flex md:hidden">
                             <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(!isMenuOpen)}>

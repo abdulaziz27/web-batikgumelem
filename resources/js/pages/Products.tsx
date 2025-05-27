@@ -37,7 +37,7 @@ const Products = () => {
     const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000000]);
     const [showFilters, setShowFilters] = useState(false);
 
-    const productsPerPage = 8;
+    const productsPerPage = 9;
 
     // Filter products based on search term and price range (client-side filtering)
     const filteredProducts = allProducts.filter((product) => {
@@ -112,9 +112,9 @@ const Products = () => {
                     </Button>
                 </div>
 
-                <div className={`lg:grid lg:grid-cols-4 lg:gap-x-8 ${showFilters ? 'block' : 'hidden lg:block'}`}>
+                <div className="lg:grid lg:grid-cols-4 lg:gap-x-8">
                     {/* Sidebar filters */}
-                    <div className="col-span-1 space-y-6 rounded-xl bg-white p-6 shadow-sm">
+                    <div className={`col-span-1 space-y-6 rounded-xl bg-white p-6 shadow-sm ${showFilters ? 'block' : 'hidden lg:block'}`}>
                         <div className="hidden lg:block">
                             <h3 className="text-batik-brown mb-4 text-lg font-medium">Pencarian</h3>
                             <div className="relative">

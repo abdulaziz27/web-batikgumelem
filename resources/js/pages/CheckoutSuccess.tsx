@@ -20,14 +20,14 @@ interface Props {
 
 const CheckoutSuccess = ({ order }: Props) => {
     const [isChecking, setIsChecking] = useState(false);
-    
+
     // Safer cart access with try-catch (same pattern as CheckoutPayment)
     let clearCart = () => {};
     try {
         const cart = useCart();
         clearCart = cart.clearCart;
     } catch (error) {
-        console.warn("Cart provider not available, using fallback");
+        console.warn('Cart provider not available, using fallback');
     }
 
     useEffect(() => {

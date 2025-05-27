@@ -199,14 +199,14 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
                             {order.status === 'pending'
                                 ? 'Menunggu'
                                 : order.status === 'processing'
-                                ? 'Diproses'
-                                : order.status === 'shipped'
-                                ? 'Dikirim'
-                                : order.status === 'delivered'
-                                ? 'Diterima'
-                                : order.status === 'cancelled'
-                                ? 'Dibatalkan'
-                                : order.status}
+                                  ? 'Diproses'
+                                  : order.status === 'shipped'
+                                    ? 'Dikirim'
+                                    : order.status === 'delivered'
+                                      ? 'Diterima'
+                                      : order.status === 'cancelled'
+                                        ? 'Dibatalkan'
+                                        : order.status}
                         </Badge>
                         <Badge variant={order.payment_status === 'paid' ? 'default' : 'secondary'}>
                             Pembayaran: {order.payment_status === 'paid' ? 'Dibayar' : order.payment_status === 'pending' ? 'Menunggu' : 'Gagal'}
@@ -270,18 +270,15 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
                                 <div className="grid gap-6 sm:grid-cols-2">
                                     <div>
                                         <h3 className="text-muted-foreground mb-2 text-sm font-medium">Detail Pelanggan</h3>
-                                        <p className="font-medium">
-                                            {order.user ? order.user.name : order.guest_name || 'Tamu'}
-                                        </p>
-                                        <p className="text-muted-foreground text-sm">
-                                            {order.user ? order.user.email : order.guest_email}
-                                        </p>
+                                        <p className="font-medium">{order.user ? order.user.name : order.guest_name || 'Tamu'}</p>
+                                        <p className="text-muted-foreground text-sm">{order.user ? order.user.email : order.guest_email}</p>
                                     </div>
                                     <div>
                                         <h3 className="text-muted-foreground mb-2 text-sm font-medium">Metode Pembayaran</h3>
                                         <p className="font-medium">{order.payment_method}</p>
                                         <p className="text-muted-foreground text-sm">
-                                            Status: {order.payment_status === 'paid' ? 'Dibayar' : order.payment_status === 'pending' ? 'Menunggu' : 'Gagal'}
+                                            Status:{' '}
+                                            {order.payment_status === 'paid' ? 'Dibayar' : order.payment_status === 'pending' ? 'Menunggu' : 'Gagal'}
                                         </p>
                                     </div>
                                 </div>
@@ -326,14 +323,14 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
                                             {order.status === 'pending'
                                                 ? 'Menunggu'
                                                 : order.status === 'processing'
-                                                ? 'Diproses'
-                                                : order.status === 'shipped'
-                                                ? 'Dikirim'
-                                                : order.status === 'delivered'
-                                                ? 'Diterima'
-                                                : order.status === 'cancelled'
-                                                ? 'Dibatalkan'
-                                                : order.status}
+                                                  ? 'Diproses'
+                                                  : order.status === 'shipped'
+                                                    ? 'Dikirim'
+                                                    : order.status === 'delivered'
+                                                      ? 'Diterima'
+                                                      : order.status === 'cancelled'
+                                                        ? 'Dibatalkan'
+                                                        : order.status}
                                         </p>
                                         {order.tracking_number && (
                                             <p className="text-muted-foreground text-sm">
@@ -341,7 +338,12 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
                                                 {order.tracking_url && (
                                                     <>
                                                         <br />
-                                                        <a href={order.tracking_url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                                                        <a
+                                                            href={order.tracking_url}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="text-primary hover:underline"
+                                                        >
                                                             Lacak Pengiriman
                                                         </a>
                                                     </>
@@ -441,14 +443,14 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
                                                     {event.status === 'pending'
                                                         ? 'Menunggu'
                                                         : event.status === 'processing'
-                                                        ? 'Diproses'
-                                                        : event.status === 'shipped'
-                                                        ? 'Dikirim'
-                                                        : event.status === 'delivered'
-                                                        ? 'Diterima'
-                                                        : event.status === 'cancelled'
-                                                        ? 'Dibatalkan'
-                                                        : event.status}
+                                                          ? 'Diproses'
+                                                          : event.status === 'shipped'
+                                                            ? 'Dikirim'
+                                                            : event.status === 'delivered'
+                                                              ? 'Diterima'
+                                                              : event.status === 'cancelled'
+                                                                ? 'Dibatalkan'
+                                                                : event.status}
                                                 </p>
                                                 <p className="text-muted-foreground text-sm">{event.description}</p>
                                                 <p className="text-muted-foreground text-sm">{formatDate(event.date)}</p>

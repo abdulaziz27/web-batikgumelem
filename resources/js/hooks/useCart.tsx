@@ -1,7 +1,6 @@
 import { router } from '@inertiajs/react';
 import axios from 'axios';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
-import { toast } from 'sonner';
 
 export interface CartItem {
     id: number;
@@ -31,7 +30,7 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export const CartProvider = ({ children, user }: { children: ReactNode, user?: any }) => {
+export const CartProvider = ({ children, user }: { children: ReactNode; user?: any }) => {
     // Tidak lagi menggunakan usePage
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [isLoading, setIsLoading] = useState(false);

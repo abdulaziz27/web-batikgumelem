@@ -1,9 +1,9 @@
 import { ReactNode } from 'react';
+import { AppProviders } from '../../AppProviders';
 import ChatButton from '../chat/ChatButton';
 import PageWithMessage from '../ui/PageWithMessage';
 import Footer from './Footer';
 import Navbar from './Navbar';
-import { AppProviders } from '../../AppProviders';
 
 interface LayoutProps {
     children: ReactNode;

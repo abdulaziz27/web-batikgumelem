@@ -321,7 +321,7 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
                                 />
                             </div>
                             <Select
-                                value={table.getColumn('is_active')?.getFilterValue() as string ?? 'all'}
+                                value={(table.getColumn('is_active')?.getFilterValue() as string) ?? 'all'}
                                 onValueChange={(value) => table.getColumn('is_active')?.setFilterValue(value)}
                             >
                                 <SelectTrigger className="w-full sm:w-[180px]">
@@ -386,10 +386,12 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
                     <CardFooter className="px-4 py-4 sm:px-6">
                         <div className="flex w-full flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                             <div className="text-muted-foreground text-center text-sm sm:text-left">
-                                Menampilkan {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} ke {Math.min(
+                                Menampilkan {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} ke{' '}
+                                {Math.min(
                                     (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
                                     table.getFilteredRowModel().rows.length,
-                                )} dari {table.getFilteredRowModel().rows.length} produk
+                                )}{' '}
+                                dari {table.getFilteredRowModel().rows.length} produk
                             </div>
                             <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6 lg:gap-8">
                                 <div className="flex w-full items-center gap-2 sm:w-auto">

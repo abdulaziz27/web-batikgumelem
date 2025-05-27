@@ -1,10 +1,10 @@
+import { usePage } from '@inertiajs/react';
+import React from 'react';
 import { CartProvider } from './hooks/useCart';
 import { CouponProvider } from './hooks/useCoupon';
 import { ShippingProvider } from './hooks/useShipping';
-import React from 'react';
-import { usePage } from '@inertiajs/react';
 
-class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { error: any, errorInfo: any }> {
+class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { error: any; errorInfo: any }> {
     constructor(props: { children: React.ReactNode }) {
         super(props);
         this.state = { error: null, errorInfo: null };
@@ -35,14 +35,12 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
     try {
         const { auth } = usePage().props as any;
         const user = auth?.user;
-        
+
         return (
             <ErrorBoundary>
                 <CartProvider user={user}>
                     <CouponProvider>
-                        <ShippingProvider>
-                            {children}
-                        </ShippingProvider>
+                        <ShippingProvider>{children}</ShippingProvider>
                     </CouponProvider>
                 </CartProvider>
             </ErrorBoundary>

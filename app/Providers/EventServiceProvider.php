@@ -17,10 +17,11 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         OrderCreated::class => [
-            SendOrderConfirmationEmail::class, // Ini sudah benar, memicu kedua email
+            SendOrderConfirmationEmail::class,
         ],
         OrderStatusChanged::class => [
             SendOrderStatusUpdateNotification::class,
+            \App\Listeners\UpdateProductStock::class,
         ],
     ];
 

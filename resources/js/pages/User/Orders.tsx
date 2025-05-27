@@ -80,10 +80,8 @@ export default function Orders({ orders, midtrans_client_key, is_production }: O
         }
 
         // Load new script
-        const midtransScriptUrl = is_production 
-            ? 'https://app.midtrans.com/snap/snap.js'
-            : 'https://app.sandbox.midtrans.com/snap/snap.js';
-            
+        const midtransScriptUrl = is_production ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js';
+
         const script = document.createElement('script');
         script.id = 'midtrans-script';
         script.src = midtransScriptUrl;
@@ -293,9 +291,7 @@ export default function Orders({ orders, midtrans_client_key, is_production }: O
                                                         <Link href={`/orders/${order.id}`}>Lihat Detail</Link>
                                                     </Button>
 
-                                                    {order.payment_status !== 'paid' && 
-                                                     order.payment_url && 
-                                                     order.status !== 'cancelled' && (
+                                                    {order.payment_status !== 'paid' && order.payment_url && order.status !== 'cancelled' && (
                                                         <Button
                                                             onClick={() => handlePayment(order.id)}
                                                             size="sm"

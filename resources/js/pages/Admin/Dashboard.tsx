@@ -1,12 +1,12 @@
 import { Head } from '@inertiajs/react';
-import { Package, Pencil, ShoppingCart, DollarSign, Clock, Users } from 'lucide-react';
+import { Clock, DollarSign, Package, Pencil, ShoppingCart, Users } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AdminLayout from '@/layouts/admin-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Link } from '@inertiajs/react';
 import { formatRupiah } from '@/utils/formatters';
+import { Link } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {

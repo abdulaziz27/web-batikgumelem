@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Select, SelectItem } from '@/components/ui/select';
-import { Loader2, Download } from 'lucide-react';
+import axios from 'axios';
+import { Download, Loader2 } from 'lucide-react';
+import { useState } from 'react';
 
 interface SalesReportProps {
     // Props definition
@@ -14,7 +14,7 @@ interface SalesReportProps {
 export default function SalesReport() {
     const [dateRange, setDateRange] = useState({
         start_date: '',
-        end_date: ''
+        end_date: '',
     });
     const [reportType, setReportType] = useState('daily');
     const [isLoading, setIsLoading] = useState(false);
@@ -26,9 +26,9 @@ export default function SalesReport() {
                 params: {
                     ...dateRange,
                     type: reportType,
-                    format: 'pdf'
+                    format: 'pdf',
                 },
-                responseType: 'blob'
+                responseType: 'blob',
             });
 
             // Create download link
@@ -60,10 +60,12 @@ export default function SalesReport() {
                                 <Input
                                     type="date"
                                     value={dateRange.start_date}
-                                    onChange={(e) => setDateRange(prev => ({
-                                        ...prev,
-                                        start_date: e.target.value
-                                    }))}
+                                    onChange={(e) =>
+                                        setDateRange((prev) => ({
+                                            ...prev,
+                                            start_date: e.target.value,
+                                        }))
+                                    }
                                 />
                             </div>
                             <div>
@@ -71,28 +73,24 @@ export default function SalesReport() {
                                 <Input
                                     type="date"
                                     value={dateRange.end_date}
-                                    onChange={(e) => setDateRange(prev => ({
-                                        ...prev,
-                                        end_date: e.target.value
-                                    }))}
+                                    onChange={(e) =>
+                                        setDateRange((prev) => ({
+                                            ...prev,
+                                            end_date: e.target.value,
+                                        }))
+                                    }
                                 />
                             </div>
                         </div>
                         <div>
                             <Label>Tipe Laporan</Label>
-                            <Select
-                                value={reportType}
-                                onValueChange={setReportType}
-                            >
+                            <Select value={reportType} onValueChange={setReportType}>
                                 <SelectItem value="daily">Harian</SelectItem>
                                 <SelectItem value="weekly">Mingguan</SelectItem>
                                 <SelectItem value="monthly">Bulanan</SelectItem>
                             </Select>
                         </div>
-                        <Button
-                            onClick={handleDownload}
-                            disabled={isLoading}
-                        >
+                        <Button onClick={handleDownload} disabled={isLoading}>
                             {isLoading ? (
                                 <>
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

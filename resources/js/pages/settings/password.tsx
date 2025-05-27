@@ -57,7 +57,10 @@ export default function Password() {
             <Head title="Pengaturan Kata Sandi" />
 
             <div className="space-y-6">
-                <HeadingSmall title="Perbarui Kata Sandi" description="Pastikan akun Anda menggunakan kata sandi yang panjang dan acak untuk keamanan maksimal" />
+                <HeadingSmall
+                    title="Perbarui Kata Sandi"
+                    description="Pastikan akun Anda menggunakan kata sandi yang panjang dan acak untuk keamanan maksimal"
+                />
 
                 <form onSubmit={updatePassword} className="space-y-6">
                     <div className="grid gap-2">

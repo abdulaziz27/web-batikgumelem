@@ -7,7 +7,7 @@ import { Link, router } from '@inertiajs/react';
 import { ArrowRight, ShoppingBag, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
 
-class CartErrorBoundary extends React.Component<{ children: React.ReactNode }, { error: any, errorInfo: any }> {
+class CartErrorBoundary extends React.Component<{ children: React.ReactNode }, { error: any; errorInfo: any }> {
     constructor(props: { children: React.ReactNode }) {
         super(props);
         this.state = { error: null, errorInfo: null };
@@ -38,7 +38,7 @@ class CartErrorBoundary extends React.Component<{ children: React.ReactNode }, {
 // Wrapper component yang menangkap error useCart
 const CartContent = () => {
     const [error, setError] = useState<Error | null>(null);
-    
+
     // Render empty cart jika terjadi error
     if (error) {
         return (
@@ -56,7 +56,7 @@ const CartContent = () => {
             </div>
         );
     }
-    
+
     try {
         const { cartItems, removeFromCart, updateQuantity, clearCart, totalPrice, isLoading } = useCart();
 

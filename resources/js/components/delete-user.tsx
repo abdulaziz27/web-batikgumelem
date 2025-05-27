@@ -46,7 +46,8 @@ export default function DeleteUser() {
                     <DialogContent>
                         <DialogTitle>Apakah Anda yakin ingin menghapus akun Anda?</DialogTitle>
                         <DialogDescription>
-                            Setelah akun Anda dihapus, seluruh data dan sumber daya yang terkait juga akan dihapus secara permanen. Silakan masukkan kata sandi Anda untuk mengonfirmasi penghapusan akun secara permanen.
+                            Setelah akun Anda dihapus, seluruh data dan sumber daya yang terkait juga akan dihapus secara permanen. Silakan masukkan
+                            kata sandi Anda untuk mengonfirmasi penghapusan akun secara permanen.
                         </DialogDescription>
                         <form className="space-y-6" onSubmit={deleteUser}>
                             <div className="grid gap-2">

@@ -1,9 +1,9 @@
+import AdminLayout from '@/layouts/admin-layout';
+import AppLayout from '@/layouts/app-layout';
+import SettingsLayout from '@/layouts/settings/layout';
 import { type BreadcrumbItem } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { type PropsWithChildren } from 'react';
-import AppLayout from '@/layouts/app-layout';
-import AdminLayout from '@/layouts/admin-layout';
-import SettingsLayout from '@/layouts/settings/layout';
 
 interface SettingsLayoutWrapperProps extends PropsWithChildren {
     breadcrumbs: BreadcrumbItem[];
@@ -17,9 +17,7 @@ export default function SettingsLayoutWrapper({ children, breadcrumbs }: Setting
 
     return (
         <Layout breadcrumbs={breadcrumbs}>
-            <SettingsLayout>
-                {children}
-            </SettingsLayout>
+            <SettingsLayout>{children}</SettingsLayout>
         </Layout>
     );
 }

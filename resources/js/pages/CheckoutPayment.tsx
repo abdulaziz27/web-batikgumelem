@@ -34,24 +34,24 @@ const CheckoutPayment = ({ order, payment_url, midtrans_client_key, is_productio
     const [isLoading, setIsLoading] = useState(false);
     const [snapToken, setSnapToken] = useState('');
     const [error, setError] = useState<string | null>(null);
-    
+
     // Safer cart access
     let clearCart = () => {};
     try {
         const cart = useCart();
         clearCart = cart.clearCart;
     } catch (error) {
-        console.warn("Cart provider not available, using fallback");
+        console.warn('Cart provider not available, using fallback');
     }
 
     // Validate order data
     useEffect(() => {
         if (!order || !order.id) {
             setError('Data pesanan tidak valid');
-            console.error("Invalid order data:", order);
+            console.error('Invalid order data:', order);
             return;
         }
-        
+
         if (!order.payment_token && !order.payment_url) {
             console.warn("Payment token/URL missing - this means the payment wasn't properly initialized");
         }
@@ -60,7 +60,7 @@ const CheckoutPayment = ({ order, payment_url, midtrans_client_key, is_productio
     // Extract token
     useEffect(() => {
         if (error) return;
-        
+
         let token = '';
         if (order?.payment_token) {
             token = order.payment_token;
@@ -77,16 +77,14 @@ const CheckoutPayment = ({ order, payment_url, midtrans_client_key, is_productio
     // Load Snap.js
     useEffect(() => {
         if (error || !snapToken) return;
-        
+
         const existingScript = document.getElementById('midtrans-script');
         if (existingScript) {
             document.body.removeChild(existingScript);
         }
 
-        const midtransScriptUrl = is_production 
-            ? 'https://app.midtrans.com/snap/snap.js'
-            : 'https://app.sandbox.midtrans.com/snap/snap.js';
-            
+        const midtransScriptUrl = is_production ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js';
+
         const script = document.createElement('script');
         script.id = 'midtrans-script';
         script.src = midtransScriptUrl;
@@ -209,9 +207,9 @@ const CheckoutPayment = ({ order, payment_url, midtrans_client_key, is_productio
                             <div className="flex flex-col items-center justify-center">
                                 <p className="mb-4 text-center">Klik tombol di bawah untuk melanjutkan ke halaman pembayaran</p>
 
-                                <Button 
-                                    onClick={handlePayNow} 
-                                    className="bg-batik-indigo hover:bg-batik-indigo/90" 
+                                <Button
+                                    onClick={handlePayNow}
+                                    className="bg-batik-indigo hover:bg-batik-indigo/90"
                                     disabled={isLoading || !snapToken}
                                 >
                                     {isLoading ? (

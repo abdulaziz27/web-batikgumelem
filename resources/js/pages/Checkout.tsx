@@ -72,7 +72,7 @@ interface CheckoutProps {
 }
 
 // Error boundary class component
-class CheckoutErrorBoundary extends React.Component<{ children: React.ReactNode }, { error: any, errorInfo: any }> {
+class CheckoutErrorBoundary extends React.Component<{ children: React.ReactNode }, { error: any; errorInfo: any }> {
     constructor(props: { children: React.ReactNode }) {
         super(props);
         this.state = { error: null, errorInfo: null };
@@ -599,9 +599,7 @@ const CheckoutContent = ({ cart, coupon, shippingOptions: initialShippingOptions
                                                 'Hitung Ongkos Kirim'
                                             )}
                                         </Button>
-                                        <p className="mt-2 text-sm text-gray-500">
-                                            Klik tombol di atas untuk menghitung ongkos kirim ke alamat Anda
-                                        </p>
+                                        <p className="mt-2 text-sm text-gray-500">Klik tombol di atas untuk menghitung ongkos kirim ke alamat Anda</p>
                                     </div>
                                 ) : (
                                     <div className="space-y-4">
@@ -664,11 +662,7 @@ const CheckoutContent = ({ cart, coupon, shippingOptions: initialShippingOptions
                                             render={({ field }) => (
                                                 <FormItem className="space-y-3">
                                                     <FormControl>
-                                                        <RadioGroup
-                                                            onValueChange={field.onChange}
-                                                            defaultValue={field.value}
-                                                            className="space-y-3"
-                                                        >
+                                                        <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="space-y-3">
                                                             <FormItem className="flex items-center space-y-0 space-x-3 rounded-lg border p-4">
                                                                 <FormControl>
                                                                     <RadioGroupItem value="bank_transfer" />
@@ -750,9 +744,7 @@ const CheckoutContent = ({ cart, coupon, shippingOptions: initialShippingOptions
                                                     {selectedShipping.company} - {selectedShipping.courier_name}
                                                 </p>
                                                 <p className="text-sm text-gray-600">Estimasi {selectedShipping.duration}</p>
-                                                <p className="text-batik-indigo mt-1 text-sm font-medium">
-                                                    {formatRupiah(selectedShipping.price)}
-                                                </p>
+                                                <p className="text-batik-indigo mt-1 text-sm font-medium">{formatRupiah(selectedShipping.price)}</p>
                                             </>
                                         )}
                                     </div>

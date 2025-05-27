@@ -644,8 +644,8 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
                         <AlertDialogTitle>Apakah Anda yakin?</AlertDialogTitle>
                         <AlertDialogDescription>
                             Tindakan ini akan menghapus pesanan{' '}
-                            <span className="font-semibold">{orderToDelete?.order_number || `#${orderToDelete?.id}`}</span> secara permanen. 
-                            Tindakan ini tidak dapat dibatalkan.
+                            <span className="font-semibold">{orderToDelete?.order_number || `#${orderToDelete?.id}`}</span> secara permanen. Tindakan
+                            ini tidak dapat dibatalkan.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
