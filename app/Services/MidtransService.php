@@ -56,9 +56,10 @@ class MidtransService
                 ];
             }
 
+            $orderId = 'ORD-' . $order->id . '-' . time();
             $transactionData = [
                 'transaction_details' => [
-                    'order_id' => 'ORD-' . $order->id . '-' . time(),
+                    'order_id' => $orderId,
                     'gross_amount' => $order->total_amount ?? $order->total_price,
                 ],
                 'customer_details' => [
@@ -76,10 +77,10 @@ class MidtransService
                 ],
                 'item_details' => $items,
                 'callbacks' => [
-                    'finish' => route('checkout.success'),
-                    'pending' => route('checkout.pending'),
-                    'error' => route('checkout.failed'),
-                    'cancel' => route('checkout.cancel'),
+                    'finish' => route('checkout.success') . '?order_id=' . $orderId,
+                    'pending' => route('checkout.pending') . '?order_id=' . $orderId,
+                    'error' => route('checkout.failed') . '?order_id=' . $orderId,
+                    'cancel' => route('checkout.cancel') . '?order_id=' . $orderId,
                 ],
             ];
 

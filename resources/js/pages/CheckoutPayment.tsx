@@ -143,58 +143,40 @@ const CheckoutPayment = ({ order, payment_url, midtrans_client_key, is_productio
         );
     }
 
-    const handlePayNow = () => {
-        if (error) return;
+    const handlePayment = () => {
+        if (!snapToken) {
+            setError('Token pembayaran tidak valid');
+            return;
+        }
+
         setIsLoading(true);
 
-        if (window.snap && snapToken) {
-            console.log('Opening Snap payment modal with token:', snapToken);
+        if (window.snap) {
             window.snap.pay(snapToken, {
-                onSuccess: (result: any) => {
+                onSuccess: function (result: any) {
                     console.log('Payment success:', result);
-                    router.visit(`/checkout/success?order_id=${order.id}`, {
-                        preserveState: true,
-                        preserveScroll: true,
-                        replace: true,
-                    });
+                    router.visit(`/checkout/success?order_id=${result.order_id}`);
                 },
-                onPending: (result: any) => {
+                onPending: function (result: any) {
                     console.log('Payment pending:', result);
-                    router.visit(`/checkout/pending?order_id=${order.id}`, {
-                        preserveState: true,
-                        preserveScroll: true,
-                        replace: true,
-                    });
+                    router.visit(`/checkout/pending?order_id=${result.order_id}`);
                 },
-                onError: (result: any) => {
+                onError: function (result: any) {
                     console.error('Payment error:', result);
-                    router.visit(`/checkout/failed?order_id=${order.id}&error_message=${encodeURIComponent(result.message || '')}`, {
+                    router.visit(`/checkout/failed?order_id=${result.order_id}`);
+                },
+                onClose: function () {
+                    console.log('Payment widget closed without completion');
+                    const orderId = `ORD-${order.id}-${Math.floor(Date.now() / 1000)}`;
+                    router.visit(`/checkout/pending?order_id=${orderId}`, {
                         preserveState: true,
                         preserveScroll: true,
-                        replace: true,
                     });
-                },
-                onClose: () => {
-                    console.log('Payment widget closed without completion');
-                    setIsLoading(false);
-                    // Redirect to pending page when user closes the payment modal
-                    if (!window.location.pathname.includes('/checkout/success')) {
-                        router.visit(`/checkout/pending?order_id=${order.id}`, {
-                            preserveState: true,
-                            preserveScroll: true,
-                            replace: true,
-                        });
-                    }
-                },
+                }
             });
         } else {
-            console.error('Snap.js not loaded or token not available');
-            if (payment_url && payment_url !== 'null') {
-                window.location.href = payment_url;
-            } else {
-                setError('Gateway pembayaran tidak tersedia');
-                setIsLoading(false);
-            }
+            setError('Payment gateway not initialized');
+            setIsLoading(false);
         }
     };
 
@@ -209,44 +191,43 @@ const CheckoutPayment = ({ order, payment_url, midtrans_client_key, is_productio
 
                     <Card>
                         <CardHeader>
-                            <CardTitle className="flex items-center">
-                                <CreditCard className="mr-2 h-5 w-5" />
-                                Selesaikan Pembayaran
-                            </CardTitle>
-                            <CardDescription>Pesanan Anda telah dibuat. Silakan selesaikan pembayaran untuk memproses pesanan Anda.</CardDescription>
+                            <CardTitle>Detail Pembayaran</CardTitle>
+                            <CardDescription>Silakan selesaikan pembayaran Anda</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <div className="mb-6 rounded-lg bg-gray-50 p-4">
-                                <p className="font-medium">Detail Pesanan</p>
-                                <p className="text-sm text-gray-600">Nomor Pesanan: {order?.order_number}</p>
-                                <p className="text-sm text-gray-600">Total: {formatRupiah(order?.total_amount || 0)}</p>
-                                <p className="text-sm text-gray-600">
-                                    Metode Pembayaran: {order?.payment_method === 'bank_transfer' ? 'Transfer Bank' : 'E-Wallet'}
-                                </p>
-                            </div>
-
-                            <div className="flex flex-col items-center justify-center">
-                                <p className="mb-4 text-center">Klik tombol di bawah untuk melanjutkan ke halaman pembayaran</p>
-
-                                <Button
-                                    onClick={handlePayNow}
-                                    className="bg-batik-indigo hover:bg-batik-indigo/90"
-                                    disabled={isLoading || !snapToken}
-                                >
-                                    {isLoading ? (
-                                        <>
-                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                            Memproses...
-                                        </>
-                                    ) : (
-                                        'Bayar Sekarang'
-                                    )}
-                                </Button>
+                            <div className="space-y-4">
+                                <div className="flex items-center justify-between">
+                                    <span className="text-sm font-medium">Nomor Pesanan</span>
+                                    <span>{order.order_number}</span>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                    <span className="text-sm font-medium">Total Pembayaran</span>
+                                    <span className="font-semibold">{formatRupiah(order.total_amount)}</span>
+                                </div>
+                                {error && (
+                                    <div className="rounded-md bg-red-50 p-4">
+                                        <div className="text-sm text-red-700">{error}</div>
+                                    </div>
+                                )}
                             </div>
                         </CardContent>
-                        <CardFooter>
-                            <Button variant="outline" asChild className="mr-auto">
-                                <a href="/">Kembali ke Beranda</a>
+                        <CardFooter className="flex justify-center">
+                            <Button
+                                onClick={handlePayment}
+                                disabled={isLoading || !snapToken || !!error}
+                                className="bg-batik-indigo hover:bg-batik-indigo/90 w-full"
+                            >
+                                {isLoading ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        Memproses...
+                                    </>
+                                ) : (
+                                    <>
+                                        <CreditCard className="mr-2 h-4 w-4" />
+                                        Bayar Sekarang
+                                    </>
+                                )}
                             </Button>
                         </CardFooter>
                     </Card>

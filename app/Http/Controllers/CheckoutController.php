@@ -298,8 +298,11 @@ class CheckoutController extends Controller
     public function pending(Request $request)
     {
         // Extract order ID from Midtrans order_id format (ORD-xx-timestamp)
-        $parts = explode('-', $request->order_id);
-        $orderId = $parts[1] ?? null;
+        $orderId = $request->order_id;
+        if (strpos($orderId, 'ORD-') === 0) {
+            $parts = explode('-', $orderId);
+            $orderId = $parts[1] ?? null;
+        }
 
         if (!$orderId) {
             return redirect()->route('home')->with('error', 'Invalid order data');
@@ -307,7 +310,12 @@ class CheckoutController extends Controller
 
         $order = Order::findOrFail($orderId);
         
-        return Inertia::render('CheckoutSuccess', [
+        // Update order status if needed
+        if ($order->status === 'created') {
+            $order->update(['status' => 'pending']);
+        }
+
+        return Inertia::render('CheckoutPending', [
             'order' => $order,
         ]);
     }
@@ -315,8 +323,11 @@ class CheckoutController extends Controller
     public function failed(Request $request)
     {
         // Extract order ID from Midtrans order_id format (ORD-xx-timestamp)
-        $parts = explode('-', $request->order_id);
-        $orderId = $parts[1] ?? null;
+        $orderId = $request->order_id;
+        if (strpos($orderId, 'ORD-') === 0) {
+            $parts = explode('-', $orderId);
+            $orderId = $parts[1] ?? null;
+        }
 
         if (!$orderId) {
             return redirect()->route('home')->with('error', 'Invalid order data');
@@ -325,8 +336,18 @@ class CheckoutController extends Controller
         $order = Order::findOrFail($orderId);
         $order->update(['status' => 'cancelled', 'payment_status' => 'failed']);
         
-        return redirect()->route('orders.show', $order->id)
-            ->with('error', 'Pembayaran gagal. Silakan coba lagi atau pilih metode pembayaran lain.');
+        // Get specific error message based on the situation
+        $errorMessage = match($request->transaction_status ?? '') {
+            'deny' => 'Pembayaran ditolak oleh sistem.',
+            'expire' => 'Waktu pembayaran telah habis.',
+            'cancel' => 'Pembayaran dibatalkan.',
+            default => 'Pembayaran gagal diproses.'
+        };
+        
+        return Inertia::render('CheckoutFailed', [
+            'order' => $order,
+            'error_message' => $errorMessage
+        ]);
     }
 
     public function cancel(Request $request)
