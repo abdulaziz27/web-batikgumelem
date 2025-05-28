@@ -1,7 +1,7 @@
-import { Head, router } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
+import axios from 'axios';
 import { Download } from 'lucide-react';
 import { useState } from 'react';
-import axios from 'axios';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';

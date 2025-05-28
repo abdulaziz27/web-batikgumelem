@@ -211,13 +211,10 @@ export default function Addresses({ addresses = [] }: AddressesProps) {
                                         className="text-primary focus:ring-primary h-4 w-4 rounded border-gray-300"
                                     />
                                     <span className="text-muted-foreground text-sm">
-                                        {editingAddress?.is_default 
-                                            ? "Ini adalah alamat utama Anda" 
-                                            : "Jadikan sebagai alamat utama"}
+                                        {editingAddress?.is_default ? 'Ini adalah alamat utama Anda' : 'Jadikan sebagai alamat utama'}
                                     </span>
                                 </div>
                             </div>
-
                         </div>
                         <DialogFooter>
                             <Button type="submit">{editingAddress ? 'Simpan Perubahan' : 'Tambah Alamat'}</Button>

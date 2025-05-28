@@ -332,8 +332,7 @@ export default function Orders({ orders, midtrans_client_key, is_production }: O
                                                     {/* Tombol batalkan hanya muncul jika:
                                                         1. Status masih pending
                                                         2. Belum dibayar (payment_status !== 'paid') */}
-                                                    {order.status === 'pending' && 
-                                                     order.payment_status !== 'paid' && (
+                                                    {order.status === 'pending' && order.payment_status !== 'paid' && (
                                                         <Link
                                                             href={`/orders/${order.id}/cancel`}
                                                             method="put"

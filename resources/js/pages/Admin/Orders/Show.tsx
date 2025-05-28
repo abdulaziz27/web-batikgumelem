@@ -1,6 +1,6 @@
 import { Head, router } from '@inertiajs/react';
 import { format, parseISO } from 'date-fns';
-import { ArrowLeft, CheckCircle, CircleCheck, Package, Receipt, ShoppingCart, Truck, XCircle, Clock, Check, X } from 'lucide-react';
+import { ArrowLeft, Check, CheckCircle, CircleCheck, Clock, Package, Receipt, ShoppingCart, Truck, X, XCircle } from 'lucide-react';
 import React, { useState } from 'react';
 
 import { Badge } from '@/components/ui/badge';
@@ -147,16 +147,16 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
 
     const getValidStatusOptions = (currentStatus: OrderStatus, paymentStatus: PaymentStatus): OrderStatus[] => {
         const statusTransitions: StatusTransitions = {
-            'pending': ['processing', 'cancelled'],
-            'processing': ['shipped', 'cancelled'],
-            'shipped': ['completed'],
-            'completed': [],
-            'cancelled': []
+            pending: ['processing', 'cancelled'],
+            processing: ['shipped', 'cancelled'],
+            shipped: ['completed'],
+            completed: [],
+            cancelled: [],
         };
 
         // Jika sudah dibayar, tidak bisa dibatalkan
         if (paymentStatus === 'paid') {
-            return statusTransitions[currentStatus].filter(status => status !== 'cancelled');
+            return statusTransitions[currentStatus].filter((status) => status !== 'cancelled');
         }
 
         return statusTransitions[currentStatus];
@@ -308,9 +308,7 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
                         </div>
                     </div>
                     <div className="mt-3 flex items-center gap-3 sm:mt-0">
-                        <Badge variant={getStatusBadgeVariant(order.status)}>
-                            {getStatusLabel(order.status)}
-                        </Badge>
+                        <Badge variant={getStatusBadgeVariant(order.status)}>{getStatusLabel(order.status)}</Badge>
                         <Badge variant={order.payment_status === 'paid' ? 'default' : 'secondary'}>
                             Pembayaran: {order.payment_status === 'paid' ? 'Dibayar' : order.payment_status === 'pending' ? 'Menunggu' : 'Gagal'}
                         </Badge>
@@ -422,9 +420,7 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
                                     </div>
                                     <div>
                                         <h3 className="text-muted-foreground mb-2 text-sm font-medium">Status Pengiriman</h3>
-                                        <p className="font-medium">
-                                            {getStatusLabel(order.status)}
-                                        </p>
+                                        <p className="font-medium">{getStatusLabel(order.status)}</p>
                                         {order.tracking_number && (
                                             <p className="text-muted-foreground text-sm">
                                                 No. Resi: {order.tracking_number}
@@ -461,15 +457,9 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
                                     <label htmlFor="status" className="text-sm font-medium">
                                         Status Pesanan
                                     </label>
-                                    <Select
-                                        value={orderStatus}
-                                        onValueChange={(value: OrderStatus) => setOrderStatus(value)}
-                                        disabled={isSubmitting}
-                                    >
+                                    <Select value={orderStatus} onValueChange={(value: OrderStatus) => setOrderStatus(value)} disabled={isSubmitting}>
                                         <SelectTrigger id="status">
-                                            <SelectValue placeholder="Pilih status">
-                                                {getStatusLabel(orderStatus)}
-                                            </SelectValue>
+                                            <SelectValue placeholder="Pilih status">{getStatusLabel(orderStatus)}</SelectValue>
                                         </SelectTrigger>
                                         <SelectContent>
                                             {getAllStatuses().map((status) => (
@@ -538,9 +528,7 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
                                                 {displayIcon(event.icon)}
                                             </div>
                                             <div>
-                                                <p className="font-medium">
-                                                    {getStatusLabel(event.status as OrderStatus)}
-                                                </p>
+                                                <p className="font-medium">{getStatusLabel(event.status as OrderStatus)}</p>
                                                 <p className="text-muted-foreground text-sm">{event.description}</p>
                                                 <p className="text-muted-foreground text-sm">{formatDate(event.date)}</p>
                                             </div>

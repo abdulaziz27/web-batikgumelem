@@ -2,10 +2,9 @@ import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatRupiah } from '@/utils/formatters';
-import { router } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { Clock, RefreshCw } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { Head } from '@inertiajs/react';
 
 interface Props {
     order: {
@@ -101,9 +100,7 @@ const CheckoutPending = ({ order }: Props) => {
                                 <p className="text-gray-600">
                                     Pesanan Anda telah dibuat. Silakan selesaikan pembayaran sebelum batas waktu berakhir.
                                 </p>
-                                <p className="mt-2 font-medium text-yellow-600">
-                                    Sisa waktu: {timeLeft}
-                                </p>
+                                <p className="mt-2 font-medium text-yellow-600">Sisa waktu: {timeLeft}</p>
                             </div>
 
                             <div className="rounded-lg bg-gray-50 p-4">
@@ -118,19 +115,11 @@ const CheckoutPending = ({ order }: Props) => {
                                 </p>
 
                                 <div className="mt-4 flex flex-col gap-2">
-                                    <Button
-                                        onClick={handlePayNow}
-                                        className="bg-batik-indigo hover:bg-batik-indigo/90"
-                                    >
+                                    <Button onClick={handlePayNow} className="bg-batik-indigo hover:bg-batik-indigo/90">
                                         Lanjutkan Pembayaran
                                     </Button>
-                                    
-                                    <Button
-                                        onClick={checkPaymentStatus}
-                                        disabled={isChecking}
-                                        variant="outline"
-                                        className="flex items-center"
-                                    >
+
+                                    <Button onClick={checkPaymentStatus} disabled={isChecking} variant="outline" className="flex items-center">
                                         <RefreshCw className={`mr-1 h-3 w-3 ${isChecking ? 'animate-spin' : ''}`} />
                                         {isChecking ? 'Memeriksa...' : 'Perbarui Status Pembayaran'}
                                     </Button>
@@ -149,4 +138,4 @@ const CheckoutPending = ({ order }: Props) => {
     );
 };
 
-export default CheckoutPending; 
+export default CheckoutPending;
