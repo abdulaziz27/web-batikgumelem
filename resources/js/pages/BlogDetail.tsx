@@ -72,7 +72,13 @@ const BlogDetail = () => {
 
                     {/* Featured image */}
                     <div className="animate-fade-in mb-10 overflow-hidden rounded-xl" style={{ animationDelay: '200ms' }}>
-                        <img src={`/storage/${blog.image}`} alt={blog.title} className="h-auto w-full object-cover" />
+                        <div className="aspect-[16/9] max-h-[600px] overflow-hidden">
+                            <img 
+                                src={blog.image} 
+                                alt={blog.title} 
+                                className="h-full w-full object-cover" 
+                            />
+                        </div>
                     </div>
 
                     {/* Article content */}
@@ -88,18 +94,29 @@ const BlogDetail = () => {
                             <h2 className="text-batik-brown mb-6 text-2xl font-bold">Artikel Terkait</h2>
                             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                                 {relatedBlogs.map((related) => (
-                                    <Link key={related.id} href={`/blog/${related.slug}`} className="group hover-lift">
-                                        <div className="mb-3 aspect-video overflow-hidden rounded-lg">
+                                    <Link key={related.id} href={`/blog/${related.slug}`} className="group product-card hover-lift animate-fade-in overflow-hidden">
+                                        <div className="aspect-video overflow-hidden">
                                             <img
-                                                src={`/storage/${related.image}`}
+                                                src={related.image}
                                                 alt={related.title}
                                                 className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                                             />
                                         </div>
-                                        <h3 className="text-batik-indigo group-hover:text-batik-brown font-medium transition-colors duration-300">
-                                            {related.title}
-                                        </h3>
-                                        <p className="mt-1 text-sm text-gray-500">{new Date(related.created_at).toLocaleDateString('id-ID')}</p>
+                                        <div className="p-4">
+                                            <div className="mb-2 flex items-center justify-between">
+                                                <span className="text-batik-indigo bg-batik-indigo/10 rounded-full px-3 py-1 text-xs font-medium">
+                                                    {related.category}
+                                                </span>
+                                                <span className="text-sm text-gray-500">
+                                                    {new Date(related.created_at).toLocaleDateString('id-ID')}
+                                                </span>
+                                            </div>
+                                            <h3 className="text-batik-brown group-hover:text-batik-indigo text-lg font-semibold transition-colors duration-300">
+                                                {related.title}
+                                            </h3>
+                                            <p className="mt-2 line-clamp-2 text-sm text-gray-600">{related.excerpt}</p>
+                                            <div className="mt-3 text-xs text-gray-700">Oleh {related.author}</div>
+                                        </div>
                                     </Link>
                                 ))}
                             </div>

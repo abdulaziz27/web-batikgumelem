@@ -5,7 +5,7 @@ import ReactDOMServer from 'react-dom/server';
 import { type RouteName, route } from 'ziggy-js';
 import { AppProviders } from './AppProviders';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = import.meta.env.VITE_APP_NAME || 'Batik Gumelem';
 
 createServer((page) =>
     createInertiaApp({

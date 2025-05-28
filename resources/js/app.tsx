@@ -6,7 +6,7 @@ import { AppProviders } from './AppProviders'; // <-- Tambahkan ini
 import { Toaster } from './components/ui/sonner';
 import { initializeTheme } from './hooks/use-appearance';
 
-const appName = import.meta.env.VITE_APP_NAME || 'BatikGumelem';
+const appName = import.meta.env.VITE_APP_NAME || 'Batik Gumelem';
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
