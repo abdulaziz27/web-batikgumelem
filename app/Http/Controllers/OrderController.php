@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Traits\ValidatesUserOwnership;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class OrderController extends Controller
 {
+    use ValidatesUserOwnership;
+
     /**
      * Display a listing of the resource.
      */
@@ -64,11 +67,11 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        $user = auth()->user();
-        
-        $order = Order::where('user_id', $user->id)
-            ->with(['items.product.images', 'shippingAddress'])
+        $order = Order::with(['items.product.images', 'shippingAddress'])
             ->findOrFail($id);
+
+        // Validate ownership
+        $this->validateUserOwnership($order);
 
         // Transform product images to array format for frontend
         foreach ($order->items as $item) {
@@ -110,10 +113,10 @@ class OrderController extends Controller
      */
     public function markAsCompleted($id)
     {
-        $user = auth()->user();
-        
-        $order = Order::where('user_id', $user->id)
-            ->findOrFail($id);
+        $order = Order::findOrFail($id);
+
+        // Validate ownership
+        $this->validateUserOwnership($order);
 
         // Only shipped orders can be marked as completed
         if ($order->status !== 'shipped') {
@@ -129,12 +132,17 @@ class OrderController extends Controller
      */
     public function cancel($id)
     {
-        $user = auth()->user();
-        
-        $order = Order::where('user_id', $user->id)
-            ->findOrFail($id);
+        $order = Order::findOrFail($id);
 
-        // Only allow cancellation of pending or processing orders
+        // Validate ownership
+        $this->validateUserOwnership($order);
+
+        // Validasi status pembayaran
+        if ($order->payment_status === 'paid') {
+            return redirect()->back()->with('error', 'Pesanan yang sudah dibayar tidak dapat dibatalkan');
+        }
+
+        // Validasi status pesanan
         if (!in_array($order->status, ['pending', 'processing'])) {
             return redirect()->back()->with('error', 'Hanya pesanan yang masih pending atau processing yang dapat dibatalkan');
         }

@@ -161,7 +161,7 @@ const CheckoutPayment = ({ order, payment_url, midtrans_client_key, is_productio
                 },
                 onPending: (result: any) => {
                     console.log('Payment pending:', result);
-                    router.visit(`/checkout/success?order_id=${order.id}`, {
+                    router.visit(`/checkout/pending?order_id=${order.id}`, {
                         preserveState: true,
                         preserveScroll: true,
                         replace: true
@@ -169,17 +169,23 @@ const CheckoutPayment = ({ order, payment_url, midtrans_client_key, is_productio
                 },
                 onError: (result: any) => {
                     console.error('Payment error:', result);
-                    router.visit(`/checkout/cancel?order_id=${order.id}`, {
+                    router.visit(`/checkout/failed?order_id=${order.id}&error_message=${encodeURIComponent(result.message || '')}`, {
                         preserveState: true,
                         preserveScroll: true,
                         replace: true
                     });
                 },
                 onClose: () => {
-                    console.log('Payment widget closed');
+                    console.log('Payment widget closed without completion');
                     setIsLoading(false);
-                    // Refresh the page to get latest order status
-                    router.reload();
+                    // Redirect to pending page when user closes the payment modal
+                    if (!window.location.pathname.includes('/checkout/success')) {
+                        router.visit(`/checkout/pending?order_id=${order.id}`, {
+                            preserveState: true,
+                            preserveScroll: true,
+                            replace: true
+                        });
+                    }
                 },
             });
         } else {

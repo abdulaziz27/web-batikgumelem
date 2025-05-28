@@ -20,7 +20,7 @@ class DashboardController extends Controller
             'orders' => Order::count(),
             'blogs' => Blog::count(),
             'users' => User::count(),
-            'total_revenue' => Order::where('status', 'delivered')
+            'total_revenue' => Order::where('status', 'completed')
                 ->where('payment_status', 'paid')
                 ->sum('total_amount'),
             'pending_revenue' => Order::whereIn('status', ['pending', 'processing', 'shipped'])

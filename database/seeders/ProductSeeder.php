@@ -146,7 +146,7 @@ class ProductSeeder extends Seeder
                 'slug' => Str::slug($productData['name']),
                 'description' => $productData['description'],
                 'price' => $productData['price'],
-                'stock' => rand(1, 15),
+                'stock' => rand(10, 50),
                 'image' => $primaryImage,
             ]);
 

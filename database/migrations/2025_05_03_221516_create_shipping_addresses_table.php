@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('postal_code');
             $table->string('phone');
             $table->boolean('is_default')->default(false);
+            $table->boolean('is_order_address')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });

@@ -1,6 +1,6 @@
 import { Head, router } from '@inertiajs/react';
 import { format, parseISO } from 'date-fns';
-import { ArrowLeft, CheckCircle, CircleCheck, Package, Receipt, ShoppingCart, Truck, XCircle } from 'lucide-react';
+import { ArrowLeft, CheckCircle, CircleCheck, Package, Receipt, ShoppingCart, Truck, XCircle, Clock, Check, X } from 'lucide-react';
 import React, { useState } from 'react';
 
 import { Badge } from '@/components/ui/badge';
@@ -50,7 +50,7 @@ interface OrderItem {
 interface Order {
     id: number;
     order_number: string;
-    status: string;
+    status: OrderStatus;
     user_id?: number;
     guest_name?: string;
     guest_email?: string;
@@ -58,7 +58,7 @@ interface Order {
     total_price: number;
     shipping_cost: number;
     payment_method: string;
-    payment_status: string;
+    payment_status: PaymentStatus;
     tracking_number?: string;
     tracking_url?: string;
     admin_notes?: string;
@@ -86,6 +86,13 @@ type IconMapping = {
     [key: string]: React.ReactNode;
 };
 
+type OrderStatus = 'pending' | 'processing' | 'shipped' | 'completed' | 'cancelled';
+type PaymentStatus = 'pending' | 'paid' | 'failed';
+
+type StatusTransitions = {
+    [K in OrderStatus]: OrderStatus[];
+};
+
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Dasbor',
@@ -102,7 +109,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function OrderShow({ order, timeline }: OrderShowProps) {
-    const [orderStatus, setOrderStatus] = useState(order.status);
+    const [orderStatus, setOrderStatus] = useState<OrderStatus>(order.status);
     const [trackingNumber, setTrackingNumber] = useState(order.tracking_number || '');
     const [trackingUrl, setTrackingUrl] = useState(order.tracking_url || '');
     const [notes, setNotes] = useState(order.admin_notes || '');
@@ -129,13 +136,30 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
                 return 'secondary';
             case 'shipped':
                 return 'default';
-            case 'delivered':
+            case 'completed':
                 return 'default';
             case 'cancelled':
                 return 'destructive';
             default:
                 return 'secondary';
         }
+    };
+
+    const getValidStatusOptions = (currentStatus: OrderStatus, paymentStatus: PaymentStatus): OrderStatus[] => {
+        const statusTransitions: StatusTransitions = {
+            'pending': ['processing', 'cancelled'],
+            'processing': ['shipped', 'cancelled'],
+            'shipped': ['completed'],
+            'completed': [],
+            'cancelled': []
+        };
+
+        // Jika sudah dibayar, tidak bisa dibatalkan
+        if (paymentStatus === 'paid') {
+            return statusTransitions[currentStatus].filter(status => status !== 'cancelled');
+        }
+
+        return statusTransitions[currentStatus];
     };
 
     const handleUpdateOrder = () => {
@@ -177,6 +201,95 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
     const orderTotal = order.total_amount || order.total_price || 0;
     const subtotal = orderTotal - (order.shipping_cost || 0);
 
+    const getStatusColor = (status: OrderStatus) => {
+        switch (status) {
+            case 'pending':
+                return 'text-orange-500 bg-orange-50';
+            case 'processing':
+                return 'text-blue-500 bg-blue-50';
+            case 'shipped':
+                return 'text-purple-500 bg-purple-50';
+            case 'completed':
+                return 'text-green-500 bg-green-50';
+            case 'cancelled':
+                return 'text-red-500 bg-red-50';
+            default:
+                return 'text-gray-500 bg-gray-50';
+        }
+    };
+
+    const getStatusIcon = (status: OrderStatus) => {
+        switch (status) {
+            case 'pending':
+                return <Clock className="h-4 w-4" />;
+            case 'processing':
+                return <Package className="h-4 w-4" />;
+            case 'shipped':
+                return <Truck className="h-4 w-4" />;
+            case 'completed':
+                return <Check className="h-4 w-4" />;
+            case 'cancelled':
+                return <X className="h-4 w-4" />;
+            default:
+                return <Clock className="h-4 w-4" />;
+        }
+    };
+
+    const getTimelineStatus = (status: OrderStatus) => {
+        switch (status) {
+            case 'pending':
+                return 'Menunggu Pembayaran';
+            case 'processing':
+                return 'Sedang Diproses';
+            case 'shipped':
+                return 'Dalam Pengiriman';
+            case 'completed':
+                return 'Pesanan Selesai';
+            case 'cancelled':
+                return 'Pesanan Dibatalkan';
+            default:
+                return status;
+        }
+    };
+
+    const getTimelineIcon = (status: OrderStatus) => {
+        switch (status) {
+            case 'pending':
+                return 'ShoppingCart';
+            case 'processing':
+                return 'Package';
+            case 'shipped':
+                return 'Truck';
+            case 'completed':
+                return 'CheckCircle';
+            case 'cancelled':
+                return 'XCircle';
+            default:
+                return 'CircleCheck';
+        }
+    };
+
+    const getStatusLabel = (status: OrderStatus): string => {
+        switch (status) {
+            case 'pending':
+                return 'Menunggu';
+            case 'processing':
+                return 'Diproses';
+            case 'shipped':
+                return 'Dikirim';
+            case 'completed':
+                return 'Selesai';
+            case 'cancelled':
+                return 'Dibatalkan';
+            default:
+                return status;
+        }
+    };
+
+    const getAllStatuses = (): OrderStatus[] => {
+        return ['pending', 'processing', 'shipped', 'completed', 'cancelled'];
+    };
+
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
             <Head title={`Pesanan #${order.order_number || order.id}`} />
@@ -196,17 +309,7 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
                     </div>
                     <div className="mt-3 flex items-center gap-3 sm:mt-0">
                         <Badge variant={getStatusBadgeVariant(order.status)}>
-                            {order.status === 'pending'
-                                ? 'Menunggu'
-                                : order.status === 'processing'
-                                  ? 'Diproses'
-                                  : order.status === 'shipped'
-                                    ? 'Dikirim'
-                                    : order.status === 'delivered'
-                                      ? 'Diterima'
-                                      : order.status === 'cancelled'
-                                        ? 'Dibatalkan'
-                                        : order.status}
+                            {getStatusLabel(order.status)}
                         </Badge>
                         <Badge variant={order.payment_status === 'paid' ? 'default' : 'secondary'}>
                             Pembayaran: {order.payment_status === 'paid' ? 'Dibayar' : order.payment_status === 'pending' ? 'Menunggu' : 'Gagal'}
@@ -320,17 +423,7 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
                                     <div>
                                         <h3 className="text-muted-foreground mb-2 text-sm font-medium">Status Pengiriman</h3>
                                         <p className="font-medium">
-                                            {order.status === 'pending'
-                                                ? 'Menunggu'
-                                                : order.status === 'processing'
-                                                  ? 'Diproses'
-                                                  : order.status === 'shipped'
-                                                    ? 'Dikirim'
-                                                    : order.status === 'delivered'
-                                                      ? 'Diterima'
-                                                      : order.status === 'cancelled'
-                                                        ? 'Dibatalkan'
-                                                        : order.status}
+                                            {getStatusLabel(order.status)}
                                         </p>
                                         {order.tracking_number && (
                                             <p className="text-muted-foreground text-sm">
@@ -368,16 +461,22 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
                                     <label htmlFor="status" className="text-sm font-medium">
                                         Status Pesanan
                                     </label>
-                                    <Select value={orderStatus} onValueChange={setOrderStatus}>
+                                    <Select
+                                        value={orderStatus}
+                                        onValueChange={(value: OrderStatus) => setOrderStatus(value)}
+                                        disabled={isSubmitting}
+                                    >
                                         <SelectTrigger id="status">
-                                            <SelectValue />
+                                            <SelectValue placeholder="Pilih status">
+                                                {getStatusLabel(orderStatus)}
+                                            </SelectValue>
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="pending">Menunggu</SelectItem>
-                                            <SelectItem value="processing">Diproses</SelectItem>
-                                            <SelectItem value="shipped">Dikirim</SelectItem>
-                                            <SelectItem value="delivered">Diterima</SelectItem>
-                                            <SelectItem value="cancelled">Dibatalkan</SelectItem>
+                                            {getAllStatuses().map((status) => (
+                                                <SelectItem key={status} value={status}>
+                                                    {getStatusLabel(status)}
+                                                </SelectItem>
+                                            ))}
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -440,17 +539,7 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
                                             </div>
                                             <div>
                                                 <p className="font-medium">
-                                                    {event.status === 'pending'
-                                                        ? 'Menunggu'
-                                                        : event.status === 'processing'
-                                                          ? 'Diproses'
-                                                          : event.status === 'shipped'
-                                                            ? 'Dikirim'
-                                                            : event.status === 'delivered'
-                                                              ? 'Diterima'
-                                                              : event.status === 'cancelled'
-                                                                ? 'Dibatalkan'
-                                                                : event.status}
+                                                    {getStatusLabel(event.status as OrderStatus)}
                                                 </p>
                                                 <p className="text-muted-foreground text-sm">{event.description}</p>
                                                 <p className="text-muted-foreground text-sm">{formatDate(event.date)}</p>

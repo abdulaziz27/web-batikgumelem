@@ -57,40 +57,30 @@ class OrderController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'status' => 'required|string|in:pending,processing,shipped,delivered,cancelled',
-            'tracking_number' => 'nullable|string|max:100',
-            'tracking_url' => 'nullable|string|max:255',
-            'notes' => 'nullable|string|max:1000',
-        ]);
-
         $order = Order::findOrFail($id);
         
-        $oldStatus = $order->status;
-        $newStatus = $request->status;
-        
-        $updateData = [
-            'status' => $newStatus,
-        ];
-        
-        if ($request->filled('tracking_number')) {
-            $updateData['tracking_number'] = $request->tracking_number;
-        }
-        
-        if ($request->filled('tracking_url')) {
-            $updateData['tracking_url'] = $request->tracking_url;
-        }
-        
-        if ($request->filled('notes')) {
-            $updateData['admin_notes'] = $request->notes;
-        }
-        
-        $order->update($updateData);
-        
-        // Here you might want to trigger notifications for status changes
-        // E.g. $this->notifyStatusChange($order, $oldStatus, $newStatus);
+        // Validasi perubahan status
+        $request->validate([
+            'status' => 'required|in:pending,processing,shipped,completed,cancelled',
+            'tracking_number' => 'nullable|string',
+            'tracking_url' => 'nullable|url',
+            'notes' => 'nullable|string'
+        ]);
 
-        return redirect()->back()->with('success', 'Pesanan berhasil diperbarui');
+        // Validasi logika status
+        if ($request->status === 'cancelled' && $order->payment_status === 'paid') {
+            return back()->with('error', 'Pesanan yang sudah dibayar tidak dapat dibatalkan');
+        }
+
+        // Update order
+        $order->update([
+            'status' => $request->status,
+            'tracking_number' => $request->tracking_number ?: null,
+            'tracking_url' => $request->tracking_url ?: null,
+            'admin_notes' => $request->notes ?: null
+        ]);
+
+        return back()->with('success', 'Pesanan berhasil diupdate');
     }
 
     public function destroy($id)

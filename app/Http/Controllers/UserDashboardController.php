@@ -54,9 +54,9 @@ class UserDashboardController extends Controller
                 ];
             });
             
-        // Calculate total spent amount (for completed and shipped orders)
+        // Calculate total spent amount (for completed orders)
         $totalSpent = Order::where('user_id', $user->id)
-            ->whereIn('status', ['completed', 'shipped'])
+            ->where('status', 'completed')
             ->where('payment_status', 'paid')
             ->sum('total_amount');
             

@@ -94,6 +94,23 @@ export default function Dashboard({
         }
     };
 
+    const getStatusLabel = (status: string): string => {
+        switch (status.toLowerCase()) {
+            case 'pending':
+                return 'Menunggu';
+            case 'processing':
+                return 'Diproses';
+            case 'shipped':
+                return 'Dikirim';
+            case 'completed':
+                return 'Selesai';
+            case 'cancelled':
+                return 'Dibatalkan';
+            default:
+                return status;
+        }
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Beranda" />
@@ -175,7 +192,7 @@ export default function Dashboard({
                                                 className={`flex items-center space-x-1 rounded-full px-2 py-1 text-xs ${getStatusColor(order.status)}`}
                                             >
                                                 {getStatusIcon(order.status)}
-                                                <span>{order.status}</span>
+                                                <span>{getStatusLabel(order.status)}</span>
                                             </div>
                                             <Button asChild variant="outline" size="sm">
                                                 <Link href={`/orders/${order.id}`}>Detail</Link>

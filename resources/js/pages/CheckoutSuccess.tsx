@@ -75,7 +75,7 @@ const CheckoutSuccess = ({ order }: Props) => {
             <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
                 <div className="mx-auto max-w-3xl">
                     <div className="mb-8">
-                        <h1 className="text-batik-brown text-2xl font-bold tracking-tight">Pesanan Berhasil</h1>
+                        <h1 className="text-batik-brown text-2xl font-bold tracking-tight">Pesanan Berhasil Dibuat</h1>
                     </div>
 
                     <Card>

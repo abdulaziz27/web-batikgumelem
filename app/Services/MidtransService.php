@@ -75,6 +75,12 @@ class MidtransService
                     ],
                 ],
                 'item_details' => $items,
+                'callbacks' => [
+                    'finish' => route('checkout.success'),
+                    'pending' => route('checkout.pending'),
+                    'error' => route('checkout.failed'),
+                    'cancel' => route('checkout.cancel'),
+                ],
             ];
 
             \Log::info('Creating Midtrans transaction', [

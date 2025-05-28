@@ -43,10 +43,27 @@ class CheckoutController extends Controller
         session()->forget('shippingOptions');
         $savedAddresses = [];
         if (auth()->check()) {
-            $savedAddresses = \App\Models\ShippingAddress::where('user_id', auth()->id())
-                ->orderBy('is_default', 'desc')
-                ->orderBy('created_at', 'desc')
-                ->get();
+            // Coba ambil alamat default
+            $defaultAddress = \App\Models\ShippingAddress::where('user_id', auth()->id())
+                ->where('is_default', true)
+                ->whereNotNull('user_id')
+                ->where('is_order_address', true)
+                ->first();
+
+            if ($defaultAddress) {
+                $savedAddresses = [$defaultAddress];
+            } else {
+                // Jika tidak ada alamat default, ambil alamat terakhir
+                $lastAddress = \App\Models\ShippingAddress::where('user_id', auth()->id())
+                    ->whereNotNull('user_id')
+                    ->where('is_order_address', false)
+                    ->latest()
+                    ->first();
+                
+                if ($lastAddress) {
+                    $savedAddresses = [$lastAddress];
+                }
+            }
         }
         return Inertia::render('Checkout', [
             'cart' => $cart,
@@ -175,6 +192,7 @@ class CheckoutController extends Controller
                     ->where('user_id', auth()->id())
                     ->firstOrFail();
                 $shippingAddress = $savedAddress->replicate();
+                $shippingAddress->is_order_address = true;  // Set sebagai alamat pesanan
                 $shippingAddress->save();
             } else {
                 $shippingAddress = \App\Models\ShippingAddress::create([
@@ -186,6 +204,7 @@ class CheckoutController extends Controller
                     'postal_code' => $request->shipping_address['postal_code'],
                     'phone' => $request->shipping_address['phone'],
                     'is_default' => false,
+                    'is_order_address' => true,  // Set sebagai alamat pesanan
                 ]);
             }
             $order = \App\Models\Order::create([
@@ -261,19 +280,70 @@ class CheckoutController extends Controller
 
     public function success(Request $request)
     {
-        $order = Order::findOrFail($request->order_id);
+        // Extract order ID from Midtrans order_id format (ORD-xx-timestamp)
+        $parts = explode('-', $request->order_id);
+        $orderId = $parts[1] ?? null;
 
+        if (!$orderId) {
+            return redirect()->route('home')->with('error', 'Invalid order data');
+        }
+
+        $order = Order::findOrFail($orderId);
+        
         return Inertia::render('CheckoutSuccess', [
             'order' => $order,
         ]);
     }
 
+    public function pending(Request $request)
+    {
+        // Extract order ID from Midtrans order_id format (ORD-xx-timestamp)
+        $parts = explode('-', $request->order_id);
+        $orderId = $parts[1] ?? null;
+
+        if (!$orderId) {
+            return redirect()->route('home')->with('error', 'Invalid order data');
+        }
+
+        $order = Order::findOrFail($orderId);
+        
+        return Inertia::render('CheckoutSuccess', [
+            'order' => $order,
+        ]);
+    }
+
+    public function failed(Request $request)
+    {
+        // Extract order ID from Midtrans order_id format (ORD-xx-timestamp)
+        $parts = explode('-', $request->order_id);
+        $orderId = $parts[1] ?? null;
+
+        if (!$orderId) {
+            return redirect()->route('home')->with('error', 'Invalid order data');
+        }
+
+        $order = Order::findOrFail($orderId);
+        $order->update(['status' => 'cancelled', 'payment_status' => 'failed']);
+        
+        return redirect()->route('orders.show', $order->id)
+            ->with('error', 'Pembayaran gagal. Silakan coba lagi atau pilih metode pembayaran lain.');
+    }
+
     public function cancel(Request $request)
     {
-        $order = Order::findOrFail($request->order_id);
-        $order->update(['status' => 'cancelled']);
+        // Extract order ID from Midtrans order_id format (ORD-xx-timestamp)
+        $parts = explode('-', $request->order_id);
+        $orderId = $parts[1] ?? null;
 
-        return redirect()->route('home')->with('error', 'Your order has been cancelled');
+        if (!$orderId) {
+            return redirect()->route('home')->with('error', 'Invalid order data');
+        }
+
+        $order = Order::findOrFail($orderId);
+        $order->update(['status' => 'cancelled']);
+        
+        return redirect()->route('orders.show', $order->id)
+            ->with('info', 'Pesanan telah dibatalkan');
     }
 
     public function notification(Request $request)
@@ -397,30 +467,55 @@ class CheckoutController extends Controller
         }
     }
 
-    public function checkPaymentStatus(Request $request)
+    public function checkPaymentStatus($orderId)
     {
         try {
-            $orderId = $request->order_id;
+            // Ambil order dari database
             $order = Order::findOrFail($orderId);
             
+            // Pastikan order ada
+            if (!$order) {
+                \Log::error('Order not found when checking payment status');
+                return back()->with('error', 'Pesanan tidak ditemukan');
+            }
+
             // Use the new method to check and update order status
             $result = $this->midtransService->checkAndUpdateOrderStatus($order);
             
             if (!$result['success']) {
-                return back()->with('error', 'Gagal mengecek status pembayaran: ' . ($result['message'] ?? ''));
+                \Log::error('Failed to check payment status', [
+                    'order_id' => $order->id,
+                    'error' => $result['message'] ?? 'Unknown error'
+                ]);
+                return back()->with('error', 'Gagal mengecek status pembayaran');
             }
             
+            // Redirect ke halaman yang sesuai berdasarkan status
             if ($result['updated']) {
-                return back()->with('success', 'Status pembayaran berhasil diperbarui');
-            } else {
-                return back()->with('info', 'Status pembayaran tidak berubah');
+                switch ($order->payment_status) {
+                    case 'paid':
+                        return redirect()->route('checkout.success', ['order_id' => $order->id])
+                            ->with('success', 'Pembayaran berhasil');
+                    case 'failed':
+                    case 'expired':
+                        return redirect()->route('checkout.failed', ['order_id' => $order->id])
+                            ->with('error', 'Pembayaran gagal');
+                    case 'pending':
+                        return redirect()->route('checkout.pending', ['order_id' => $order->id])
+                            ->with('info', 'Menunggu pembayaran');
+                    default:
+                        return back()->with('info', 'Status pembayaran: ' . $order->payment_status);
+                }
             }
+
+            return back()->with('info', 'Status pembayaran tidak berubah');
         } catch (\Exception $e) {
             \Log::error('Error checking payment status', [
+                'order_id' => $orderId,
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            return back()->with('error', 'Gagal mengecek status pembayaran: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat mengecek status pembayaran');
         }
     }
 

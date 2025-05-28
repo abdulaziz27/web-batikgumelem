@@ -40,8 +40,8 @@ interface OrderItem {
 interface Order {
     id: number;
     order_number: string;
-    status: string;
-    payment_status: string;
+    status: 'pending' | 'processing' | 'shipped' | 'completed' | 'cancelled';
+    payment_status: 'pending' | 'paid' | 'failed';
     payment_url: string | null;
     total_amount: number;
     created_at: string;
@@ -246,6 +246,23 @@ export default function Orders({ orders, midtrans_client_key, is_production }: O
         }
     };
 
+    const getStatusLabel = (status: string): string => {
+        switch (status.toLowerCase()) {
+            case 'pending':
+                return 'Menunggu';
+            case 'processing':
+                return 'Diproses';
+            case 'shipped':
+                return 'Dikirim';
+            case 'completed':
+                return 'Selesai';
+            case 'cancelled':
+                return 'Dibatalkan';
+            default:
+                return status;
+        }
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Pesanan Saya" />
@@ -278,7 +295,7 @@ export default function Orders({ orders, midtrans_client_key, is_production }: O
                                                         className={`inline-flex items-center space-x-1 rounded-full px-2 py-1 text-xs ${getStatusColor(order.status)}`}
                                                     >
                                                         {getStatusIcon(order.status)}
-                                                        <span>{order.status}</span>
+                                                        <span>{getStatusLabel(order.status)}</span>
                                                     </div>
                                                     <div className="text-muted-foreground text-sm">{order.items.length} item</div>
                                                 </div>
@@ -300,26 +317,29 @@ export default function Orders({ orders, midtrans_client_key, is_production }: O
                                                         >
                                                             {loadingOrder === order.id ? (
                                                                 <>
-                                                                    <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                                                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                                                     Memproses...
                                                                 </>
                                                             ) : (
                                                                 <>
-                                                                    <CreditCard className="mr-1 h-3 w-3" />
-                                                                    Bayar
+                                                                    <CreditCard className="mr-2 h-4 w-4" />
+                                                                    Bayar Sekarang
                                                                 </>
                                                             )}
                                                         </Button>
                                                     )}
 
-                                                    {(order.status === 'pending' || order.status === 'processing') && (
+                                                    {/* Tombol batalkan hanya muncul jika:
+                                                        1. Status masih pending
+                                                        2. Belum dibayar (payment_status !== 'paid') */}
+                                                    {order.status === 'pending' && 
+                                                     order.payment_status !== 'paid' && (
                                                         <Link
                                                             href={`/orders/${order.id}/cancel`}
                                                             method="put"
                                                             as="button"
                                                             className="bg-destructive text-destructive-foreground hover:bg-destructive/90 inline-flex h-8 items-center justify-center rounded-md px-3 py-1 text-xs font-medium shadow"
                                                             onSuccess={() => {
-                                                                // Optionally refresh the page or update the order status locally
                                                                 router.reload();
                                                             }}
                                                         >

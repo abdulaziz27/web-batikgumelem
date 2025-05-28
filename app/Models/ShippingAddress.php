@@ -18,7 +18,8 @@ class ShippingAddress extends Model
         'province',
         'postal_code',
         'phone',
-        'is_default'
+        'is_default',
+        'is_order_address'
     ];
 
     public function user()
