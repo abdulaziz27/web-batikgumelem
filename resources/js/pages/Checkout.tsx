@@ -774,7 +774,7 @@ const CheckoutContent = ({ cart, coupon, shippingOptions: initialShippingOptions
                                             <div key={item.id} className="flex items-center justify-between border-b pb-4">
                                                 <div className="flex items-center">
                                                     <img
-                                                        src={item.image}
+                                                        src={`/storage/${item.image}`}
                                                         alt={item.name}
                                                         className="h-20 w-20 rounded-md object-cover object-center"
                                                     />

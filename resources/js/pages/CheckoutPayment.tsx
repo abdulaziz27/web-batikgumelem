@@ -84,15 +84,45 @@ const CheckoutPayment = ({ order, payment_url, midtrans_client_key, is_productio
             document.body.removeChild(existingScript);
         }
 
-        const midtransScriptUrl = is_production ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js';
+        const midtransScriptUrl = is_production 
+            ? 'https://app.midtrans.com/snap/snap.js' 
+            : 'https://app.sandbox.midtrans.com/snap/snap.js';
 
         const script = document.createElement('script');
         script.id = 'midtrans-script';
         script.src = midtransScriptUrl;
         script.setAttribute('data-client-key', midtrans_client_key);
+        script.async = true;
 
-        script.onload = () => console.log('Snap.js loaded successfully');
-        script.onerror = () => setError('Gagal memuat payment processor');
+        script.onload = () => {
+            console.log('Snap.js loaded successfully');
+            // Automatically open Snap payment page
+            if (window.snap && snapToken) {
+                window.snap.pay(snapToken, {
+                    onSuccess: function (result: any) {
+                        console.log('Payment success:', result);
+                        router.visit(`/checkout/success?order_id=${order.order_number}`);
+                    },
+                    onPending: function (result: any) {
+                        console.log('Payment pending:', result);
+                        router.visit(`/checkout/pending?order_id=${order.order_number}`);
+                    },
+                    onError: function (result: any) {
+                        console.error('Payment error:', result);
+                        router.visit(`/checkout/failed?order_id=${order.order_number}`);
+                    },
+                    onClose: function () {
+                        console.log('Payment widget closed');
+                        router.visit(`/checkout/cancel?order_id=${order.order_number}`);
+                    },
+                });
+            }
+        };
+
+        script.onerror = () => {
+            console.error('Failed to load Snap.js');
+            setError('Gagal memuat payment processor');
+        };
 
         document.body.appendChild(script);
 
@@ -100,7 +130,7 @@ const CheckoutPayment = ({ order, payment_url, midtrans_client_key, is_productio
             const scriptToRemove = document.getElementById('midtrans-script');
             if (scriptToRemove) document.body.removeChild(scriptToRemove);
         };
-    }, [snapToken, error, is_production, midtrans_client_key]);
+    }, [snapToken, error, is_production, midtrans_client_key, order]);
 
     // Clear cart
     useEffect(() => {

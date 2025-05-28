@@ -67,20 +67,25 @@ class OrderController extends Controller
      */
     public function show($id)
     {
+        $user = auth()->user();
         $order = Order::with(['items.product.images', 'shippingAddress'])
+            ->where('user_id', $user->id)
             ->findOrFail($id);
 
-        // Validate ownership
-        $this->validateUserOwnership($order);
+        // Transform order items to include product images as array
+        $order->items->transform(function ($item) {
+            $imageArray = collect($item->product->images)->pluck('image')->all();
+            $item->product->images = $imageArray;
+            return $item;
+        });
 
-        // Transform product images to array format for frontend
-        foreach ($order->items as $item) {
-            // Check if images is a collection before calling pluck
-            $item->product->images = collect($item->product->images)->pluck('image')->all();
-        }
+        // Makes sure we send only necessary data
+        $order->makeVisible(['payment_status', 'payment_url']);
 
         return Inertia::render('User/OrderDetail', [
             'order' => $order,
+            'midtrans_client_key' => config('services.midtrans.client_key'),
+            'is_production' => config('services.midtrans.is_production', false),
         ]);
     }
 

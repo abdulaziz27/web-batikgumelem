@@ -86,45 +86,49 @@ class MidtransService
             \Log::info('Creating Midtrans transaction', [
                 'order_id' => $order->id,
                 'amount' => $order->total_amount,
-                'items' => $items
+                'items' => $items,
+                'server_key' => config('services.midtrans.server_key'),
+                'is_production' => config('services.midtrans.is_production'),
             ]);
             
             try {
                 $snapToken = Snap::getSnapToken($transactionData);
                 \Log::info('Snap token generated successfully', [
                     'order_id' => $order->id,
-                    'token' => $snapToken
+                    'token' => $snapToken,
+                    'transaction_data' => $transactionData
                 ]);
+
+                $snapUrl = config('services.midtrans.is_production')
+                    ? 'https://app.midtrans.com/snap/v2/transactions/'
+                    : 'https://app.sandbox.midtrans.com/snap/v2/transactions/';
+
+                $order->update([
+                    'payment_token' => $snapToken,
+                    'payment_url' => $snapUrl . $snapToken,
+                ]);
+        
+                \Log::info('Payment token saved to order', [
+                    'order_id' => $order->id,
+                    'token' => $snapToken,
+                    'url' => $snapUrl . $snapToken
+                ]);
+        
+                return [
+                    'success' => true,
+                    'token' => $snapToken,
+                    'redirect_url' => $snapUrl . $snapToken,
+                    'order_id' => $order->id,
+                ];
             } catch (\Exception $e) {
                 \Log::error('Failed to generate Snap token', [
                     'order_id' => $order->id,
                     'error' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString()
+                    'trace' => $e->getTraceAsString(),
+                    'transaction_data' => $transactionData
                 ]);
                 throw $e;
             }
-
-            $snapUrl = config('services.midtrans.is_production')
-                ? 'https://app.midtrans.com/snap/v1/transactions/'
-                : 'https://app.sandbox.midtrans.com/snap/v1/transactions/';
-
-            $order->update([
-                'payment_token' => $snapToken,
-                'payment_url' => $snapUrl . $snapToken,
-            ]);
-    
-            \Log::info('Payment token generated', [
-                'order_id' => $order->id,
-                'token' => $snapToken,
-                'url' => $snapUrl . $snapToken
-            ]);
-    
-            return [
-                'success' => true,
-                'token' => $snapToken,
-                'redirect_url' => $snapUrl . $snapToken,
-                'order_id' => $order->id,
-            ];
         } catch (\Exception $e) {
             \Log::error('Midtrans payment error', [
                 'message' => $e->getMessage(),

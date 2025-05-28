@@ -61,12 +61,12 @@ const ProductDetail = () => {
     const mainImage =
         product.images && product.images.length > 0
             ? product.images.find((img) => img.is_primary)?.image || product.images[0].image
-            : `/storage/${product.image}`;
+            : product.image;
 
     const [selectedImage, setSelectedImage] = useState(mainImage);
 
     // Get all product images or use main image if no additional images
-    const allImages = product.images && product.images.length > 0 ? product.images.map((img) => img.image) : [`/storage/${product.image}`];
+    const allImages = product.images && product.images.length > 0 ? product.images.map((img) => img.image) : [product.image];
 
     // Check stock for selected size
     const selectedSizeObj = product.sizes && product.sizes.length > 0 ? product.sizes.find((size) => size.size === selectedSize) : null;
