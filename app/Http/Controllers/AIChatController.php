@@ -77,8 +77,14 @@ class AIChatController extends Controller
             return response()->json(['answer' => $answer], 200);
         } catch (\Exception $e) {
             \Log::error('AI Chat Error: ' . $e->getMessage(), ['exception' => $e]);
+            $errorMsg = $e->getMessage();
+            if (str_contains(strtolower($errorMsg), 'overloaded') || str_contains(strtolower($errorMsg), 'rate limit')) {
+                $userMsg = 'Maaf, server AI sedang sibuk atau terkena batas penggunaan. Silakan coba beberapa saat lagi.';
+            } else {
+                $userMsg = 'Maaf, terjadi gangguan teknis. Silakan hubungi admin.';
+            }
             return response()->json([
-                'answer' => 'Maaf, terjadi gangguan teknis. Silakan hubungi admin.'
+                'answer' => $userMsg
             ], 200);
         }
     }

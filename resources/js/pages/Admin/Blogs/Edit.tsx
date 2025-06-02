@@ -98,23 +98,29 @@ export default function BlogsEdit({ blog }: BlogsEditProps) {
 
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
-            <Head title={`Edit Blog: ${blog.title}`} />
+            <Head title={`Edit Artikel: ${blog.title}`} />
 
             <div className="space-y-6 p-3 sm:p-6">
                 <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-                    <h1 className="text-2xl font-bold tracking-tight">Edit Blog</h1>
+                    <h1 className="text-2xl font-bold tracking-tight">Edit Artikel</h1>
                 </div>
 
                 <Card>
                     <form onSubmit={handleSubmit}>
                         <CardHeader>
-                            <CardTitle>Detail Blog</CardTitle>
+                            <CardTitle>Detail Artikel</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="grid gap-4 sm:grid-cols-2">
                                 <div className="space-y-2">
                                     <Label htmlFor="title">Judul</Label>
-                                    <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Judul Blog" required />
+                                    <Input
+                                        id="title"
+                                        value={title}
+                                        onChange={(e) => setTitle(e.target.value)}
+                                        placeholder="Judul Artikel"
+                                        required
+                                    />
                                 </div>
 
                                 <div className="space-y-2">
@@ -142,7 +148,7 @@ export default function BlogsEdit({ blog }: BlogsEditProps) {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="image">Gambar Utama</Label>
+                                    <Label htmlFor="image">Gambar Artikel</Label>
                                     <Input id="image" type="file" onChange={handleImageChange} accept="image/*" />
                                     {imagePreview && (
                                         <div className="mt-2">
@@ -158,7 +164,7 @@ export default function BlogsEdit({ blog }: BlogsEditProps) {
                                     id="excerpt"
                                     value={excerpt}
                                     onChange={(e) => setExcerpt(e.target.value)}
-                                    placeholder="Deskripsi singkat untuk blog"
+                                    placeholder="Deskripsi singkat untuk artikel"
                                     rows={3}
                                     required
                                 />
@@ -175,7 +181,7 @@ export default function BlogsEdit({ blog }: BlogsEditProps) {
                             </Button>
                             <Button type="submit" disabled={submitting}>
                                 <Save className="mr-2 h-4 w-4" />
-                                Perbarui Blog
+                                Simpan Perubahan
                             </Button>
                         </CardFooter>
                     </form>

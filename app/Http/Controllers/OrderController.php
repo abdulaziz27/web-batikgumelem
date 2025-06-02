@@ -21,7 +21,7 @@ class OrderController extends Controller
         $orders = Order::where('user_id', $user->id)
             ->with(['items.product.images'])
             ->latest()
-            ->paginate(10);
+            ->paginate(5);
 
         // Transform to ensure proper data structure
         $orders->through(function ($order) {

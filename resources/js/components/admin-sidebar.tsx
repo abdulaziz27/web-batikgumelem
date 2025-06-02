@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BarChart3, BookOpen, LayoutGrid, Package, Pencil, ShoppingCart, Users } from 'lucide-react';
+import { BarChart3, BookOpen, LayoutGrid, Package, Pencil, ShoppingCart, Users, Ticket } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const adminNavItems: NavItem[] = [
@@ -14,19 +14,24 @@ const adminNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'Produk',
-        href: '/admin/products',
-        icon: Package,
-    },
-    {
         title: 'Pesanan',
         href: '/admin/orders',
         icon: ShoppingCart,
     },
     {
+        title: 'Produk',
+        href: '/admin/products',
+        icon: Package,
+    },
+    {
         title: 'Pengguna',
         href: '/admin/users',
         icon: Users,
+    },
+    {
+        title: 'Kupon',
+        href: '/admin/coupons',
+        icon: Ticket,
     },
     {
         title: 'Blog',

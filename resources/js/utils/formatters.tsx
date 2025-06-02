@@ -13,3 +13,16 @@ export function formatRupiah(amount: number): string {
 
     return formatter.format(amount);
 }
+
+/**
+ * Format tanggal ke format Indonesia
+ * @param date - tanggal dalam bentuk string atau Date
+ * @returns string - format tanggal Indonesia, contoh: "24 Maret 2024"
+ */
+export function formatDate(date: string | Date): string {
+    return new Date(date).toLocaleDateString('id-ID', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+    });
+}

@@ -15,6 +15,7 @@ use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\CouponController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -155,14 +156,20 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     // Admin Products
     Route::resource('products', AdminProductController::class);
+    Route::post('/products/upload-image', [ProductController::class, 'uploadImage'])->name('products.upload-image');
 
     // Admin Orders
     Route::resource('orders', AdminOrderController::class);
+    Route::post('/orders/{order}/update-status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
 
     // Admin Blogs
     Route::resource('blogs', AdminBlogController::class);
+    Route::post('/blogs/upload-image', [BlogController::class, 'uploadImage'])->name('blogs.upload-image');
 
     // Reports
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/reports/sales', [ReportController::class, 'sales'])->name('reports.sales');
+
+    // Coupon management
+    Route::resource('coupons', CouponController::class);
 });

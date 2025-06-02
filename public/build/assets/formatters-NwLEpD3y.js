@@ -1,0 +1,1 @@
+function n(t){return new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",minimumFractionDigits:0,maximumFractionDigits:0}).format(t)}function a(t){return new Date(t).toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric"})}export{n as a,a as f};
