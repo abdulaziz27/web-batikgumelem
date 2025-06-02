@@ -16,6 +16,10 @@ class CartItem extends Model
         'size',
     ];
 
+    protected $casts = [
+        'quantity' => 'integer',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
