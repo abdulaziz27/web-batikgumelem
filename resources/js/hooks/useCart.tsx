@@ -77,9 +77,9 @@ export const CartProvider = ({ children, user }: { children: ReactNode; user?: a
                 (item) => item.id === product.id && (product.size ? item.size === product.size : !item.size),
             );
             if (existingItemIndex >= 0) {
-                return prevItems.map((item, index) => (index === existingItemIndex ? { ...item, quantity: item.quantity + quantity } : item));
+                return prevItems.map((item, index) => (index === existingItemIndex ? { ...item, quantity: Number(quantity) } : item));
             } else {
-                return [...prevItems, { ...product, quantity }];
+                return [...prevItems, { ...product, quantity: Number(quantity) }];
             }
         });
         router.visit('/cart', {
@@ -118,7 +118,11 @@ export const CartProvider = ({ children, user }: { children: ReactNode; user?: a
         if (quantity < 1) return;
         setIsLoading(true);
         setCartItems((prevItems) =>
-            prevItems.map((item) => (item.id === id && (size ? item.size === size : !item.size) ? { ...item, quantity } : item)),
+            prevItems.map((item) =>
+                item.id === id && (size ? item.size === size : !item.size)
+                    ? { ...item, quantity: Number(quantity) }
+                    : item
+            )
         );
         const itemKey = size ? `${id}-${size}` : `${id}`;
         router.visit('/cart', {
