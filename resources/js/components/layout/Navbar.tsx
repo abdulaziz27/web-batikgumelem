@@ -28,7 +28,7 @@ const Navbar = () => {
     try {
         if (auth.user) {
             const { cartItems } = useCart();
-            cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+            cartItemCount = cartItems.reduce((total, item) => total + Number(item.quantity), 0);
         }
     } catch (error) {
         console.error('Error accessing cart:', error);
