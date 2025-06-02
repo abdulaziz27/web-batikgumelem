@@ -70,9 +70,6 @@ class OrderController extends Controller
         $order = Order::with(['items.product.images', 'shippingAddress'])
             ->findOrFail($id);
 
-        // Validate ownership
-        $this->validateUserOwnership($order);
-
         // Transform product images to array format for frontend
         foreach ($order->items as $item) {
             // Check if images is a collection before calling pluck
