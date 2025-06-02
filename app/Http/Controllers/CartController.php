@@ -84,7 +84,7 @@ class CartController extends Controller
         ]);
         $result = $this->cartService->updateCartItem($request->item_key, $request->quantity);
         return Inertia::render('Cart', [
-            'cart' => $result['cart'],
+            'cart' => $result['cart'] ?? [],
             'message' => 'Jumlah produk di keranjang berhasil diperbarui.',
         ]);
     }
@@ -99,7 +99,7 @@ class CartController extends Controller
         ]);
         $result = $this->cartService->removeCartItem($request->item_key);
         return Inertia::render('Cart', [
-            'cart' => $result['cart'],
+            'cart' => $result['cart'] ?? [],
             'message' => 'Produk berhasil dihapus dari keranjang.',
         ]);
     }
