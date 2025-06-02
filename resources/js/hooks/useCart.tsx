@@ -47,7 +47,12 @@ export const CartProvider = ({ children, user }: { children: ReactNode; user?: a
             .then((response) => {
                 const cartData = response.data.cart as CartData | undefined;
                 if (cartData?.items) {
-                    setCartItems(Object.values(cartData.items));
+                    setCartItems(
+                        Object.values(cartData.items).map(item => ({
+                            ...item,
+                            quantity: Number(item.quantity),
+                        }))
+                    );
                 }
             })
             .catch((error) => {
