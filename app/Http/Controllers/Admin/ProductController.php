@@ -16,7 +16,8 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::select('id', 'name', 'slug', 'price', 'stock', 'is_active', 'image')
+        $products = Product::with('sizes')
+            ->select('id', 'name', 'slug', 'price', 'is_active', 'image')
             ->latest()
             ->get()
             ->map(function ($product) {
@@ -25,7 +26,7 @@ class ProductController extends Controller
                     'name' => $product->name,
                     'slug' => $product->slug,
                     'price' => $product->price,
-                    'stock' => $product->stock,
+                    'total_stock' => $product->total_stock, // Using the accessor from model
                     'is_active' => $product->is_active,
                     'image_url' => $product->image ? asset('storage/' . $product->image) : null,
                 ];
@@ -48,13 +49,14 @@ class ProductController extends Controller
             'slug' => 'required|string|max:255|unique:products',
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:0',
             'is_active' => 'boolean',
-            'new_images' => 'required|array|min:1',
+            'new_images' => 'required|array|min:1|max:6',
             'new_images.*' => 'image|max:2048',
-            'sizes' => 'nullable|array',
+            'sizes' => 'required|array|min:1',
             'sizes.*.size' => 'required|string',
             'sizes.*.stock' => 'required|integer|min:0',
+        ], [
+            'new_images.max' => 'Maksimal 6 gambar yang boleh diunggah.'
         ]);
 
         return DB::transaction(function () use ($request, $validated) {
@@ -64,7 +66,6 @@ class ProductController extends Controller
                 'slug' => $validated['slug'],
                 'description' => $validated['description'],
                 'price' => $validated['price'],
-                'stock' => $validated['stock'],
                 'is_active' => $validated['is_active'] ?? true,
             ]);
 
@@ -88,15 +89,13 @@ class ProductController extends Controller
                 }
             }
 
-            // Process sizes if provided
-            if ($request->has('sizes') && is_array($request->sizes)) {
-                foreach ($request->sizes as $sizeData) {
-                    ProductSize::create([
-                        'product_id' => $product->id,
-                        'size' => $sizeData['size'],
-                        'stock' => $sizeData['stock'],
-                    ]);
-                }
+            // Process sizes - now required for all products
+            foreach ($validated['sizes'] as $sizeData) {
+                ProductSize::create([
+                    'product_id' => $product->id,
+                    'size' => $sizeData['size'],
+                    'stock' => $sizeData['stock'],
+                ]);
             }
 
             return redirect()->route('admin.products.index')
@@ -149,17 +148,18 @@ class ProductController extends Controller
             'slug' => 'required|string|max:255|unique:products,slug,'.$id,
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:0',
             'is_active' => 'sometimes|boolean',
-            'new_images' => 'nullable|array',
+            'new_images' => 'nullable|array|max:6',
             'new_images.*' => 'nullable|image|max:2048',
-            'sizes' => 'nullable|array',
+            'sizes' => 'required|array|min:1',
             'sizes.*.id' => 'nullable|integer|exists:product_sizes,id,product_id,'.$product->id,
             'sizes.*.size' => 'required|string',
             'sizes.*.stock' => 'required|integer|min:0',
             'deleted_image_ids' => 'nullable|array',
             'deleted_image_ids.*' => 'nullable|integer|exists:product_images,id,product_id,'.$product->id,
             'primary_image_id' => 'nullable|integer',
+        ], [
+            'new_images.max' => 'Maksimal 6 gambar yang boleh diunggah.'
         ]);
 
         return DB::transaction(function () use ($request, $product, $validated) {
@@ -169,7 +169,6 @@ class ProductController extends Controller
                 'slug' => $validated['slug'],
                 'description' => $validated['description'],
                 'price' => $validated['price'],
-                'stock' => $validated['stock'],
                 'is_active' => $validated['is_active'] ?? $product->is_active,
             ]);
 
@@ -263,17 +262,10 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
 
-        // Delete associated images from storage
-        foreach ($product->images as $image) {
-            if (Storage::disk('public')->exists($image->image)) {
-                Storage::disk('public')->delete($image->image);
-            }
-        }
-
-        // Delete product (sizes and images will be deleted via cascade)
+        // Soft delete product only
         $product->delete();
 
         return redirect()->route('admin.products.index')
-            ->with('success', 'Product deleted successfully');
+            ->with('success', 'Produk berhasil dihapus (soft delete).');
     }
 }

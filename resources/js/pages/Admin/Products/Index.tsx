@@ -46,7 +46,7 @@ interface Product {
     slug: string;
     description: string;
     price: number;
-    stock: number;
+    total_stock: number;
     is_active: boolean;
     image?: string;
     image_url?: string;
@@ -137,11 +137,11 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
             cell: ({ row }) => formatPrice(row.getValue('price')),
         },
         {
-            accessorKey: 'stock',
+            accessorKey: 'total_stock',
             header: ({ column }) => {
                 return (
                     <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="hover:bg-transparent">
-                        Stok
+                        Total Stok
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 );
@@ -264,8 +264,8 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
                                 <p className="font-medium">{formatPrice(product.price)}</p>
                             </div>
                             <div>
-                                <p className="text-muted-foreground text-sm">Stok</p>
-                                <p className="font-medium">{product.stock}</p>
+                                <p className="text-muted-foreground text-sm">Total Stok</p>
+                                <p className="font-medium">{product.total_stock}</p>
                             </div>
                         </div>
 

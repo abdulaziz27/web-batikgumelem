@@ -60,8 +60,8 @@ export default function VerifyEmail({ status }: VerifyEmailProps) {
                                 </Button>
 
                                 <div className="mt-6">
-                                    <Link href={route('logout')} method="post" as="button" className="text-batik-indigo text-sm hover:underline">
-                                        Keluar
+                                    <Link href={route('home')} className="text-batik-indigo text-sm hover:underline">
+                                        Kembali ke Beranda
                                     </Link>
                                 </div>
                             </div>

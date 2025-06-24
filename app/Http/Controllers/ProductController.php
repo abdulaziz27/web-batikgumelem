@@ -105,6 +105,7 @@ class ProductController extends Controller
         });
 
         $relatedProducts = Product::where('id', '!=', $product->id)
+            ->with('sizes')
             ->inRandomOrder()
             ->take(3)
             ->get()

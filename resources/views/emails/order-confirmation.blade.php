@@ -22,6 +22,16 @@
                 <td>{{ format_rupiah($item->price) }}</td>
             </tr>
             @endforeach
+            <tr>
+                <td><strong>Kurir:</strong></td>
+                <td>
+                    @if(isset($order['courier_name']))
+                        {{ $order['courier_name'] }}
+                    @else
+                        -
+                    @endif
+                </td>
+            </tr>
         </table>
         
         <div class="order-totals">

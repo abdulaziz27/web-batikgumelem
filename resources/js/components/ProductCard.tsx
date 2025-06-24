@@ -6,6 +6,13 @@ import { ShoppingCart } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
+interface ProductSize {
+    id: number;
+    product_id: number;
+    size: string;
+    stock: number;
+}
+
 interface ProductCardProps {
     product: {
         id: number;
@@ -14,6 +21,7 @@ interface ProductCardProps {
         image: string;
         description?: string;
         slug: string;
+        sizes?: ProductSize[];
     };
     className?: string;
 }
@@ -23,19 +31,50 @@ const ProductCard = ({ product, className = '' }: ProductCardProps) => {
     const [isHovering, setIsHovering] = useState(false);
     const { auth } = usePage().props as any;
 
+    // Get first available size (with stock > 0) or first size if none have stock
+    const getFirstAvailableSize = () => {
+        if (product.sizes && product.sizes.length > 0) {
+            const availableSize = product.sizes.find(size => size.stock > 0);
+            return availableSize ? availableSize.size : product.sizes[0].size;
+        }
+        return '';
+    };
+
+    // Check if product has any stock
+    const hasStock = () => {
+        if (product.sizes && product.sizes.length > 0) {
+            return product.sizes.some(size => size.stock > 0);
+        }
+        return false;
+    };
+
     const handleAddToCart = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
+        
         if (!auth?.user) {
             toast.error('Anda harus login untuk menambah produk ke keranjang. Silakan login terlebih dahulu.');
             router.visit('/login');
             return;
         }
+
+        if (!hasStock()) {
+            toast.error('Produk ini sedang habis stok untuk semua ukuran.');
+            return;
+        }
+
+        const selectedSize = getFirstAvailableSize();
+        if (!selectedSize) {
+            toast.error('Ukuran produk tidak tersedia.');
+            return;
+        }
+
         addToCart({
             id: product.id,
             name: product.name,
             price: product.price,
             image: product.image,
+            size: selectedSize,
         });
     };
 
@@ -67,8 +106,12 @@ const ProductCard = ({ product, className = '' }: ProductCardProps) => {
                         <Button
                             onClick={handleAddToCart}
                             size="icon"
-                            className="bg-batik-brown hover:bg-batik-brown/90 ml-4 flex-shrink-0 rounded-full transition-transform duration-300 hover:scale-110"
-                            disabled={isLoading}
+                            className={`ml-4 flex-shrink-0 rounded-full transition-transform duration-300 hover:scale-110 ${
+                                hasStock() 
+                                    ? 'bg-batik-brown hover:bg-batik-brown/90' 
+                                    : 'bg-gray-400 cursor-not-allowed'
+                            }`}
+                            disabled={isLoading || !hasStock()}
                         >
                             <ShoppingCart className="h-4 w-4" />
                         </Button>

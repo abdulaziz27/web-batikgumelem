@@ -20,8 +20,8 @@ class UpdateProductStock
         try {
             DB::transaction(function () use ($event) {
                 foreach ($event->order->items as $item) {
+                    // All products should now have sizes, so only update size-specific stock
                     if ($item->size) {
-                        // Update stock for specific size
                         $productSize = ProductSize::where('product_id', $item->product_id)
                             ->where('size', $item->size)
                             ->first();
@@ -30,11 +30,12 @@ class UpdateProductStock
                             $productSize->decrement('stock', $item->quantity);
                         }
                     } else {
-                        // Update general product stock
-                        $product = Product::find($item->product_id);
-                        if ($product) {
-                            $product->decrement('stock', $item->quantity);
-                        }
+                        // Log warning if item doesn't have size (this shouldn't happen in new system)
+                        Log::warning('Order item without size found - this should not happen in the new system', [
+                            'order_id' => $event->order->id,
+                            'order_item_id' => $item->id,
+                            'product_id' => $item->product_id
+                        ]);
                     }
                 }
             });

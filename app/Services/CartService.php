@@ -73,10 +73,10 @@ class CartService
                 $product = Product::lockForUpdate()->findOrFail($productId);
                 Log::info('Product found', [
                     'product_name' => $product->name,
-                    'product_stock' => $product->stock,
                     'has_size' => !is_null($size)
                 ]);
 
+                // For products with sizes, use the size-specific stock
                 if ($size) {
                     $productSize = ProductSize::lockForUpdate()
                         ->where('product_id', $productId)
@@ -89,12 +89,19 @@ class CartService
                         'requested_quantity' => $quantity
                     ]);
 
-                    if (!$productSize || $productSize->stock < $quantity) {
+                    if (!$productSize) {
+                        return [
+                            'success' => false,
+                            'message' => 'Ukuran yang dipilih tidak tersedia',
+                        ];
+                    }
+
+                    if ($productSize->stock < $quantity) {
                         Log::warning('Stock not available for size', [
                             'product_id' => $productId,
                             'size' => $size,
                             'requested_quantity' => $quantity,
-                            'available_stock' => $productSize ? $productSize->stock : 0
+                            'available_stock' => $productSize->stock
                         ]);
                         return [
                             'success' => false,
@@ -117,25 +124,21 @@ class CartService
                         ];
                     }
                 } else {
-                    // Check existing cart items to validate total quantity
-                    $existingCartItem = CartItem::where('user_id', $user->id)
-                        ->where('product_id', $productId)
-                        ->where('size', null)
-                        ->first();
-
-                    $totalQuantity = ($existingCartItem ? $existingCartItem->quantity : 0) + $quantity;
-
-                    if ($totalQuantity > $product->stock) {
-                        Log::warning('Total quantity exceeds available stock', [
-                            'product_id' => $productId,
-                            'total_quantity' => $totalQuantity,
-                            'available_stock' => $product->stock
-                        ]);
+                    // For products without specific size selection, they must have sizes defined
+                    $productSizes = ProductSize::where('product_id', $productId)->get();
+                    
+                    if ($productSizes->isEmpty()) {
                         return [
                             'success' => false,
-                            'message' => 'Total quantity melebihi stok yang tersedia',
+                            'message' => 'Produk ini memerlukan pemilihan ukuran',
                         ];
                     }
+
+                    // For now, we don't allow adding products without specifying size if sizes exist
+                    return [
+                        'success' => false,
+                        'message' => 'Silakan pilih ukuran terlebih dahulu',
+                    ];
                 }
 
                 $cartItem = CartItem::where('user_id', $user->id)
@@ -206,25 +209,7 @@ class CartService
                 // Lock the product for update
                 $product = Product::lockForUpdate()->findOrFail($productId);
 
-                if ($size) {
-                    $productSize = ProductSize::lockForUpdate()
-                        ->where('product_id', $productId)
-                        ->where('size', $size)
-                        ->first();
-
-                    if (!$productSize || $productSize->stock < $quantity) {
-                        return [
-                            'success' => false,
-                            'message' => 'Stok tidak tersedia untuk ukuran yang dipilih',
-                        ];
-                    }
-                } else if ($product->stock < $quantity) {
-                    return [
-                        'success' => false,
-                        'message' => 'Stok produk tidak mencukupi',
-                    ];
-                }
-
+                // Ambil cart item
                 $cartItem = CartItem::where('user_id', $user->id)
                     ->where('product_id', $productId)
                     ->where('size', $size)
@@ -234,6 +219,45 @@ class CartService
                     return [
                         'success' => false,
                         'message' => 'Item tidak ditemukan di keranjang',
+                        'cart' => $this->getCart(),
+                    ];
+                }
+
+                // All products must have sizes now, so validate size-specific stock
+                if (!$size) {
+                    return [
+                        'success' => false,
+                        'message' => 'Item tidak valid - ukuran tidak ditemukan',
+                        'cart' => $this->getCart(),
+                    ];
+                }
+
+                $productSize = ProductSize::lockForUpdate()
+                    ->where('product_id', $productId)
+                    ->where('size', $size)
+                    ->first();
+
+                if (!$productSize) {
+                    return [
+                        'success' => false,
+                        'message' => 'Ukuran produk tidak ditemukan',
+                        'cart' => $this->getCart(),
+                    ];
+                }
+
+                if ($productSize->stock < $quantity) {
+                    return [
+                        'success' => false,
+                        'message' => 'Stok tidak tersedia untuk ukuran yang dipilih',
+                        'cart' => $this->getCart(),
+                    ];
+                }
+
+                if ($quantity > $productSize->stock) {
+                    return [
+                        'success' => false,
+                        'message' => 'Jumlah melebihi stok yang tersedia untuk ukuran ini',
+                        'cart' => $this->getCart(),
                     ];
                 }
 
@@ -256,6 +280,7 @@ class CartService
             return [
                 'success' => false,
                 'message' => 'Gagal memperbarui keranjang',
+                'cart' => $this->getCart(),
             ];
         }
     }
@@ -272,13 +297,14 @@ class CartService
             $cartItem->delete();
             return [
                 'success' => true,
-                'message' => 'Item removed from cart',
+                'message' => 'Produk berhasil dihapus dari keranjang',
                 'cart' => $this->getCart(),
             ];
         }
         return [
             'success' => false,
-            'message' => 'Item not found in cart',
+            'message' => 'Item tidak ditemukan di keranjang',
+            'cart' => $this->getCart(),
         ];
     }
 

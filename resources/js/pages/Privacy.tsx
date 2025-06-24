@@ -124,10 +124,10 @@ const Privacy = () => {
                             <p className="font-medium">Jika Anda memiliki pertanyaan tentang Kebijakan Privasi ini, silakan hubungi kami melalui:</p>
                             <ul className="mt-2 space-y-1">
                                 <li>
-                                    <span className="font-medium">Email:</span> privacy@batikgumelem.com
+                                    <span className="font-medium">Email:</span> admin@batikgumelem.com
                                 </li>
                                 <li>
-                                    <span className="font-medium">Telepon:</span> +62 123-456-7890
+                                    <span className="font-medium">Telepon:</span> +62 859-4460-8542
                                 </li>
                                 <li>
                                     <span className="font-medium">Alamat:</span> Jl. Batik Gumelem No. 123, Banjarnegara, Jawa Tengah

@@ -195,7 +195,7 @@ export default function Dashboard({
                                                 <span>{getStatusLabel(order.status)}</span>
                                             </div>
                                             <Button asChild variant="outline" size="sm">
-                                                <Link href={`/orders/${order.id}`}>Detail</Link>
+                                                <Link href={`/orders/detail/${order.order_number}`}>Detail</Link>
                                             </Button>
                                         </div>
                                     </div>

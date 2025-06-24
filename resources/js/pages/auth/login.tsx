@@ -17,9 +17,10 @@ type LoginForm = {
 interface LoginProps {
     status?: string;
     canResetPassword?: boolean;
+    success?: string;
 }
 
-export default function Login({ status, canResetPassword = true }: LoginProps) {
+export default function Login({ status, canResetPassword = true, success }: LoginProps) {
     const [showPassword, setShowPassword] = useState(false);
 
     const { data, setData, post, processing, errors } = useForm<LoginForm>({
@@ -130,6 +131,7 @@ export default function Login({ status, canResetPassword = true }: LoginProps) {
                         </form>
 
                         {status && <div className="mt-4 text-center text-sm font-medium text-green-600">{status}</div>}
+                        {success && <div className="mt-4 text-center text-sm font-medium text-green-600">{success}</div>}
                     </div>
                 </div>
             </div>

@@ -15,7 +15,7 @@ class HomeController extends Controller
     public function index()
     {
         // Get 3 featured products
-        $featuredProducts = Product::with(['images'])
+        $featuredProducts = Product::with(['images', 'sizes'])
             ->inRandomOrder()
             ->take(3)
             ->get()

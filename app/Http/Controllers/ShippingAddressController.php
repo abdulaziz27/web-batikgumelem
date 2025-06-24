@@ -59,13 +59,26 @@ class ShippingAddressController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'full_name' => 'required|string|max:255',
-            'address' => 'required|string',
-            'city' => 'required|string|max:255',
-            'province' => 'required|string|max:255',
-            'postal_code' => 'required|string|max:20',
-            'phone' => 'required|string|max:20',
+            'full_name' => 'required|string|min:3|max:255',
+            'address' => 'required|string|min:10|max:500',
+            'city' => 'required|string|min:3|max:100',
+            'province' => 'required|string|min:3|max:100',
+            'postal_code' => 'required|string|regex:/^[0-9]{5}$/',
+            'phone' => 'required|string|regex:/^[0-9]{10,15}$/',
             'is_default' => 'boolean',
+        ], [
+            'full_name.required' => 'Nama lengkap wajib diisi.',
+            'full_name.min' => 'Nama lengkap minimal 3 karakter.',
+            'address.required' => 'Alamat lengkap wajib diisi.',
+            'address.min' => 'Alamat minimal 10 karakter.',
+            'city.required' => 'Nama kota wajib diisi.',
+            'city.min' => 'Nama kota minimal 3 karakter.',
+            'province.required' => 'Nama provinsi wajib diisi.',
+            'province.min' => 'Nama provinsi minimal 3 karakter.',
+            'postal_code.required' => 'Kode pos wajib diisi.',
+            'postal_code.regex' => 'Kode pos harus berupa 5 digit angka.',
+            'phone.required' => 'Nomor telepon wajib diisi.',
+            'phone.regex' => 'Nomor telepon harus berupa angka 10-15 digit.',
         ]);
 
         $user = auth()->user();
@@ -99,13 +112,26 @@ class ShippingAddressController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'full_name' => 'required|string|max:255',
-            'address' => 'required|string',
-            'city' => 'required|string|max:255',
-            'province' => 'required|string|max:255',
-            'postal_code' => 'required|string|max:20',
-            'phone' => 'required|string|max:20',
+            'full_name' => 'required|string|min:3|max:255',
+            'address' => 'required|string|min:10|max:500',
+            'city' => 'required|string|min:3|max:100',
+            'province' => 'required|string|min:3|max:100',
+            'postal_code' => 'required|string|regex:/^[0-9]{5}$/',
+            'phone' => 'required|string|regex:/^[0-9]{10,15}$/',
             'is_default' => 'boolean',
+        ], [
+            'full_name.required' => 'Nama lengkap wajib diisi.',
+            'full_name.min' => 'Nama lengkap minimal 3 karakter.',
+            'address.required' => 'Alamat lengkap wajib diisi.',
+            'address.min' => 'Alamat minimal 10 karakter.',
+            'city.required' => 'Nama kota wajib diisi.',
+            'city.min' => 'Nama kota minimal 3 karakter.',
+            'province.required' => 'Nama provinsi wajib diisi.',
+            'province.min' => 'Nama provinsi minimal 3 karakter.',
+            'postal_code.required' => 'Kode pos wajib diisi.',
+            'postal_code.regex' => 'Kode pos harus berupa 5 digit angka.',
+            'phone.required' => 'Nomor telepon wajib diisi.',
+            'phone.regex' => 'Nomor telepon harus berupa angka 10-15 digit.',
         ]);
 
         $user = auth()->user();

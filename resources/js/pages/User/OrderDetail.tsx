@@ -62,6 +62,7 @@ interface Order {
     items: OrderItem[];
     notes: string | null;
     admin_notes: string | null;
+    discount: number;
 }
 
 interface OrderDetailProps {
@@ -204,7 +205,7 @@ export default function OrderDetail({ order }: OrderDetailProps) {
         },
         {
             title: `Pesanan #${order.order_number}`,
-            href: `/orders/${order.id}`,
+            href: `/orders/detail/${order.order_number}`,
         },
     ];
 
@@ -335,7 +336,7 @@ export default function OrderDetail({ order }: OrderDetailProps) {
 
                         {order.status === 'shipped' && (
                             <Link
-                                href={`/orders/${order.id}/complete`}
+                                                                            href={`/orders/complete/${order.order_number}`}
                                 method="put"
                                 className="inline-flex items-center justify-center rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white shadow hover:bg-green-700"
                             >
@@ -433,7 +434,7 @@ export default function OrderDetail({ order }: OrderDetailProps) {
                                                         {item.product.name}
                                                     </Link>
                                                 </h3>
-                                                {item.size && <p className="text-muted-foreground text-sm">Ukuran: {item.size}</p>}
+                                                {item.size && <p className="text-muted-foreground text-sm">Variasi: {item.size}</p>}
                                                 <div className="flex items-center justify-between">
                                                     <span className="text-sm">
                                                         {item.quantity} x {formatRupiah(item.price)}
@@ -484,6 +485,12 @@ export default function OrderDetail({ order }: OrderDetailProps) {
                                             <span>Subtotal</span>
                                             <span>{formatRupiah(order.total_price)}</span>
                                         </div>
+                                        {order.discount > 0 && (
+                                            <div className="flex items-center justify-between text-sm">
+                                                <span>Diskon</span>
+                                                <span className="text-red-500">- {formatRupiah(order.discount)}</span>
+                                            </div>
+                                        )}
                                         <div className="flex items-center justify-between text-sm">
                                             <span>Ongkos Kirim</span>
                                             <span>{formatRupiah(order.shipping_cost)}</span>

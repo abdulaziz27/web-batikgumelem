@@ -82,4 +82,16 @@ class LoginRequest extends FormRequest
     {
         return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
     }
+
+    public function messages()
+    {
+        return [
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'password.required' => 'Password wajib diisi.',
+            'email.exists' => 'Email tidak ditemukan.',
+            'auth.failed' => 'Kredensial yang Anda masukkan tidak cocok dengan data kami.',
+            'auth.throttle' => 'Terlalu banyak upaya login. Silakan coba lagi dalam :seconds detik atau :minutes menit.',
+        ];
+    }
 }

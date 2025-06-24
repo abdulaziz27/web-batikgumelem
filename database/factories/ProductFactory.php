@@ -28,7 +28,6 @@ class ProductFactory extends Factory
             'slug' => Str::slug($name),
             'description' => $this->faker->paragraph(),
             'price' => $this->faker->numberBetween(100000, 2000000),
-            'stock' => $this->faker->numberBetween(5, 50),
             'image' => 'products/' . $this->faker->numberBetween(1, 10) . '.jpg',
         ];
     }

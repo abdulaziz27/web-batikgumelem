@@ -69,7 +69,6 @@ const History = () => {
                         viewport={{ once: true }}
                     >
                         <div className="relative">
-                            <div className="bg-batik-brown absolute -top-4 -left-4 hidden h-24 w-24 rounded-full md:block"></div>
                             <img
                                 src="images/product_image_3.png"
                                 alt="Proses pembuatan batik Gumelem"

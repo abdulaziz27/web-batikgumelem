@@ -106,11 +106,7 @@ class ReportController extends Controller
                     throw new \Exception('Invalid report type');
             }
 
-            if ($data->isEmpty()) {
-                return back()->with('error', 'Tidak ada data penjualan untuk periode yang dipilih');
-            }
-
-            // Generate PDF menggunakan DomPDF
+            // Tetap generate PDF meskipun data kosong
             $pdf = PDF::loadView('admin.reports.sales', [
                 'data' => $data,
                 'type' => $request->type,

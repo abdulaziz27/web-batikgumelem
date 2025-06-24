@@ -11,6 +11,13 @@ import { ArrowUpDown, ChevronDown, ChevronUp, Search, SlidersHorizontal } from '
 import { useState } from 'react';
 
 // Define types based on your backend
+interface ProductSize {
+    id: number;
+    product_id: number;
+    size: string;
+    stock: number;
+}
+
 interface Product {
     id: number;
     name: string;
@@ -18,7 +25,7 @@ interface Product {
     price: number;
     image: string;
     description: string;
-    stock: number;
+    sizes?: ProductSize[];
 }
 
 interface ProductsProps {

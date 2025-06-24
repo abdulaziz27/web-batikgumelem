@@ -1,11 +1,11 @@
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useCart } from '@/hooks/useCart';
 import { formatRupiah } from '@/utils/formatters';
-import { router } from '@inertiajs/react';
-import { Check, RefreshCw } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Head, router } from '@inertiajs/react';
+import { CheckCircle, Package, ArrowRight } from 'lucide-react';
+import { useEffect } from 'react';
 
 interface Props {
     order: {
@@ -15,13 +15,12 @@ interface Props {
         total_price: number;
         total_amount: number;
         payment_status: string;
+        payment_method: string;
     };
 }
 
 const CheckoutSuccess = ({ order }: Props) => {
-    const [isChecking, setIsChecking] = useState(false);
-
-    // Safer cart access with try-catch (same pattern as CheckoutPayment)
+    // Safer cart access with try-catch
     let clearCart = () => {};
     try {
         const cart = useCart();
@@ -30,6 +29,7 @@ const CheckoutSuccess = ({ order }: Props) => {
         console.warn('Cart provider not available, using fallback');
     }
 
+    // Clear cart on mount
     useEffect(() => {
         try {
             clearCart();
@@ -38,96 +38,101 @@ const CheckoutSuccess = ({ order }: Props) => {
         }
     }, []);
 
-    // Auto-poll for payment status updates if not paid
-    useEffect(() => {
-        let statusCheckInterval: ReturnType<typeof setInterval> | null = null;
-
-        // Only set up polling if the payment is not yet completed
-        if (order.payment_status !== 'paid') {
-            // Initial check after 5 seconds
-            const initialCheckTimeout = setTimeout(() => {
-                checkPaymentStatus();
-
-                // Then check every 20 seconds
-                statusCheckInterval = setInterval(checkPaymentStatus, 20000);
-            }, 5000);
-
-            return () => {
-                clearTimeout(initialCheckTimeout);
-                if (statusCheckInterval) {
-                    clearInterval(statusCheckInterval);
-                }
-            };
-        }
-    }, [order.payment_status]);
-
-    const checkPaymentStatus = () => {
-        if (isChecking) return; // Prevent multiple simultaneous checks
-
-        setIsChecking(true);
-        router.visit(`/checkout/check-status/${order.id}`, {
-            onFinish: () => setIsChecking(false),
-        });
-    };
-
     return (
         <Layout>
+            <Head title="Pembayaran Berhasil" />
             <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
                 <div className="mx-auto max-w-3xl">
                     <div className="mb-8">
-                        <h1 className="text-batik-brown text-2xl font-bold tracking-tight">Pesanan Berhasil Dibuat</h1>
+                        <h1 className="text-batik-brown text-2xl font-bold tracking-tight">
+                            Pembayaran Berhasil
+                        </h1>
                     </div>
 
                     <Card>
                         <CardHeader>
-                            <div className="mb-4 flex justify-center">
-                                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
-                                    <Check className="h-8 w-8 text-green-600" />
-                                </div>
+                            <div className="flex items-center space-x-2">
+                                <CheckCircle className="h-5 w-5 text-green-500" />
+                                <CardTitle>Pembayaran Berhasil</CardTitle>
                             </div>
-                            <CardTitle className="text-center text-xl">Terima Kasih Atas Pesanan Anda!</CardTitle>
+                            <CardDescription>
+                                Pembayaran Anda telah berhasil diproses dan pesanan akan segera dikirim
+                            </CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <div className="mb-6 text-center">
-                                <p className="text-gray-600">
-                                    {order.payment_status === 'paid'
-                                        ? 'Pembayaran Anda telah berhasil diterima.'
-                                        : 'Pesanan Anda telah berhasil dibuat dan menunggu pembayaran.'}
-                                </p>
-                            </div>
+                            <div className="space-y-6">
+                                {/* Order Details */}
+                                <div className="rounded-lg bg-gray-50 p-4">
+                                    <div className="space-y-2">
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-sm font-medium">Nomor Pesanan</span>
+                                            <span className="font-mono">{order.order_number}</span>
+                                        </div>
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-sm font-medium">Total Pembayaran</span>
+                                            <span className="font-semibold">{formatRupiah(order.total_amount)}</span>
+                                        </div>
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-sm font-medium">Metode Pembayaran</span>
+                                            <span className="capitalize">{order.payment_method.replace('_', ' ')}</span>
+                                        </div>
+                                    </div>
+                                </div>
 
-                            <div className="rounded-lg bg-gray-50 p-4">
-                                <p className="font-medium">Detail Pesanan</p>
-                                <p className="text-sm text-gray-600">Nomor Pesanan: {order.order_number}</p>
-                                <p className="text-sm text-gray-600">Total: {formatRupiah(order.total_amount)}</p>
-                                <p className="text-sm text-gray-600">
-                                    Status:{' '}
-                                    <span
-                                        className={`rounded-full px-2 py-1 text-xs font-medium ${
-                                            order.payment_status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                                        }`}
-                                    >
-                                        {order.payment_status === 'paid' ? 'Dibayar' : 'Menunggu Pembayaran'}
-                                    </span>
-                                </p>
+                                {/* Success Status */}
+                                <div className="rounded-lg border border-green-200 bg-green-50 p-4">
+                                    <div className="flex items-center space-x-2">
+                                        <CheckCircle className="h-5 w-5 text-green-500" />
+                                        <span className="font-medium text-green-800">
+                                            Pembayaran Berhasil
+                                        </span>
+                                    </div>
+                                    <p className="mt-2 text-sm text-green-700">
+                                        Terima kasih! Pembayaran Anda telah berhasil diverifikasi. Pesanan akan segera diproses dan dikirim.
+                                    </p>
+                                </div>
 
-                                {order.payment_status !== 'paid' && (
-                                    <Button
-                                        onClick={checkPaymentStatus}
-                                        disabled={isChecking}
-                                        variant="outline"
-                                        size="sm"
-                                        className="mt-2 flex items-center"
-                                    >
-                                        <RefreshCw className={`mr-1 h-3 w-3 ${isChecking ? 'animate-spin' : ''}`} />
-                                        {isChecking ? 'Memeriksa...' : 'Perbarui Status Pembayaran'}
-                                    </Button>
-                                )}
+                                {/* Next Steps */}
+                                <div className="space-y-4">
+                                    <h3 className="font-semibold">Langkah Selanjutnya:</h3>
+                                    <div className="rounded-lg border p-4">
+                                        <ol className="list-decimal space-y-2 pl-4">
+                                            <li>Kami akan memproses pesanan Anda dalam 1-2 hari kerja</li>
+                                            <li>Anda akan menerima email konfirmasi dengan detail pengiriman</li>
+                                            <li>Pesanan akan dikirim sesuai alamat yang telah Anda berikan</li>
+                                            <li>Pantau status pesanan melalui halaman riwayat pesanan</li>
+                                        </ol>
+                                    </div>
+                                </div>
                             </div>
                         </CardContent>
-                        <CardFooter className="flex justify-center">
-                            <Button asChild className="bg-batik-indigo hover:bg-batik-indigo/90">
-                                <a href="/">Kembali ke Beranda</a>
+                        <CardFooter className="flex flex-col space-y-4">
+                            {/* Tombol Detail Pesanan */}
+                            <Button
+                                onClick={() => router.visit(`/orders/detail/${order.order_number}`)}
+                                className="bg-batik-brown hover:bg-batik-brown/90 w-full"
+                            >
+                                <Package className="mr-2 h-4 w-4" />
+                                Lihat Detail Pesanan
+                            </Button>
+                            
+                            {/* Tombol Kembali Berbelanja */}
+                            {/* <Button
+                                variant="outline"
+                                onClick={() => router.visit('/products')}
+                                className="w-full"
+                            >
+                                <ArrowRight className="mr-2 h-4 w-4" />
+                                Lanjut Berbelanja
+                            </Button> */}
+                            
+                            {/* Tombol Kembali ke Home */}
+                            <Button
+                                variant="outline"
+                                onClick={() => router.visit('/')}
+                                className="w-full"
+                            >
+                                Kembali ke Beranda
                             </Button>
                         </CardFooter>
                     </Card>

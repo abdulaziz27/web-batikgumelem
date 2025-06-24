@@ -79,29 +79,6 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
 
                         <InputError className="mt-2" message={errors.email} />
                     </div>
-
-                    {mustVerifyEmail && auth.user.email_verified_at === null && (
-                        <div>
-                            <p className="text-muted-foreground -mt-4 text-sm">
-                                Alamat email Anda belum diverifikasi.{' '}
-                                <Link
-                                    href={route('verification.send')}
-                                    method="post"
-                                    as="button"
-                                    className="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
-                                >
-                                    Klik di sini untuk mengirim ulang email verifikasi.
-                                </Link>
-                            </p>
-
-                            {status === 'verification-link-sent' && (
-                                <div className="mt-2 text-sm font-medium text-green-600">
-                                    Link verifikasi baru telah dikirim ke alamat email Anda.
-                                </div>
-                            )}
-                        </div>
-                    )}
-
                     <div className="flex items-center gap-4">
                         <Button disabled={processing}>Simpan</Button>
 

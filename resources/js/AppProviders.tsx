@@ -46,7 +46,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
             </ErrorBoundary>
         );
     } catch (error) {
-        // Jika usePage gagal (biasanya di SSR), bungkus saja dengan ErrorBoundary
+        // Jika usePage gagal (biasanya di SSR), makanya dibungkus dengan ErrorBoundary
         return <ErrorBoundary>{children}</ErrorBoundary>;
     }
 }

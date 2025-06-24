@@ -29,7 +29,6 @@ interface Product {
     slug: string;
     description: string;
     price: number;
-    stock: number;
     is_active: boolean;
     image?: string;
     image_url?: string;
@@ -175,7 +174,7 @@ export default function Show({ product }: ShowProps) {
                             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                 <div>
                                     <h3 className="text-muted-foreground mb-1 text-sm font-medium">Nama</h3>
-                                    <p className="font-semibold">{product.name}</p>
+                                    <p>{product.name}</p>
                                 </div>
                                 <div>
                                     <h3 className="text-muted-foreground mb-1 text-sm font-medium">Slug</h3>
@@ -183,11 +182,11 @@ export default function Show({ product }: ShowProps) {
                                 </div>
                                 <div>
                                     <h3 className="text-muted-foreground mb-1 text-sm font-medium">Harga</h3>
-                                    <p className="font-semibold">{formatPrice(product.price)}</p>
+                                    <p>{formatPrice(product.price)}</p>
                                 </div>
                                 <div>
-                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">Stok Utama</h3>
-                                    <p className="font-semibold">{product.stock}</p>
+                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">Total Stok</h3>
+                                    <p>{product.sizes.reduce((total, size) => total + size.stock, 0)}</p>
                                 </div>
                                 <div>
                                     <h3 className="text-muted-foreground mb-1 text-sm font-medium">Status</h3>

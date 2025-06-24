@@ -3,8 +3,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatRupiah } from '@/utils/formatters';
 import { Head, router } from '@inertiajs/react';
-import { AlertCircle, Clock, Loader2, RefreshCw } from 'lucide-react';
+import { AlertCircle, Clock, Loader2, RefreshCw, CreditCard, CheckCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useCart } from '@/hooks/useCart';
 
 interface Props {
     order: {
@@ -18,26 +19,143 @@ interface Props {
         payment_token: string;
         payment_url: string;
     };
+    midtrans_client_key?: string;
+    is_production?: boolean;
 }
 
-const CheckoutPending = ({ order }: Props) => {
+// Add global type for Midtrans Snap
+declare global {
+    interface Window {
+        snap?: any;
+    }
+}
+
+const CheckoutPending = ({ order, midtrans_client_key = '', is_production = false }: Props) => {
     const [isChecking, setIsChecking] = useState(false);
+    const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+    const [snapToken, setSnapToken] = useState('');
+    const [error, setError] = useState<string | null>(null);
+
+    // Safer cart access
+    let clearCart = () => {};
+    try {
+        const cart = useCart();
+        clearCart = cart.clearCart;
+    } catch (error) {
+        console.warn('Cart provider not available, using fallback');
+    }
+
+    // Clear cart on mount
+    useEffect(() => {
+        try {
+            clearCart();
+        } catch (err) {
+            console.warn('Error clearing cart:', err);
+        }
+    }, []);
+
+    // Extract Snap token
+    useEffect(() => {
+        let token = '';
+        if (order?.payment_token) {
+            token = order.payment_token;
+        } else if (order?.payment_url) {
+            const tokenMatch = order.payment_url.match(/([^\/]+)$/);
+            if (tokenMatch && tokenMatch[1]) {
+                token = tokenMatch[1];
+            }
+        }
+        setSnapToken(token);
+    }, [order]);
+
+    // Load Snap.js script
+    useEffect(() => {
+        if (!snapToken || !midtrans_client_key) return;
+
+        const existingScript = document.getElementById('midtrans-script');
+        if (existingScript) {
+            document.body.removeChild(existingScript);
+        }
+
+        const midtransScriptUrl = is_production 
+            ? 'https://app.midtrans.com/snap/snap.js' 
+            : 'https://app.sandbox.midtrans.com/snap/snap.js';
+
+        const script = document.createElement('script');
+        script.id = 'midtrans-script';
+        script.src = midtransScriptUrl;
+        script.setAttribute('data-client-key', midtrans_client_key);
+
+        script.onload = () => console.log('Snap.js loaded successfully');
+        script.onerror = () => setError('Gagal memuat payment processor');
+
+        document.body.appendChild(script);
+
+        return () => {
+            const scriptToRemove = document.getElementById('midtrans-script');
+            if (scriptToRemove) document.body.removeChild(scriptToRemove);
+        };
+    }, [snapToken, midtrans_client_key, is_production]);
+
+    const handlePayment = () => {
+        if (!snapToken) {
+            setError('Token pembayaran tidak valid');
+            return;
+        }
+
+        setIsProcessingPayment(true);
+
+        if (window.snap) {
+            window.snap.pay(snapToken, {
+                onSuccess: function (result: any) {
+                    console.log('Payment success:', result);
+                    setIsProcessingPayment(false);
+                    // Use the order_id from result which should be in ORD-X-timestamp format
+                    router.visit(`/checkout/success?order_id=${result.order_id}`);
+                },
+                onPending: function (result: any) {
+                    console.log('Payment pending:', result);
+                    setIsProcessingPayment(false);
+                    // Stay on this page and show updated status
+                    checkPaymentStatus();
+                },
+                onError: function (result: any) {
+                    console.error('Payment error:', result);
+                    setIsProcessingPayment(false);
+                    router.visit(`/checkout/failed?order_id=${result.order_id}`);
+                },
+                onClose: function () {
+                    console.log('Payment widget closed without completion');
+                    setIsProcessingPayment(false);
+                    // Stay on pending page - no need to redirect
+                }
+            });
+        } else {
+            setError('Payment gateway not initialized');
+            setIsProcessingPayment(false);
+        }
+    };
 
     const checkPaymentStatus = () => {
         setIsChecking(true);
-        router.visit(`/checkout/check-payment/${order.id}`, {
+        router.visit(`/checkout/check-payment/${order.order_number}`, {
             preserveState: true,
             onFinish: () => setIsChecking(false),
+            onError: (errors) => {
+                console.error('Error checking payment status:', errors);
+            }
         });
     };
 
     return (
         <Layout>
-            <Head title="Menunggu Pembayaran" />
+            <Head title="Pembayaran Pesanan" />
             <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
                 <div className="mx-auto max-w-3xl">
                     <div className="mb-8">
-                        <h1 className="text-batik-brown text-2xl font-bold tracking-tight">Menunggu Pembayaran</h1>
+                        <h1 className="text-batik-brown text-2xl font-bold tracking-tight">
+                            Pembayaran Pesanan
+                        </h1>
                     </div>
 
                     <Card>
@@ -46,7 +164,9 @@ const CheckoutPending = ({ order }: Props) => {
                                 <AlertCircle className="h-5 w-5 text-yellow-500" />
                                 <CardTitle>Pembayaran Dalam Proses</CardTitle>
                             </div>
-                            <CardDescription>Silakan selesaikan pembayaran Anda sesuai instruksi</CardDescription>
+                            <CardDescription>
+                                Silakan selesaikan pembayaran Anda sesuai instruksi
+                            </CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-6">
@@ -96,10 +216,33 @@ const CheckoutPending = ({ order }: Props) => {
                             </div>
                         </CardContent>
                         <CardFooter className="flex flex-col space-y-4">
+                            {/* Tombol Bayar Sekarang (jika ada token) */}
+                            {snapToken && (
+                                <Button
+                                    onClick={handlePayment}
+                                    disabled={isProcessingPayment || !!error}
+                                    className="bg-batik-brown hover:bg-batik-brown/90 w-full"
+                                >
+                                    {isProcessingPayment ? (
+                                        <>
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                            Memproses Pembayaran...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <CreditCard className="mr-2 h-4 w-4" />
+                                            Bayar Sekarang
+                                        </>
+                                    )}
+                                </Button>
+                            )}
+                            
+                            {/* Tombol Cek Status */}
                             <Button
                                 onClick={checkPaymentStatus}
                                 disabled={isChecking}
-                                className="bg-batik-indigo hover:bg-batik-indigo/90 w-full"
+                                variant={snapToken ? "outline" : "default"}
+                                className={snapToken ? "w-full" : "bg-batik-indigo hover:bg-batik-indigo/90 w-full"}
                             >
                                 {isChecking ? (
                                     <>
@@ -113,13 +256,22 @@ const CheckoutPending = ({ order }: Props) => {
                                     </>
                                 )}
                             </Button>
+                            
+                            {/* Tombol Detail Pesanan */}
                             <Button
                                 variant="outline"
-                                onClick={() => router.visit(`/orders/${order.id}`)}
+                                onClick={() => router.visit(`/orders/detail/${order.order_number}`)}
                                 className="w-full"
                             >
                                 Lihat Detail Pesanan
                             </Button>
+
+                            {/* Error Message */}
+                            {error && (
+                                <div className="rounded-md bg-red-50 p-3 w-full">
+                                    <div className="text-sm text-red-700">{error}</div>
+                                </div>
+                            )}
                         </CardFooter>
                     </Card>
                 </div>

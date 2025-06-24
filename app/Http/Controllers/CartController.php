@@ -53,8 +53,14 @@ class CartController extends Controller
             'quantity' => 'required|integer|min:1',
             'size' => 'nullable|string',
         ]);
+        
         $result = $this->cartService->addToCart($validated['product_id'], $validated['quantity'], $validated['size'] ?? null);
-        return back()->with('success', 'Produk berhasil ditambahkan ke keranjang.');
+        
+        if ($result['success']) {
+            return back()->with('success', $result['message']);
+        } else {
+            return back()->with('error', $result['message']);
+        }
     }
 
     /**
@@ -82,11 +88,20 @@ class CartController extends Controller
             'item_key' => 'required|string',
             'quantity' => 'required|integer|min:1',
         ]);
+        
         $result = $this->cartService->updateCartItem($request->item_key, $request->quantity);
-        return Inertia::render('Cart', [
-            'cart' => $result['cart'],
-            'message' => 'Jumlah produk di keranjang berhasil diperbarui.',
-        ]);
+        
+        if ($result['success']) {
+            return Inertia::render('Cart', [
+                'cart' => $result['cart'],
+                'success' => $result['message'],
+            ]);
+        } else {
+            return Inertia::render('Cart', [
+                'cart' => $result['cart'],
+                'error' => $result['message'],
+            ]);
+        }
     }
 
     /**
@@ -97,11 +112,20 @@ class CartController extends Controller
         $request->validate([
             'item_key' => 'required|string',
         ]);
+        
         $result = $this->cartService->removeCartItem($request->item_key);
-        return Inertia::render('Cart', [
-            'cart' => $result['cart'],
-            'message' => 'Produk berhasil dihapus dari keranjang.',
-        ]);
+        
+        if ($result['success']) {
+            return Inertia::render('Cart', [
+                'cart' => $result['cart'],
+                'success' => $result['message'],
+            ]);
+        } else {
+            return Inertia::render('Cart', [
+                'cart' => $result['cart'],
+                'error' => $result['message'],
+            ]);
+        }
     }
 
     public function clear()

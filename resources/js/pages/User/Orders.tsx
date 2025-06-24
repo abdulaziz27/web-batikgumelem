@@ -305,7 +305,7 @@ export default function Orders({ orders, midtrans_client_key, is_production }: O
                                                 <div className="font-semibold">{formatRupiah(order.total_amount)}</div>
                                                 <div className="flex space-x-2">
                                                     <Button asChild variant="outline" size="sm">
-                                                        <Link href={`/orders/${order.id}`}>Lihat Detail</Link>
+                                                        <Link href={`/orders/detail/${order.order_number}`}>Lihat Detail</Link>
                                                     </Button>
 
                                                     {order.payment_status !== 'paid' && order.payment_url && order.status !== 'cancelled' && (
@@ -334,7 +334,7 @@ export default function Orders({ orders, midtrans_client_key, is_production }: O
                                                         2. Belum dibayar (payment_status !== 'paid') */}
                                                     {order.status === 'pending' && order.payment_status !== 'paid' && (
                                                         <Link
-                                                            href={`/orders/${order.id}/cancel`}
+                                                            href={`/orders/cancel/${order.order_number}`}
                                                             method="put"
                                                             as="button"
                                                             className="bg-destructive text-destructive-foreground hover:bg-destructive/90 inline-flex h-8 items-center justify-center rounded-md px-3 py-1 text-xs font-medium shadow"

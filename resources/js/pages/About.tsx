@@ -100,7 +100,7 @@ const About = () => {
                 </div>
 
                 {/* Workshop Gallery */}
-                <div className="mb-20">
+                {/* <div className="mb-20">
                     <div className="mb-12 text-center">
                         <h2 className="text-batik-brown mb-4 text-3xl font-bold">Workshop Kami</h2>
                         <p className="mx-auto max-w-3xl text-lg text-gray-600">
@@ -174,7 +174,7 @@ const About = () => {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> */}
 
                 {/* Location and Contact */}
                 <div>
@@ -189,7 +189,7 @@ const About = () => {
                         <div className="animate-fade-in overflow-hidden rounded-xl bg-white shadow-sm">
                             <iframe
                                 title="Google Maps Location"
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31642.288870029946!2d109.63935393798298!3d-7.412517588335306!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7aa0b9bc1e3f97%3A0xd781175c07507599!2sGumelem%20Wetan%2C%20Kec.%20Susukan%2C%20Kabupaten%20Banjarnegara%2C%20Jawa%20Tengah!5e0!3m2!1sid!2sid!4v1714667824781!5m2!1sid!2sid"
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3955.43193360254!2d109.40806429999999!3d-7.5277771!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e654f34bfa908d7%3A0x931c9b3c8d262ebf!2sAmorista%20Batik!5e0!3m2!1sid!2sid!4v1750780105864!5m2!1sid!2sid"
                                 width="100%"
                                 height="450"
                                 style={{ border: 0 }}
@@ -213,7 +213,7 @@ const About = () => {
                                         <div className="ml-4">
                                             <h4 className="text-batik-indigo text-lg font-semibold">Alamat</h4>
                                             <p className="mt-1 text-gray-600">
-                                                Desa Gumelem Kulon, Kecamatan Susukan
+                                                Amorista, Desa Gumelem Kulon, Kecamatan Susukan
                                                 <br />
                                                 Kabupaten Banjarnegara, Jawa Tengah
                                                 <br />
@@ -231,9 +231,7 @@ const About = () => {
                                         <div className="ml-4">
                                             <h4 className="text-batik-indigo text-lg font-semibold">Telepon</h4>
                                             <p className="mt-1 text-gray-600">
-                                                +62 852 1155 3430
-                                                <br />
-                                                +62 876 5432 1098
+                                                +62 859 4460 8542
                                             </p>
                                         </div>
                                     </div>

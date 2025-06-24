@@ -168,14 +168,30 @@ class CheckoutController extends Controller
             $validationRules['saved_address_id'] = 'required|exists:shipping_addresses,id';
         } else {
             $validationRules['shipping_address'] = 'required|array';
-            $validationRules['shipping_address.full_name'] = 'required|string';
-            $validationRules['shipping_address.address'] = 'required|string';
-            $validationRules['shipping_address.city'] = 'required|string';
-            $validationRules['shipping_address.province'] = 'required|string';
-            $validationRules['shipping_address.postal_code'] = 'required|string';
-            $validationRules['shipping_address.phone'] = 'required|string';
+            $validationRules['shipping_address.full_name'] = 'required|string|min:3|max:255';
+            $validationRules['shipping_address.address'] = 'required|string|min:10|max:500';
+            $validationRules['shipping_address.city'] = 'required|string|min:3|max:100';
+            $validationRules['shipping_address.province'] = 'required|string|min:3|max:100';
+            $validationRules['shipping_address.postal_code'] = 'required|string|regex:/^[0-9]{5}$/';
+            $validationRules['shipping_address.phone'] = 'required|string|regex:/^[0-9]{10,15}$/';
         }
-        $request->validate($validationRules);
+        $request->validate($validationRules, [
+            'shipping_address.full_name.required' => 'Nama lengkap wajib diisi.',
+            'shipping_address.full_name.min' => 'Nama lengkap minimal 3 karakter.',
+            'shipping_address.address.required' => 'Alamat lengkap wajib diisi.',
+            'shipping_address.address.min' => 'Alamat minimal 10 karakter.',
+            'shipping_address.city.required' => 'Nama kota wajib diisi.',
+            'shipping_address.city.min' => 'Nama kota minimal 3 karakter.',
+            'shipping_address.province.required' => 'Nama provinsi wajib diisi.',
+            'shipping_address.province.min' => 'Nama provinsi minimal 3 karakter.',
+            'shipping_address.postal_code.required' => 'Kode pos wajib diisi.',
+            'shipping_address.postal_code.regex' => 'Kode pos harus berupa 5 digit angka.',
+            'shipping_address.phone.required' => 'Nomor telepon wajib diisi.',
+            'shipping_address.phone.regex' => 'Nomor telepon harus berupa angka 10-15 digit.',
+            'shipping_method.required' => 'Metode pengiriman wajib dipilih.',
+            'payment_method.required' => 'Metode pembayaran wajib dipilih.',
+            'payment_method.in' => 'Metode pembayaran tidak valid.',
+        ]);
         // Start DB transaction
         return \DB::transaction(function () use ($request, $cart) {
             $subtotal = $cart['total'];
@@ -245,10 +261,9 @@ class CheckoutController extends Controller
             }
 
 
-            // Redirect dengan token yang baru dibuat
-            return redirect()->route('checkout.payment', [
-                'order_id' => $order->id,
-                'payment_url' => $transaction['success'] ? $transaction['redirect_url'] : null,
+            // Redirect langsung ke pending (menggabungkan payment dan pending)
+            return redirect()->route('checkout.pending', [
+                'order_number' => $order->order_number,
             ]);
         });
     }
@@ -280,15 +295,68 @@ class CheckoutController extends Controller
 
     public function success(Request $request)
     {
-        // Extract order ID from Midtrans order_id format (ORD-xx-timestamp)
-        $parts = explode('-', $request->order_id);
-        $orderId = $parts[1] ?? null;
-
-        if (!$orderId) {
-            return redirect()->route('home')->with('error', 'Invalid order data');
+        // Get order_number parameter - this should be the customer-facing order number
+        $orderNumber = $request->order_number;
+        
+        // Support legacy order_id parameter for backward compatibility 
+        if (!$orderNumber && $request->order_id) {
+            $legacyOrderId = $request->order_id;
+            // If it's Midtrans format (ORD-X-timestamp), extract the database ID
+            if (strpos($legacyOrderId, 'ORD-') === 0) {
+                $parts = explode('-', $legacyOrderId);
+                $dbId = $parts[1] ?? null;
+                if ($dbId) {
+                    $order = Order::find($dbId);
+                    if ($order) {
+                        // Redirect to use proper order_number format
+                        return redirect()->route('checkout.success', ['order_number' => $order->order_number]);
+                    }
+                }
+            }
         }
+        \Log::info('Success page accessed', ['order_param' => $orderNumber]);
+        
+        if (!$orderNumber) {
+            \Log::error('No order_number provided in success page');
+            return redirect()->route('home')->with('error', 'Parameter pesanan tidak valid');
+        }
+        
+        // Find order by order_number (customer-facing format: ORD-YYYYMMDD-XXXX)
+        $order = Order::where('order_number', $orderNumber)->first();
 
-        $order = Order::findOrFail($orderId);
+        if (!$order) {
+            \Log::error('Order not found in success page', ['order_param' => $orderNumber]);
+            return redirect()->route('home')->with('error', 'Pesanan tidak ditemukan');
+        }
+        
+        // If payment status is not paid yet, try to update it first
+        if ($order->payment_status !== 'paid') {
+            \Log::info('Payment status not paid, checking Midtrans status', [
+                'order_id' => $order->id,
+                'current_status' => $order->payment_status
+            ]);
+            
+            // Try to update order status from Midtrans
+            $result = $this->midtransService->checkAndUpdateOrderStatus($order);
+            
+            if ($result['success'] && $result['updated']) {
+                // Refresh order data
+                $order->refresh();
+                \Log::info('Order status updated from Midtrans', [
+                    'order_id' => $order->id,
+                    'new_payment_status' => $order->payment_status
+                ]);
+            }
+            
+            // Check again after potential update
+            if ($order->payment_status !== 'paid') {
+                if ($order->payment_status === 'pending') {
+                    return redirect()->route('checkout.pending', ['order_number' => $order->order_number]);
+                } else {
+                    return redirect()->route('checkout.failed', ['order_number' => $order->order_number]);
+                }
+            }
+        }
         
         return Inertia::render('CheckoutSuccess', [
             'order' => $order,
@@ -297,18 +365,43 @@ class CheckoutController extends Controller
 
     public function pending(Request $request)
     {
-        // Extract order ID from Midtrans order_id format (ORD-xx-timestamp)
-        $orderId = $request->order_id;
-        if (strpos($orderId, 'ORD-') === 0) {
-            $parts = explode('-', $orderId);
-            $orderId = $parts[1] ?? null;
+        // Get order_number parameter - this should be the customer-facing order number
+        $orderNumber = $request->order_number;
+        
+        // Support legacy order_id parameter for backward compatibility 
+        if (!$orderNumber && $request->order_id) {
+            $legacyOrderId = $request->order_id;
+            // If it's Midtrans format (ORD-X-timestamp), extract the database ID
+            if (strpos($legacyOrderId, 'ORD-') === 0) {
+                $parts = explode('-', $legacyOrderId);
+                $dbId = $parts[1] ?? null;
+                if ($dbId) {
+                    $order = Order::find($dbId);
+                    if ($order) {
+                        // Redirect to use proper order_number format
+                        return redirect()->route('checkout.pending', ['order_number' => $order->order_number]);
+                    }
+                }
+            }
         }
-
-        if (!$orderId) {
-            return redirect()->route('home')->with('error', 'Invalid order data');
+        
+        if (!$orderNumber) {
+            return redirect()->route('home')->with('error', 'Parameter pesanan tidak valid');
         }
+        
+        // Find order by order_number (customer-facing format: ORD-YYYYMMDD-XXXX)
+        $order = Order::where('order_number', $orderNumber)->first();
 
-        $order = Order::findOrFail($orderId);
+        if (!$order) {
+            return redirect()->route('home')->with('error', 'Pesanan tidak ditemukan');
+        }
+        
+        // Redirect to appropriate page based on payment status
+        if ($order->payment_status === 'paid') {
+            return redirect()->route('checkout.success', ['order_number' => $order->order_number]);
+        } elseif (in_array($order->payment_status, ['failed', 'expired'])) {
+            return redirect()->route('checkout.failed', ['order_number' => $order->order_number]);
+        }
         
         // Update order status if needed
         if ($order->status === 'created') {
@@ -317,23 +410,43 @@ class CheckoutController extends Controller
 
         return Inertia::render('CheckoutPending', [
             'order' => $order,
+            'midtrans_client_key' => config('services.midtrans.client_key'),
+            'is_production' => config('services.midtrans.is_production', false),
         ]);
     }
 
     public function failed(Request $request)
     {
-        // Extract order ID from Midtrans order_id format (ORD-xx-timestamp)
-        $orderId = $request->order_id;
-        if (strpos($orderId, 'ORD-') === 0) {
-            $parts = explode('-', $orderId);
-            $orderId = $parts[1] ?? null;
+        // Get order_number parameter - this should be the customer-facing order number
+        $orderNumber = $request->order_number;
+        
+        // Support legacy order_id parameter for backward compatibility 
+        if (!$orderNumber && $request->order_id) {
+            $legacyOrderId = $request->order_id;
+            // If it's Midtrans format (ORD-X-timestamp), extract the database ID
+            if (strpos($legacyOrderId, 'ORD-') === 0) {
+                $parts = explode('-', $legacyOrderId);
+                $dbId = $parts[1] ?? null;
+                if ($dbId) {
+                    $order = Order::find($dbId);
+                    if ($order) {
+                        // Redirect to use proper order_number format
+                        return redirect()->route('checkout.failed', ['order_number' => $order->order_number]);
+                    }
+                }
+            }
         }
-
-        if (!$orderId) {
-            return redirect()->route('home')->with('error', 'Invalid order data');
+        
+        if (!$orderNumber) {
+            return redirect()->route('home')->with('error', 'Parameter pesanan tidak valid');
         }
+        
+        // Find order by order_number (customer-facing format: ORD-YYYYMMDD-XXXX)
+        $order = Order::where('order_number', $orderNumber)->first();
 
-        $order = Order::findOrFail($orderId);
+        if (!$order) {
+            return redirect()->route('home')->with('error', 'Pesanan tidak ditemukan');
+        }
         $order->update(['status' => 'cancelled', 'payment_status' => 'failed']);
         
         // Get specific error message based on the situation
@@ -488,11 +601,11 @@ class CheckoutController extends Controller
         }
     }
 
-    public function checkPaymentStatus($orderId)
+    public function checkPaymentStatus($orderNumber)
     {
         try {
-            // Ambil order dari database
-            $order = Order::findOrFail($orderId);
+            // Ambil order dari database berdasarkan order_number
+            $order = Order::where('order_number', $orderNumber)->firstOrFail();
             
             // Pastikan order ada
             if (!$order) {
@@ -504,39 +617,51 @@ class CheckoutController extends Controller
             $result = $this->midtransService->checkAndUpdateOrderStatus($order);
             
             if (!$result['success']) {
-                \Log::error('Failed to check payment status', [
+                \Log::warning('Unable to check payment status from Midtrans', [
                     'order_id' => $order->id,
                     'error' => $result['message'] ?? 'Unknown error'
                 ]);
-                return back()->with('error', 'Gagal mengecek status pembayaran');
-            }
-            
-            // Redirect ke halaman yang sesuai berdasarkan status
-            if ($result['updated']) {
+                
+                // Berikan pesan berdasarkan status saat ini di database
                 switch ($order->payment_status) {
+                    case 'pending':
+                        return back()->with('info', 'Status pembayaran masih pending. Silakan lakukan pembayaran terlebih dahulu.');
                     case 'paid':
-                        return redirect()->route('checkout.success', ['order_id' => $order->id])
-                            ->with('success', 'Pembayaran berhasil');
+                        return back()->with('success', 'Pembayaran telah berhasil.');
                     case 'failed':
                     case 'expired':
-                        return redirect()->route('checkout.failed', ['order_id' => $order->id])
-                            ->with('error', 'Pembayaran gagal');
-                    case 'pending':
-                        return redirect()->route('checkout.pending', ['order_id' => $order->id])
-                            ->with('info', 'Menunggu pembayaran');
+                        return back()->with('warning', 'Pembayaran gagal atau telah kadaluarsa. Silakan buat pesanan baru.');
                     default:
-                        return back()->with('info', 'Status pembayaran: ' . $order->payment_status);
+                        return back()->with('info', 'Status pembayaran saat ini: ' . ucfirst($order->payment_status));
                 }
             }
-
-            return back()->with('info', 'Status pembayaran tidak berubah');
+            
+            // Refresh order untuk mendapatkan status terbaru
+            $order->refresh();
+            
+            // Redirect berdasarkan status pembayaran terbaru
+            switch ($order->payment_status) {
+                case 'paid':
+                    return redirect()->route('checkout.success', ['order_number' => $order->order_number])
+                        ->with('success', 'Pembayaran berhasil dikonfirmasi!');
+                case 'failed':
+                case 'expired':
+                    return redirect()->route('checkout.failed', ['order_number' => $order->order_number])
+                        ->with('warning', 'Pembayaran gagal atau telah kadaluarsa.');
+                case 'pending':
+                    return back()->with('info', 'Status pembayaran masih pending. Silakan selesaikan pembayaran Anda.');
+                case 'challenge':
+                    return back()->with('warning', 'Pembayaran sedang dalam review. Mohon tunggu konfirmasi lebih lanjut.');
+                default:
+                    return back()->with('info', 'Status pembayaran: ' . ucfirst($order->payment_status));
+            }
         } catch (\Exception $e) {
             \Log::error('Error checking payment status', [
-                'order_id' => $orderId,
+                'order_number' => $orderNumber,
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            return back()->with('error', 'Terjadi kesalahan saat mengecek status pembayaran');
+            return back()->with('error', 'Terjadi kesalahan saat mengecek status pembayaran. Silakan coba lagi.');
         }
     }
 

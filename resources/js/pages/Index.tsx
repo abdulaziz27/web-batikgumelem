@@ -8,6 +8,13 @@ import { motion } from 'framer-motion';
 import { ArrowRight, CheckCircle } from 'lucide-react';
 
 // Define types for our props from backend
+interface ProductSize {
+    id: number;
+    product_id: number;
+    size: string;
+    stock: number;
+}
+
 interface Product {
     id: number;
     name: string;
@@ -15,7 +22,7 @@ interface Product {
     price: number;
     image: string;
     description: string;
-    stock: number;
+    sizes?: ProductSize[];
 }
 
 interface Blog {
@@ -108,8 +115,6 @@ const Index = () => {
                             <div className="hero-image-shadow aspect-[5/4] overflow-hidden rounded-2xl">
                                 <img src="/images/dashboard_banner_image.png" alt="Batik Gumelem" className="h-full w-full object-cover" />
                             </div>
-                            <div className="bg-batik-indigo absolute -top-6 -right-6 h-24 w-24 rounded-full"></div>
-                            <div className="bg-batik-brown absolute -bottom-6 -left-6 h-24 w-24 rounded-full"></div>
                         </motion.div>
                     </div>
                 </div>

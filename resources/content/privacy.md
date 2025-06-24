@@ -67,6 +67,6 @@ Kami dapat memperbarui kebijakan ini. Perubahan signifikan akan diumumkan di web
 
 Jika ada pertanyaan tentang Kebijakan Privasi ini, hubungi:
 
-- Email: privacy@batikgumelem.com
-- Telepon: +62 123-456-7890
+- Email: admin@batikgumelem.com
+- Telepon: +62 859-4460-8542
 - Alamat: Jl. Batik Gumelem No. 123, Banjarnegara, Jawa Tengah

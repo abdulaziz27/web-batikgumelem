@@ -5,24 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'name',
         'slug',
         'description',
         'price',
-        'stock',
         'is_active',
         'image',
     ];
 
     protected $casts = [
         'price' => 'float',
-        'stock' => 'integer',
         'is_active' => 'boolean',
     ];
 
@@ -44,6 +43,25 @@ class Product extends Model
     public function cartItems()
     {
         return $this->hasMany(\App\Models\CartItem::class);
+    }
+
+    /**
+     * Get total stock from all sizes, or 0 if no sizes exist
+     */
+    public function getTotalStockAttribute()
+    {
+        return $this->sizes->sum('stock');
+    }
+
+    /**
+     * Check if product has stock available
+     */
+    public function hasStock()
+    {
+        if ($this->sizes->count() > 0) {
+            return $this->sizes->where('stock', '>', 0)->count() > 0;
+        }
+        return false;
     }
 
     protected static function boot()

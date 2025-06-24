@@ -33,7 +33,6 @@ interface Product {
     slug: string;
     description: string;
     price: number;
-    stock: number;
     is_active: boolean;
     image?: string;
     image_url?: string;
@@ -52,7 +51,6 @@ type ProductFormData = {
     slug: string;
     description: string;
     price: number;
-    stock: number;
     is_active: boolean;
     sizes: Array<{ size: string; stock: number; id?: number }>;
     deleted_image_ids: number[];
@@ -95,7 +93,6 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
         slug: product?.slug || '',
         description: product?.description || '',
         price: product?.price || 0,
-        stock: product?.stock || 0,
         is_active: product?.is_active ?? true,
         sizes: product?.sizes?.map((s) => ({
             id: s.id,
@@ -103,7 +100,7 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
             stock: s.stock,
         })) || [{ size: '', stock: 0 }],
         deleted_image_ids: [],
-        primary_image_id: primaryImageId,
+        primary_image_id: null,
         new_images: [],
     });
 
@@ -122,7 +119,6 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
             form.append('slug', formData.slug);
             form.append('description', formData.description);
             form.append('price', formData.price.toString());
-            form.append('stock', formData.stock.toString());
             form.append('is_active', formData.is_active ? '1' : '0');
 
             // Add sizes
@@ -311,7 +307,6 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
         form.append('slug', formData.slug);
         form.append('description', formData.description);
         form.append('price', formData.price.toString());
-        form.append('stock', formData.stock.toString());
         form.append('is_active', formData.is_active ? '1' : '0');
 
         // Add sizes
@@ -439,19 +434,6 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
                                         />
                                     </div>
                                 </div>
-
-                                <div className="space-y-2">
-                                    <Label htmlFor="stock">Stok</Label>
-                                    <div className="space-y-1">
-                                        <Input
-                                            id="stock"
-                                            type="number"
-                                            min="0"
-                                            value={formData.stock}
-                                            onChange={(e) => handleInputChange('stock', e.target.value)}
-                                        />
-                                    </div>
-                                </div>
                             </div>
 
                             <div className="space-y-2">
@@ -534,7 +516,12 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
 
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-                            <CardTitle>Ukuran yang Tersedia</CardTitle>
+                            <div>
+                                <CardTitle>Ukuran dan Stok</CardTitle>
+                                <p className="text-sm text-muted-foreground mt-1">
+                                    Semua produk harus memiliki minimal satu ukuran dengan stok
+                                </p>
+                            </div>
                             <Button type="button" variant="outline" size="sm" onClick={addSizeField}>
                                 <Plus className="mr-1 h-4 w-4" />
                                 Tambah Ukuran
@@ -550,6 +537,7 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
                                             type="text"
                                             value={size.size}
                                             onChange={(e) => updateSizeField(index, 'size', e.target.value)}
+                                            placeholder="S, M, L, XL, dll."
                                         />
                                     </div>
                                     <div className="flex-1 space-y-2">

@@ -74,71 +74,75 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Laporan Penjualan</h1>
-        <p>Periode: {{ \Carbon\Carbon::parse($start_date)->format('d F Y') }} - {{ \Carbon\Carbon::parse($end_date)->format('d F Y') }}</p>
-    </div>
+    <h1>Laporan Penjualan</h1>
+    <p>Periode: {{ \Carbon\Carbon::parse($start_date)->format('d F Y') }} - {{ \Carbon\Carbon::parse($end_date)->format('d F Y') }}</p>
 
-    @foreach($data as $group)
-        <div class="summary-box">
-            <div class="summary-item">
-                <strong>Periode:</strong>
-                @if($type === 'daily')
-                    {{ \Carbon\Carbon::parse($group['date'])->format('d F Y') }}
-                @elseif($type === 'weekly')
-                    Minggu ke-{{ $group['week'] }}
-                @else
-                    {{ \Carbon\Carbon::createFromFormat('Y-m', $group['month'])->format('F Y') }}
-                @endif
-            </div>
-            <div class="summary-item">
-                <strong>Total Pesanan:</strong> {{ $group['total_orders'] }}
-            </div>
-            <div class="summary-item">
-                <strong>Total Penjualan:</strong> Rp {{ number_format($group['total_sales'], 0, ',', '.') }}
-            </div>
-            <div class="summary-item">
-                <strong>Total Penjualan (Selesai):</strong> Rp {{ number_format($group['completed_sales'], 0, ',', '.') }}
-            </div>
+    @if($data->isEmpty() || count($data) === 0)
+        <div style="margin-top:40px; text-align:center; color:#888; font-size:16px;">
+            <strong>Tidak ada data penjualan untuk periode yang dipilih.</strong>
         </div>
+    @else
+        @foreach($data as $group)
+            <div class="summary-box">
+                <div class="summary-item">
+                    <strong>Periode:</strong>
+                    @if($type === 'daily')
+                        {{ \Carbon\Carbon::parse($group['date'])->format('d F Y') }}
+                    @elseif($type === 'weekly')
+                        Minggu ke-{{ $group['week'] }}
+                    @else
+                        {{ \Carbon\Carbon::createFromFormat('Y-m', $group['month'])->format('F Y') }}
+                    @endif
+                </div>
+                <div class="summary-item">
+                    <strong>Total Pesanan:</strong> {{ $group['total_orders'] }}
+                </div>
+                <div class="summary-item">
+                    <strong>Total Penjualan:</strong> Rp {{ number_format($group['total_sales'], 0, ',', '.') }}
+                </div>
+                <div class="summary-item">
+                    <strong>Total Penjualan (Selesai):</strong> Rp {{ number_format($group['completed_sales'], 0, ',', '.') }}
+                </div>
+            </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>No. Order</th>
-                    <th>Tanggal</th>
-                    <th>Status</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($group['orders'] as $order)
+            <table>
+                <thead>
                     <tr>
-                        <td>{{ $order['order_number'] }}</td>
-                        <td>{{ $order['created_at'] }}</td>
-                        <td>
-                            <span class="status status-{{ $order['status'] }}">
-                                @switch($order['status'])
-                                    @case('completed')
-                                        Selesai
-                                        @break
-                                    @case('processing')
-                                        Diproses
-                                        @break
-                                    @case('pending')
-                                        Menunggu
-                                        @break
-                                    @default
-                                        {{ ucfirst($order['status']) }}
-                                @endswitch
-                            </span>
-                        </td>
-                        <td>Rp {{ number_format($order['total_amount'], 0, ',', '.') }}</td>
+                        <th>No. Order</th>
+                        <th>Tanggal</th>
+                        <th>Status</th>
+                        <th>Total</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @endforeach
+                </thead>
+                <tbody>
+                    @foreach($group['orders'] as $order)
+                        <tr>
+                            <td>{{ $order['order_number'] }}</td>
+                            <td>{{ $order['created_at'] }}</td>
+                            <td>
+                                <span class="status status-{{ $order['status'] }}">
+                                    @switch($order['status'])
+                                        @case('completed')
+                                            Selesai
+                                            @break
+                                        @case('processing')
+                                            Diproses
+                                            @break
+                                        @case('pending')
+                                            Menunggu
+                                            @break
+                                        @default
+                                            {{ ucfirst($order['status']) }}
+                                    @endswitch
+                                </span>
+                            </td>
+                            <td>Rp {{ number_format($order['total_amount'], 0, ',', '.') }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endforeach
+    @endif
 
     <div class="footer">
         <p>Dicetak pada: {{ now()->format('d F Y H:i:s') }}</p>

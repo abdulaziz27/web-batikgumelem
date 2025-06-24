@@ -30,7 +30,7 @@ class MidtransService
             foreach ($order->items as $item) {
                 $items[] = [
                     'id' => $item->product_id,
-                    'price' => $item->price,
+                    'price' => (int) round($item->price),
                     'quantity' => $item->quantity,
                     'name' => $item->product->name . ($item->size ? " (Size: {$item->size})" : ''),
                 ];
@@ -40,7 +40,7 @@ class MidtransService
             if ($order->shipping_cost > 0) {
                 $items[] = [
                     'id' => 'shipping',
-                    'price' => $order->shipping_cost,
+                    'price' => (int) round($order->shipping_cost),
                     'quantity' => 1,
                     'name' => 'Shipping Cost',
                 ];
@@ -50,17 +50,20 @@ class MidtransService
             if ($order->discount > 0) {
                 $items[] = [
                     'id' => 'discount',
-                    'price' => -$order->discount,
+                    'price' => -(int) round($order->discount),
                     'quantity' => 1,
                     'name' => 'Discount',
                 ];
             }
 
-            $orderId = 'ORD-' . $order->id . '-' . time();
+            // Create consistent order_id and store it for future reference
+            $timestamp = time();
+            $orderId = 'ORD-' . $order->id . '-' . $timestamp;
+            $grossAmount = (int) round($order->total_amount ?? $order->total_price);
             $transactionData = [
                 'transaction_details' => [
                     'order_id' => $orderId,
-                    'gross_amount' => $order->total_amount ?? $order->total_price,
+                    'gross_amount' => $grossAmount,
                 ],
                 'customer_details' => [
                     'first_name' => $order->user->name,
@@ -77,16 +80,16 @@ class MidtransService
                 ],
                 'item_details' => $items,
                 'callbacks' => [
-                    'finish' => route('checkout.success') . '?order_id=' . $orderId,
-                    'pending' => route('checkout.pending') . '?order_id=' . $orderId,
-                    'error' => route('checkout.failed') . '?order_id=' . $orderId,
-                    'cancel' => route('checkout.cancel') . '?order_id=' . $orderId,
+                    'finish' => route('checkout.success') . '?order_number=' . $order->order_number,
+                    'pending' => route('checkout.pending') . '?order_number=' . $order->order_number,
+                    'error' => route('checkout.failed') . '?order_number=' . $order->order_number,
+                    'cancel' => route('checkout.cancel') . '?order_number=' . $order->order_number,
                 ],
             ];
 
             \Log::info('Creating Midtrans transaction', [
                 'order_id' => $order->id,
-                'amount' => $order->total_amount,
+                'amount' => $grossAmount,
                 'items' => $items
             ]);
             
@@ -100,7 +103,8 @@ class MidtransService
                 \Log::error('Failed to generate Snap token', [
                     'order_id' => $order->id,
                     'error' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString()
+                    'trace' => $e->getTraceAsString(),
+                    'transaction_data' => $transactionData
                 ]);
                 throw $e;
             }
@@ -112,6 +116,7 @@ class MidtransService
             $order->update([
                 'payment_token' => $snapToken,
                 'payment_url' => $snapUrl . $snapToken,
+                // 'admin_notes' => 'Midtrans Order ID: ' . $orderId,
             ]);
     
             \Log::info('Payment token generated', [
@@ -171,8 +176,15 @@ class MidtransService
     public function checkAndUpdateOrderStatus(Order $order)
     {
         try {
-            $orderId = 'ORD-' . $order->id . '-' . strtotime($order->created_at);
-            \Log::info('Checking order status for automatic update', ['order_id' => $orderId]);
+            // Use the same pattern as createTransaction - get the actual order_id used when creating transaction
+            // We need to find the real order_id used in Midtrans from the payment_url or recreate consistently
+            $orderId = $this->getMidtransOrderId($order);
+            \Log::info('Checking order status for automatic update', [
+                'order_id' => $orderId,
+                'order_db_id' => $order->id,
+                'admin_notes' => $order->admin_notes,
+                'created_at' => $order->created_at
+            ]);
             
             $statusResponse = $this->getStatus($orderId);
             
@@ -267,5 +279,23 @@ class MidtransService
                 'message' => 'Error updating order status: ' . $e->getMessage()
             ];
         }
+    }
+
+    /**
+     * Get consistent Midtrans order_id for an order
+     */
+    private function getMidtransOrderId(Order $order)
+    {
+        // Try to extract from admin_notes first
+        if ($order->admin_notes && strpos($order->admin_notes, 'Midtrans Order ID: ') !== false) {
+            $orderIdMatch = [];
+            if (preg_match('/Midtrans Order ID: (ORD-\d+-\d+)/', $order->admin_notes, $orderIdMatch)) {
+                return $orderIdMatch[1];
+            }
+        }
+        
+        // Fallback: reconstruct using created_at timestamp for older orders
+        $timestamp = strtotime($order->created_at);
+        return 'ORD-' . $order->id . '-' . $timestamp;
     }
 }

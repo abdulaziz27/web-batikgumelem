@@ -131,8 +131,8 @@ const Shipping = () => {
                                 <p className="mb-4 text-gray-600">Untuk melakukan pengembalian produk, ikuti langkah-langkah berikut:</p>
                                 <ol className="list-decimal space-y-3 pl-5">
                                     <li className="text-gray-600">
-                                        Hubungi Customer Service kami melalui email <span className="text-batik-indigo">cs@batikgumelem.com</span>{' '}
-                                        atau WhatsApp <span className="text-batik-indigo">081234567890</span> untuk mengajukan pengembalian.
+                                        Hubungi Customer Service kami melalui email <span className="text-batik-indigo">admin@batikgumelem.com</span>{' '}
+                                        atau WhatsApp <span className="text-batik-indigo">+62 859-4460-8542</span> untuk mengajukan pengembalian.
                                     </li>
                                     <li className="text-gray-600">Sertakan nomor pesanan, foto produk, dan alasan pengembalian.</li>
                                     <li className="text-gray-600">

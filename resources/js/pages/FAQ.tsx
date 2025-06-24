@@ -88,7 +88,7 @@ const FAQ = () => {
                                 Email Kami
                             </a>
                             <a
-                                href="https://wa.me/6281234567890"
+                                href="https://wa.me/6285944608542"
                                 className="border-batik-brown text-batik-brown hover-lift hover:bg-batik-brown/10 inline-flex items-center justify-center rounded-lg border px-6 py-3"
                             >
                                 WhatsApp

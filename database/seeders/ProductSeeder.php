@@ -12,171 +12,108 @@ class ProductSeeder extends Seeder
 {
     public function run(): void
     {
-        // Path gambar yang akan digunakan (berdasarkan definisi Anda)
-        $imgPathA = 'products/product_image_2.png';
-        $imgPathB = 'products/product_image_3.png';
-        $imgPathC = 'products/product_image_1.png';
-
-        // Untuk variasi, kita buat array untuk cycling
-        $imageCycle = [$imgPathA, $imgPathB, $imgPathC];
-        $numImageCycle = count($imageCycle);
-
-        $products = [
+        // Produk berdasarkan file gambar yang disediakan user
+        $userProducts = [
             [
-                'name' => 'Batik Gumelem - Motif Sido Luhur',
-                'description' => 'Batik Tulis Gumelem premium dengan motif Sido Luhur yang memiliki pola geometris kompleks dan harmonis. Kata "Sido" berarti jadi atau tercapai, sedangkan "Luhur" berarti tinggi, mulia, atau terhormat. Motif ini melambangkan harapan agar pemakainya dapat mencapai kedudukan yang tinggi, kemuliaan, dan kehormatan dalam hidup. Seringkali dikaitkan dengan sifat sabar dan bijaksana. Dibuat oleh pengrajin batik Gumelem berpengalaman menggunakan pewarna berkualitas dan kain katun primisima.',
-                'price' => 200000,
-                'image' => $imageCycle[0 % $numImageCycle],
-                'additionalImages' => [$imageCycle[1 % $numImageCycle], $imageCycle[2 % $numImageCycle]]
+                'name' => 'Sida luhur',
+                'slug' => Str::slug('Sida luhur'),
+                'images' => ['sida_luhur.jpeg', 'sida_luhur_2.jpeg', 'sida_luhur_3.jpeg'],
             ],
             [
-                'name' => 'Batik Gumelem - Motif Kawung',
-                'description' => 'Batik Tulis Gumelem dengan motif Kawung yang memiliki pola dasar berupa empat bulatan lonjong mengelilingi satu titik pusat, menyerupai buah kawung. Di Gumelem, variasi seperti Kawung Ceplokan juga dikenal. Motif Kawung melambangkan harapan akan kebijaksanaan, keadilan, dan kesempurnaan. Dibuat dengan teknik tradisional tulis oleh pembatik Gumelem.',
-                'price' => 270000,
-                'image' => $imageCycle[1 % $numImageCycle],
-                'additionalImages' => [$imageCycle[2 % $numImageCycle], $imageCycle[0 % $numImageCycle]]
+                'name' => 'Sida mukti',
+                'slug' => Str::slug('Sida mukti'),
+                'images' => ['sida_mukti.jpeg', 'sida_mukti_2.jpeg', 'sida_mukti_3.jpeg'],
             ],
             [
-                'name' => 'Batik Gumelem - Motif Sekar Jagad',
-                'description' => 'Batik Tulis Gumelem dengan motif Sekar Jagad. "Sekar" berarti bunga dan "Jagad" berarti dunia, menampilkan ragam pola berbeda seolah peta dunia yang beragam. Motif ini melambangkan keindahan dan keberagaman yang harmonis. Dibuat dengan ketelitian tinggi oleh pengrajin Gumelem.',
-                'price' => 300000,
-                'image' => $imageCycle[2 % $numImageCycle],
-                'additionalImages' => [$imageCycle[0 % $numImageCycle], $imageCycle[1 % $numImageCycle]]
+                'name' => 'Parang angkrik',
+                'slug' => Str::slug('Parang angkrik'),
+                'images' => ['parang_angkrik.jpeg', 'parang_angkrik_2.jpeg', 'parang_angkrik_3.jpeg'],
             ],
             [
-                'name' => 'Batik Gumelem - Motif Lung-lungan',
-                'description' => 'Batik Tulis Gumelem dengan motif Lung-lungan yang berarti sulur atau tumbuhan merambat. Didominasi gambar sulur tanaman dengan daun dan bunga. Motif Lung-lungan melambangkan kehidupan yang terus tumbuh, berkembang, subur, dan berkelanjutan. Dibuat secara tradisional di Gumelem.',
-                'price' => 300000,
-                'image' => $imageCycle[0 % $numImageCycle], // Mulai siklus lagi (produk ke-4, index 3)
-                'additionalImages' => [$imageCycle[1 % $numImageCycle], $imageCycle[2 % $numImageCycle]]
+                'name' => 'Waljinahan',
+                'slug' => Str::slug('Waljinahan'),
+                'images' => ['waljinahan.jpeg', 'waljinahan_2.jpeg', 'waljinahan_3.jpeg'],
             ],
             [
-                'name' => 'Batik Gumelem - Motif Pring Sedapur',
-                'description' => 'Batik Tulis Gumelem dengan motif Pring Sedapur, "Pring" berarti bambu dan "Sedapur" berarti serumpun. Menggambarkan serumpun pohon bambu yang kokoh. Motif ini melambangkan persatuan, kesatuan, kekuatan, dan kerukunan. Khas dari Gumelem.',
-                'price' => 250000,
-                'image' => $imageCycle[1 % $numImageCycle],
-                'additionalImages' => [$imageCycle[2 % $numImageCycle], $imageCycle[0 % $numImageCycle]]
+                'name' => 'Borobudur',
+                'slug' => Str::slug('Borobudur'),
+                'images' => ['borobudur.jpeg', 'borobudur_2.jpeg', 'borobudur_3.jpeg'],
             ],
             [
-                'name' => 'Batik Gumelem - Motif Udan Liris',
-                'description' => 'Batik Tulis Gumelem dengan motif Udan Liris. "Udan" berarti hujan dan "Liris" berarti gerimis. Motif berupa garis-garis miring kecil teratur, menggambarkan tetesan air hujan. Melambangkan harapan kesuburan, kemakmuran, dan datangnya berkah. Batik asli Gumelem.',
-                'price' => 150000,
-                'image' => $imageCycle[2 % $numImageCycle],
-                'additionalImages' => [$imageCycle[0 % $numImageCycle], $imageCycle[1 % $numImageCycle]]
+                'name' => 'Buntalan',
+                'slug' => Str::slug('Buntalan'),
+                'images' => ['buntalan.jpeg', 'buntalan_2.jpeg', 'buntalan_3.jpeg'],
             ],
             [
-                'name' => 'Batik Gumelem - Motif Rujak Senthe',
-                'description' => 'Batik Tulis Gumelem dengan motif khas Rujak Senthe. Terinspirasi dari tanaman senthe dan rujak dengan pola dinamis. Dapat menyimbolkan keberanian, kekuatan, dan daya tarik. Salah satu motif ciri khas Gumelem.',
-                'price' => 20000,
-                'image' => $imageCycle[0 % $numImageCycle],
-                'additionalImages' => [$imageCycle[1 % $numImageCycle], $imageCycle[2 % $numImageCycle]]
+                'name' => 'Gajah uling',
+                'slug' => Str::slug('Gajah uling'),
+                'images' => ['gajah_uling.jpeg', 'gajah_uling_2.jpeg', 'gajah_uling_3.jpeg'],
             ],
             [
-                'name' => 'Batik Gumelem - Motif Sungai Serayu',
-                'description' => 'Batik Tulis Gumelem terinspirasi dari Sungai Serayu, ikon geografis Banjarnegara. Polanya menggambarkan aliran sungai dengan elemen alam sekitar. Melambangkan kehidupan yang terus mengalir dan keselarasan alam. Motif kontemporer Gumelem.',
-                'price' => 150000,
-                'image' => $imageCycle[1 % $numImageCycle],
-                'additionalImages' => [$imageCycle[2 % $numImageCycle], $imageCycle[0 % $numImageCycle]]
+                'name' => 'Ganda suling',
+                'slug' => Str::slug('Ganda suling'),
+                'images' => ['ganda_suling.jpeg', 'ganda_suling_2.jpeg', 'ganda_suling_3.jpeg'],
             ],
             [
-                'name' => 'Batik Gumelem - Motif Gabah Wutah',
-                'description' => 'Batik Tulis Gumelem dengan motif Gabah Wutah (Beras Tumpah). "Gabah" adalah padi, "Wutah" berarti tumpah. Menggambarkan butiran gabah atau beras tumpah, simbol kemakmuran, kesuburan, dan kecukupan. Kain batik tulis asli Gumelem.',
-                'price' => 200000,
-                'image' => $imageCycle[2 % $numImageCycle],
-                'additionalImages' => [$imageCycle[0 % $numImageCycle], $imageCycle[1 % $numImageCycle]]
+                'name' => 'Kembang asem',
+                'slug' => Str::slug('Kembang asem'),
+                'images' => ['kembang_asem.jpeg', 'kembang_asem_2.jpeg', 'kembang_asem_3.jpeg'],
             ],
             [
-                'name' => 'Batik Gumelem - Motif Parang Angkrik',
-                'description' => 'Batik Tulis Gumelem dengan motif Parang Angkrik. Garis diagonal sejajar melambangkan kekuatan, kekuasaan, dan kesinambungan. Pola tak terputus menggambarkan perjuangan dan semangat. Salah satu motif klasik yang diadaptasi di Gumelem.',
-                'price' => 250000,
-                'image' => $imageCycle[0 % $numImageCycle],
-                'additionalImages' => [$imageCycle[1 % $numImageCycle], $imageCycle[2 % $numImageCycle]]
+                'name' => 'Pasir luhur',
+                'slug' => Str::slug('Pasir luhur'),
+                'images' => ['pasir_luhur.jpeg', 'pasir_luhur_2.jpeg', 'pasir_luhur_3.jpeg'],
             ],
             [
-                'name' => 'Batik Gumelem - Motif Jahe Serimpang',
-                'description' => 'Batik Tulis Gumelem menggambarkan rimpang jahe yang saling terkait. Motif ini melambangkan pentingnya hubungan sosial yang erat, tolong-menolong, dan gotong royong dalam kehidupan bermasyarakat. Kualitas kain premium dari Gumelem.',
-                'price' => 250000,
-                'image' => $imageCycle[1 % $numImageCycle],
-                'additionalImages' => [$imageCycle[2 % $numImageCycle], $imageCycle[0 % $numImageCycle]]
+                'name' => 'Pring sedapur',
+                'slug' => Str::slug('Pring sedapur'),
+                'images' => ['pring_sedapur.jpeg', 'pring_sedapur_2.jpeg', 'pring_sedapur_3.jpeg'],
             ],
             [
-                'name' => 'Batik Gumelem - Motif Sido Mukti',
-                'description' => 'Batik Tulis Gumelem dengan motif Sido Mukti. "Sido" berarti jadi atau tercapai, dan "Mukti" berarti kebahagiaan atau kemuliaan. Pola motif ini biasanya rumit dan penuh, melambangkan harapan agar pemakainya mencapai kebahagiaan lahir dan batin. Karya pengrajin Gumelem.',
-                'price' => 350000,
-                'image' => $imageCycle[2 % $numImageCycle],
-                'additionalImages' => [$imageCycle[0 % $numImageCycle], $imageCycle[1 % $numImageCycle]]
+                'name' => 'Rujak senthe',
+                'slug' => Str::slug('Rujak senthe'),
+                'images' => ['rujak_senthe.jpeg', 'rujak_senthe_2.jpeg', 'rujak_senthe_3.jpeg'],
             ],
             [
-                'name' => 'Batik Gumelem - Motif Grinting',
-                'description' => 'Batik Tulis Gumelem dengan motif Grinting. Merupakan salah satu motif klasik yang juga ditemukan di Gumelem, sering dikaitkan dengan harapan akan kemudahan dalam mencari rezeki dan kehidupan yang lancar. Dibuat dengan canting tulis tradisional.',
-                'price' => 250000,
-                'image' => $imageCycle[0 % $numImageCycle],
-                'additionalImages' => [$imageCycle[1 % $numImageCycle], $imageCycle[2 % $numImageCycle]]
+                'name' => 'Udan liris',
+                'slug' => Str::slug('Udan liris'),
+                'images' => ['udan_liris.jpeg', 'udan_liris_2.jpeg', 'udan_liris_3.jpeg'],
             ],
-            [
-                'name' => 'Batik Gumelem - Motif Kopi Pecah',
-                'description' => 'Batik Tulis Gumelem terinspirasi dari biji kopi yang pecah. Dapat menyimbolkan proses menuju kematangan atau memiliki interpretasi lokal Gumelem terkait kehidupan. Kain batik tulis halus.',
-                'price' => 150000,
-                'image' => $imageCycle[1 % $numImageCycle], // produk ke-14, index 13
-                'additionalImages' => [$imageCycle[2 % $numImageCycle], $imageCycle[0 % $numImageCycle]]
-            ],
-            [
-                'name' => 'Batik Gumelem - Testing',
-                'description' => 'Batik Tulis Gumelem terinspirasi dari biji kopi yang pecah. Dapat menyimbolkan proses menuju kematangan atau memiliki interpretasi lokal Gumelem terkait kehidupan. Kain batik tulis halus.',
-                'price' => 0,
-                'image' => $imageCycle[1 % $numImageCycle], // produk ke-14, index 13
-                'additionalImages' => [$imageCycle[2 % $numImageCycle], $imageCycle[0 % $numImageCycle]]
-            ]
         ];
-
         // Ukuran kain batik tulis (panjang x lebar)
         $fabricSizes = ['150cmx150cm'];
-
-        // Index untuk cycling gambar, jika Anda ingin mengubah cara cycling di dalam loop
-        // Namun, karena sudah di-set manual di array $products, ini tidak begitu diperlukan lagi
-        // $imageIndex = 0;
-
-        foreach ($products as $productData) {
-            // Path gambar sudah langsung dari $productData
-            $primaryImage = $productData['image'];
-
-            // Buat produk
+        foreach ($userProducts as $prod) {
+            $mainImage = 'products/' . $prod['images'][0];
+            $additionalImages = [
+                'products/' . $prod['images'][1],
+                'products/' . $prod['images'][2],
+            ];
             $product = Product::create([
-                'name' => $productData['name'],
-                'slug' => Str::slug($productData['name']),
-                'description' => $productData['description'],
-                'price' => $productData['price'],
-                'stock' => rand(10, 50),
-                'image' => $primaryImage,
+                'name' => $prod['name'],
+                'slug' => $prod['slug'],
+                'description' => 'Batik Gumelem motif ' . $prod['name'] . '. Kain batik tulis asli Gumelem.',
+                'price' => rand(150000, 500000),
+                'image' => $mainImage,
             ]);
-
-            // Tambahkan gambar utama ke ProductImage
             ProductImage::create([
                 'product_id' => $product->id,
-                'image' => $primaryImage,
+                'image' => $mainImage,
                 'is_primary' => true
             ]);
-
-            // Tambahkan gambar tambahan
-            if (isset($productData['additionalImages']) && is_array($productData['additionalImages'])) {
-                foreach ($productData['additionalImages'] as $additionalImageFile) {
-                    ProductImage::create([
-                        'product_id' => $product->id,
-                        'image' => $additionalImageFile, // Path sudah langsung dari $productData
-                        'is_primary' => false
-                    ]);
-                }
+            foreach ($additionalImages as $img) {
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'image' => $img,
+                    'is_primary' => false
+                ]);
             }
-            
-            // Setiap produk (kain motif) akan tersedia dalam semua ukuran kain yang didefinisikan
             foreach ($fabricSizes as $size) {
                 ProductSize::create([
                     'product_id' => $product->id,
                     'size' => $size,
-                    'stock' => rand(3, 10) 
+                    'stock' => rand(3, 10)
                 ]);
             }
-            // $imageIndex++; // Jika ingin cycling berbeda di dalam loop
         }
     }
 }

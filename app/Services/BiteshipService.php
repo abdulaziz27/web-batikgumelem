@@ -67,7 +67,7 @@ class BiteshipService
 
             return [
                 'success' => false,
-                'message' => 'Failed to get shipping rates: ' . ($response->json()['error'] ?? 'Unknown error'),
+                'message' => 'Gagal mendapatkan ongkos kirim. Pastikan kode pos yang anda dimasukkan benar.',
                 'error' => $response->json(),
             ];
         } catch (\Exception $e) {

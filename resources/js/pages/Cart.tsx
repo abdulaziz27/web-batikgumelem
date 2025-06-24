@@ -124,7 +124,7 @@ const CartContent = () => {
                                                         {item.name}
                                                     </Link>
                                                 </div>
-                                                {item.size && <div className="mt-1 text-xs text-gray-500">Ukuran: {item.size}</div>}
+                                                {item.size && <div className="mt-1 text-xs text-gray-500">Variasi: {item.size}</div>}
                                             </TableCell>
                                             <TableCell className="text-right">Rp {formatRupiah(item.price || 0)}</TableCell>
                                             <TableCell className="text-right">

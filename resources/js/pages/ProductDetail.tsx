@@ -29,7 +29,6 @@ interface Product {
     slug: string;
     description: string;
     price: number;
-    stock: number;
     image: string;
     category: string;
     details: {
@@ -52,8 +51,16 @@ const ProductDetail = () => {
     const { product, relatedProducts } = usePage().props as unknown as ProductDetailProps;
     const { auth } = usePage().props as any;
 
-    // Default to first size if available
-    const [selectedSize, setSelectedSize] = useState<string>(product.sizes && product.sizes.length > 0 ? product.sizes[0].size : '');
+    // Automatically select the first available size with stock
+    const getFirstAvailableSize = () => {
+        if (product.sizes && product.sizes.length > 0) {
+            const availableSize = product.sizes.find(size => size.stock > 0);
+            return availableSize ? availableSize.size : product.sizes[0].size;
+        }
+        return '';
+    };
+
+    const [selectedSize, setSelectedSize] = useState<string>(getFirstAvailableSize());
     const [quantity, setQuantity] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -69,8 +76,8 @@ const ProductDetail = () => {
     const allImages = product.images && product.images.length > 0 ? product.images.map((img) => img.image) : [`/storage/${product.image}`];
 
     // Check stock for selected size
-    const selectedSizeObj = product.sizes && product.sizes.length > 0 ? product.sizes.find((size) => size.size === selectedSize) : null;
-    const stockForSelectedSize = selectedSizeObj ? selectedSizeObj.stock : product.stock;
+    const selectedSizeObj = selectedSize && product.sizes ? product.sizes.find((size) => size.size === selectedSize) : null;
+    const stockForSelectedSize = selectedSizeObj ? selectedSizeObj.stock : 0;
     const isOutOfStock = stockForSelectedSize <= 0;
 
     // Manual cart implementation using Laravel backend
@@ -212,31 +219,32 @@ const ProductDetail = () => {
                             </div>
 
                             <div className="animate-fade-in space-y-4" style={{ animationDelay: '400ms' }}>
-                                {product.sizes && product.sizes.length > 0 && (
-                                    <div>
-                                        <h2 className="text-batik-brown text-sm font-medium">Ukuran</h2>
-                                        <div className="mt-2">
-                                            <Select value={selectedSize} onValueChange={setSelectedSize}>
-                                                <SelectTrigger className="w-32">
-                                                    <SelectValue placeholder="Pilih Ukuran" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {product.sizes.map((size) => (
-                                                        <SelectItem key={size.id} value={size.size} disabled={size.stock <= 0}>
-                                                            {size.size} {size.stock <= 0 && '(Habis)'}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
+                                <div>
+                                    <h2 className="text-batik-brown text-sm font-medium">Ukuran</h2>
+                                    <div className="mt-2">
+                                        <Select value={selectedSize} onValueChange={setSelectedSize}>
+                                            <SelectTrigger className="w-40">
+                                                <SelectValue placeholder="Pilih Ukuran" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {product.sizes && product.sizes.map((size) => (
+                                                    <SelectItem key={size.id} value={size.size} disabled={size.stock <= 0}>
+                                                        {size.size} {size.stock <= 0 ? '(Habis)' : `(${size.stock} tersedia)`}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
                                     </div>
-                                )}
+                                </div>
 
                                 <div>
                                     <div className="flex items-center justify-between">
                                         <h2 className="text-batik-brown text-sm font-medium">Jumlah</h2>
                                         <span className={`text-sm ${isOutOfStock ? 'text-red-500' : 'text-green-600'}`}>
-                                            {isOutOfStock ? 'Stok habis' : `Tersedia: ${stockForSelectedSize} item`}
+                                            {isOutOfStock 
+                                                ? 'Stok habis untuk ukuran ini' 
+                                                : `Tersedia: ${stockForSelectedSize} item`
+                                            }
                                         </span>
                                     </div>
                                     <div className="mt-2 flex items-center">
@@ -268,7 +276,12 @@ const ProductDetail = () => {
                                     onClick={handleAddToCart}
                                 >
                                     <ShoppingCart className="mr-2 h-5 w-5" />
-                                    {isLoading ? 'Menambahkan...' : 'Tambahkan ke Keranjang'}
+                                    {isLoading 
+                                        ? 'Menambahkan...' 
+                                        : isOutOfStock 
+                                            ? 'Stok Habis' 
+                                            : 'Tambahkan ke Keranjang'
+                                    }
                                 </Button>
                             </div>
                         </div>
@@ -341,7 +354,7 @@ const ProductDetail = () => {
                                         </div>
                                         <div className="p-4">
                                             <h3 className="text-batik-brown group-hover:text-batik-indigo font-medium">{relatedProduct.name}</h3>
-                                            <p className="text-batik-indigo mt-1 font-semibold">{formatRupiah(relatedProduct.price)}</p>
+                                            <p className="text-batik-indigo mt-1">{formatRupiah(relatedProduct.price)}</p>
                                         </div>
                                     </Link>
                                 ))}

@@ -20,12 +20,12 @@ import { z } from 'zod';
 
 // Define validation schema for shipping details
 const shippingFormSchema = z.object({
-    fullName: z.string().min(3, { message: 'Nama lengkap harus diisi' }),
-    address: z.string().min(5, { message: 'Alamat harus diisi' }),
-    city: z.string().min(3, { message: 'Kota harus diisi' }),
-    postalCode: z.string().min(5, { message: 'Kode pos harus diisi' }),
-    province: z.string().min(3, { message: 'Provinsi harus diisi' }),
-    phone: z.string().min(10, { message: 'Nomor telepon harus diisi dengan benar' }),
+    fullName: z.string().min(3, { message: 'Nama lengkap minimal 3 karakter' }).max(255, { message: 'Nama lengkap maksimal 255 karakter' }),
+    address: z.string().min(10, { message: 'Alamat minimal 10 karakter' }).max(500, { message: 'Alamat maksimal 500 karakter' }),
+    city: z.string().min(3, { message: 'Nama kota minimal 3 karakter' }).max(100, { message: 'Nama kota maksimal 100 karakter' }),
+    postalCode: z.string().regex(/^[0-9]{5}$/, { message: 'Kode pos harus berupa 5 digit angka' }),
+    province: z.string().min(3, { message: 'Nama provinsi minimal 3 karakter' }).max(100, { message: 'Nama provinsi maksimal 100 karakter' }),
+    phone: z.string().regex(/^[0-9]{10,15}$/, { message: 'Nomor telepon harus berupa angka 10-15 digit' }),
     email: z.string().email({ message: 'Format email tidak valid' }).optional(),
 });
 
@@ -530,7 +530,7 @@ const CheckoutContent = ({ cart, coupon, shippingOptions: initialShippingOptions
                                             {/* Save address options */}
                                             {savedAddresses && (
                                                 <div className="mt-4 space-y-2">
-                                                    <div className="flex items-center space-x-2">
+                                                    {/* <div className="flex items-center space-x-2">
                                                         <input
                                                             type="checkbox"
                                                             id="save-address"
@@ -541,7 +541,7 @@ const CheckoutContent = ({ cart, coupon, shippingOptions: initialShippingOptions
                                                         <Label htmlFor="save-address" className="text-sm leading-none font-medium">
                                                             Simpan alamat ini untuk pembelian selanjutnya
                                                         </Label>
-                                                    </div>
+                                                    </div> */}
 
                                                     {saveNewAddress && (
                                                         <div className="ml-6 flex items-center space-x-2">
