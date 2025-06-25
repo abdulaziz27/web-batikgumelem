@@ -14,7 +14,7 @@ trait ValidatesUserOwnership
         $user = auth()->user();
         $userRoles = $user ? $user->getRoleNames() : null;
 
-        if ($model->{$userIdField} !== $authId) {
+        if ((string)$model->{$userIdField} !== (string)auth()->id()) {
             Log::warning('Ownership check failed', [
                 'order_id' => $model->id ?? null,
                 'order_user_id' => $model->{$userIdField},
