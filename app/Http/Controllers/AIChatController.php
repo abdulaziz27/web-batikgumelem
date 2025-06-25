@@ -40,11 +40,10 @@ class AIChatController extends Controller
         // 3. Produk (detail lengkap)
         $products = Product::with('sizes')->select('name','description','price','image')->get();
         $productText = $products->map(function($p, $i) {
-            $totalStock = $p->sizes->sum('stock');
             $sizeInfo = $p->sizes->map(function($s) {
-                return "{$s->size} (stok: {$s->stock})";
+                return "{$s->size}";
             })->implode(', ');
-            return ($i+1) . ". {$p->name}\nDeskripsi: {$p->description}\nHarga: Rp{$p->price}\nTotal Stok: {$totalStock}\nUkuran: {$sizeInfo}\nGambar: " . ($p->image ?? '-');
+            return ($i+1) . ". {$p->name}\nDeskripsi: {$p->description}\nHarga: Rp{$p->price}\nUkuran: {$sizeInfo}\nGambar: " . ($p->image ?? '-');
         })->implode("\n\n");
 
         // 4. Blog (judul saja)
