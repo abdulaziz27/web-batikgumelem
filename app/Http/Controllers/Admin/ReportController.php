@@ -13,11 +13,13 @@ use Illuminate\Support\Facades\Log;
 
 class ReportController extends Controller
 {
+    // Menampilkan halaman utama laporan
     public function index()
     {
         return Inertia::render('Admin/Reports/Index');
     }
 
+    // Membuat dan mengunduh laporan penjualan dalam format PDF
     public function sales(Request $request)
     {
         try {
@@ -29,7 +31,7 @@ class ReportController extends Controller
                 'format' => 'required|in:pdf'
             ]);
 
-            // Query data
+            // Query data pesanan sesuai rentang tanggal dan status
             $query = Order::with(['items.product', 'user'])
                 ->whereBetween('created_at', [
                     Carbon::parse($request->start_date)->startOfDay(),
@@ -37,7 +39,7 @@ class ReportController extends Controller
                 ])
                 ->where('status', '!=', 'cancelled');
 
-            // Group by berdasarkan tipe laporan
+            // Group by data sesuai tipe laporan
             switch($request->type) {
                 case 'daily':
                     $data = $query->get()->groupBy(function($order) {
@@ -106,7 +108,7 @@ class ReportController extends Controller
                     throw new \Exception('Invalid report type');
             }
 
-            // Tetap generate PDF meskipun data kosong
+            // Generate PDF meskipun data kosong
             $pdf = PDF::loadView('admin.reports.sales', [
                 'data' => $data,
                 'type' => $request->type,
@@ -117,6 +119,7 @@ class ReportController extends Controller
             return $pdf->download('sales-report.pdf');
 
         } catch (\Exception $e) {
+            // Log error jika terjadi kesalahan
             Log::error('Error generating sales report: ' . $e->getMessage());
             return back()->with('error', 'Terjadi kesalahan saat membuat laporan: ' . $e->getMessage());
         }

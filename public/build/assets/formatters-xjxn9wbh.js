@@ -1,0 +1,1 @@
+function a(t,n="id"){const e=n==="en"?"en-US":"id-ID";return new Intl.NumberFormat(e,{style:"currency",currency:"IDR",minimumFractionDigits:0,maximumFractionDigits:0}).format(t)}function o(t,n="id"){const e=n==="en"?"en-US":"id-ID";return new Date(t).toLocaleDateString(e,{day:"numeric",month:"long",year:"numeric"})}export{a,o as f};

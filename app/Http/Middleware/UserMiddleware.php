@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class UserMiddleware
 {
     /**
-     * Handle an incoming request - only allow regular users.
+     * Middleware untuk membatasi akses hanya untuk user biasa (role user).
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
@@ -18,19 +18,22 @@ class UserMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Jika belum login, redirect ke login
         if (!Auth::check()) {
             return redirect('login');
         }
 
+        // Jika bukan user biasa, cek apakah admin
         if (!Auth::user()->hasRole('user')) {
-            // If they are admin, let them access since they have higher privileges
+            // Jika admin, tetap boleh akses (karena hak akses lebih tinggi)
             if (Auth::user()->hasRole('admin')) {
                 return $next($request);
             }
-            
+            // Jika bukan admin, redirect ke home dengan pesan error
             return redirect('/')->with('error', 'Anda tidak memiliki akses ke halaman ini.');
         }
 
+        // Jika user biasa, lanjutkan request
         return $next($request);
     }
 } 

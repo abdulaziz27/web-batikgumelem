@@ -31,6 +31,7 @@ import { Separator } from '@/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AdminLayout from '@/layouts/admin-layout';
 import { type BreadcrumbItem } from '@/types';
+import { useTranslation } from 'react-i18next';
 
 interface User {
     id: number;
@@ -44,18 +45,13 @@ interface UsersIndexProps {
     users: User[];
 }
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Dasbor',
-        href: '/admin/dashboard',
-    },
-    {
-        title: 'Pengguna',
-        href: '/admin/users',
-    },
-];
-
 export default function UsersIndex({ users }: UsersIndexProps) {
+    const { t } = useTranslation();
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: t('dashboard.nav.adminDashboard'), href: '/admin/dashboard' },
+        { title: t('dashboard.nav.adminUsers'), href: '/admin/users' },
+    ];
+
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [userToDelete, setUserToDelete] = useState<User | null>(null);
     const [sorting, setSorting] = useState<SortingState>([]);
@@ -68,7 +64,7 @@ export default function UsersIndex({ users }: UsersIndexProps) {
             header: ({ column }) => (
                 <div className="flex items-center">
                     <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="p-0 hover:bg-transparent">
-                        Nama
+                        {t('dashboard.pages.adminUsers.table.name')}
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 </div>
@@ -79,12 +75,12 @@ export default function UsersIndex({ users }: UsersIndexProps) {
         },
         {
             accessorKey: 'email',
-            header: 'Email',
+            header: t('dashboard.pages.adminUsers.table.email'),
             cell: ({ row }) => row.getValue('email'),
         },
         {
             accessorKey: 'role',
-            header: 'Role',
+            header: t('dashboard.pages.adminUsers.table.role'),
             cell: ({ row }) => row.getValue('role'),
         },
         {
@@ -99,26 +95,26 @@ export default function UsersIndex({ users }: UsersIndexProps) {
             ),
             cell: ({ row }) => row.getValue('created_at'),
         },
-        {
-            id: 'actions',
-            header: 'Aksi',
-            cell: ({ row }) => {
-                const user = row.original;
-                return (
-                    <div className="flex space-x-2">
-                        <Button variant="ghost" size="icon" asChild>
-                            <Link href={`/admin/users/${user.id}/edit`}>
-                                <Edit className="h-4 w-4" />
-                            </Link>
-                        </Button>
-                        <Button variant="ghost" size="icon" onClick={() => confirmDelete(user)}>
-                            <Trash className="h-4 w-4" />
-                        </Button>
-                    </div>
-                );
-            },
-            enableSorting: false,
-        },
+        // {
+        //     id: 'actions',
+        //     header: 'Aksi',
+        //     cell: ({ row }) => {
+        //         const user = row.original;
+        //         return (
+        //             <div className="flex space-x-2">
+        //                 <Button variant="ghost" size="icon" asChild>
+        //                     <Link href={`/admin/users/${user.id}/edit`}>
+        //                         <Edit className="h-4 w-4" />
+        //                     </Link>
+        //                 </Button>
+        //                 <Button variant="ghost" size="icon" onClick={() => confirmDelete(user)}>
+        //                     <Trash className="h-4 w-4" />
+        //                 </Button>
+        //             </div>
+        //         );
+        //     },
+        //     enableSorting: false,
+        // },
     ];
 
     const table = useReactTable({
@@ -181,15 +177,15 @@ export default function UsersIndex({ users }: UsersIndexProps) {
 
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
-            <Head title="Manajemen Pengguna" />
+            <Head title={t('dashboard.pages.adminUsers.headTitle')} />
 
             <div className="space-y-6 p-3 sm:p-6">
                 <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-                    <h1 className="text-2xl font-bold tracking-tight">Manajemen Pengguna</h1>
+                    <h1 className="text-2xl font-bold tracking-tight">{t('dashboard.pages.adminUsers.title')}</h1>
                     <Button asChild className="w-full sm:w-auto">
                         <Link href="/admin/users/create">
                             <PlusCircle className="mr-2 h-4 w-4" />
-                            Tambah Pengguna
+                            {t('dashboard.pages.adminUsers.add')}
                         </Link>
                     </Button>
                 </div>
@@ -203,7 +199,7 @@ export default function UsersIndex({ users }: UsersIndexProps) {
                                 <Search className="text-muted-foreground absolute top-2.5 left-2.5 h-4 w-4" />
                                 <Input
                                     type="search"
-                                    placeholder="Cari pengguna..."
+                                    placeholder={t('dashboard.pages.adminUsers.searchPlaceholder')}
                                     value={searchValue}
                                     onChange={(e) => setSearchValue(e.target.value)}
                                     className="w-full pl-8"
@@ -238,7 +234,7 @@ export default function UsersIndex({ users }: UsersIndexProps) {
                                     ) : (
                                         <TableRow>
                                             <TableCell colSpan={columns.length} className="h-24 text-center">
-                                                Tidak ada pengguna ditemukan.
+                                                {t('dashboard.pages.adminUsers.empty')}
                                             </TableCell>
                                         </TableRow>
                                     )}
@@ -299,7 +295,7 @@ export default function UsersIndex({ users }: UsersIndexProps) {
                                     <div className="flex items-center gap-1">
                                         <span className="text-sm">Halaman</span>
                                         <strong className="text-sm font-medium">
-                                            {table.getState().pagination.pageIndex + 1} dari {table.getPageCount()}
+                                            {table.getState().pagination.pageIndex + 1} {t('dashboard.pages.adminUsers.pagination.of')} {table.getPageCount()}
                                         </strong>
                                     </div>
                                     <Button
@@ -344,15 +340,15 @@ export default function UsersIndex({ users }: UsersIndexProps) {
             <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Apakah Anda yakin?</AlertDialogTitle>
+                        <AlertDialogTitle>{t('dashboard.pages.adminUsers.dialog.confirmTitle')}</AlertDialogTitle>
                         <AlertDialogDescription>
                             Tindakan ini tidak dapat dibatalkan. Ini akan menghapus pengguna <span className="font-medium">{userToDelete?.name}</span>{' '}
                             secara permanen dan menghapus datanya dari server.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel>Batal</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleDelete}>Hapus</AlertDialogAction>
+                        <AlertDialogCancel>{t('dashboard.pages.adminUsers.dialog.cancel')}</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDelete}>{t('dashboard.pages.adminUsers.dialog.delete')}</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

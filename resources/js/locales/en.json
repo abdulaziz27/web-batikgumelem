@@ -1,0 +1,866 @@
+{
+  "nav": {
+    "home": "Home",
+    "history": "History",
+    "products": "Products",
+    "blog": "Blog",
+    "faq": "FAQ",
+    "about": "About",
+    "login": "Sign in",
+    "logout": "Sign out",
+    "profile": "Profile",
+    "myOrders": "My orders",
+    "adminDashboard": "Admin dashboard",
+    "language": "Language"
+  },
+  "home": {
+    "heroTitle": "The Beauty of Batik Gumelem from Banjarnegara",
+    "heroSubtitle": "Discover the beauty of traditional Gumelem batik with rich motifs and philosophy passed down through generations.",
+    "viewProducts": "View products",
+    "aboutBatik": "About Batik Gumelem",
+    "featuredTitle": "Featured products",
+    "featuredSubtitle": "Our finest pieces crafted by Gumelem artisans with premium quality and distinctive motifs.",
+    "viewAllProducts": "View all products",
+    "heritageTitle": "A valuable cultural heritage",
+    "heritageP1": "Batik Gumelem is a cultural heritage from Gumelem Village, Banjarnegara, Central Java, dating back to the Mataram Kingdom era.",
+    "heritageP2": "Its uniqueness lies in motifs inspired by nature and the local community’s philosophy of life.",
+    "heritageLearnMore": "Learn more",
+    "features": [
+      "Made with traditional hand-drawn and stamped techniques",
+      "Uses natural dyes from plants",
+      "Motifs rich in philosophy and history",
+      "Crafted by experienced artisans",
+      "High-quality materials for comfortable wear"
+    ],
+    "latestArticlesTitle": "Latest articles",
+    "latestArticlesSubtitle": "Explore stories about Batik Gumelem, crafting techniques, and the philosophy behind it",
+    "readMore": "Read more",
+    "viewAllArticles": "View all articles",
+    "ctaTitle": "Ready to own Batik Gumelem?",
+    "ctaSubtitle": "Explore our exclusive collection today.",
+    "shopNow": "Shop now"
+  },
+  "products": {
+    "titlePrefix": "Batik",
+    "titleBrand": "Gumelem",
+    "subtitle": "Explore traditional Gumelem batik with distinctive motifs and deep philosophy",
+    "searchPlaceholder": "Search products...",
+    "filters": "Filters",
+    "searchTitle": "Search",
+    "sortTitle": "Sort",
+    "sortDefault": "Default",
+    "sortPriceAsc": "Price: low to high",
+    "sortPriceDesc": "Price: high to low",
+    "sortNameAsc": "Name: A-Z",
+    "sortNameDesc": "Name: Z-A",
+    "priceRange": "Price range",
+    "noResults": "No products match your search.",
+    "reset": "View all products"
+  }
+  ,
+  "footer": {
+    "about": "Preserving the cultural heritage of Batik Gumelem from Banjarnegara, Central Java. Each piece is made with traditional techniques and carries deep philosophy.",
+    "quickLinks": "Quick links",
+    "customerService": "Customer service",
+    "contactUs": "Contact",
+    "shippingReturns": "Shipping & returns",
+    "terms": "Terms & conditions",
+    "privacy": "Privacy policy",
+    "rights": "All rights reserved."
+  },
+  "blog": {
+    "titlePrefix": "Batik blog",
+    "titleBrand": "Gumelem",
+    "subtitle": "Explore articles about history, production techniques, and the philosophy behind Batik Gumelem",
+    "searchPlaceholder": "Search articles...",
+    "noResults": "No articles match your search.",
+    "viewAll": "View all articles",
+    "by": "By",
+    "related": "Related articles",
+    "breadcrumbsHome": "Home",
+    "breadcrumbsBlog": "Blog"
+  },
+  "faq": {
+    "title": "Frequently asked questions",
+    "subtitle": "Find answers to common questions about our products and services",
+    "moreQuestionsTitle": "Still have questions?",
+    "moreQuestionsBody": "If you have other questions, feel free to contact our team.",
+    "emailUs": "Email us",
+    "whatsapp": "WhatsApp",
+    "items": [
+      {
+        "question": "What is Batik Gumelem?",
+        "answer": "Batik Gumelem is a traditional batik from Gumelem Village, Banjarnegara, Central Java. It features motifs inspired by local nature and community life. It has existed since the 17th century and is part of Indonesia’s cultural heritage."
+      },
+      {
+        "question": "What’s the difference between hand-drawn batik and stamped batik?",
+        "answer": "Hand-drawn batik is made by drawing motifs directly on fabric using a canting and hot wax (malam) by hand—this takes time and precision. Stamped batik uses a copper stamp with a fixed pattern, making the process faster while still preserving beauty and quality. At BatikGumelem.com, we offer both."
+      },
+      {
+        "question": "How do I care for batik so it lasts?",
+        "answer": "Wash gently by hand with cold water and mild detergent. Avoid bleach and do not soak for too long. Dry in the shade by hanging, and iron on medium heat. For storage, fold neatly and keep in a dry place away from direct sunlight."
+      },
+      {
+        "question": "Do your products use natural dyes?",
+        "answer": "Yes, many of our batik pieces use natural dyes from plants such as bark, leaves, and roots. Some collections may use synthetic dyes. We always mention dye information in each product description."
+      },
+      {
+        "question": "How long does shipping take?",
+        "answer": "Shipping time depends on your destination. Within Java usually takes 2–3 business days, outside Java 3–7 business days. International shipping typically takes 1–3 weeks depending on the destination country and shipping method."
+      },
+      {
+        "question": "Do you accept custom orders?",
+        "answer": "Yes, we accept custom orders. Please contact our customer service team to discuss your needs. Custom orders require longer production time and may involve additional costs depending on complexity and quantity."
+      },
+      {
+        "question": "What is your return policy?",
+        "answer": "We accept returns within 7 days after delivery, provided the item is unused, unwashed, in new condition, and still has the original tag. Return shipping costs are paid by the buyer. For more details, please see our returns policy page."
+      },
+      {
+        "question": "Do you ship internationally?",
+        "answer": "Yes, we ship internationally to many countries. International shipping fees vary based on package weight and destination. To estimate shipping costs, add items to your cart and enter your address at checkout."
+      },
+      {
+        "question": "How do I choose the right size for ready-to-wear products?",
+        "answer": "Each ready-to-wear product includes a size guide on the product page. We recommend measuring yourself before choosing a size. If you’re unsure, contact our customer service for help."
+      },
+      {
+        "question": "Do you offer discounts for bulk purchases?",
+        "answer": "Yes, we offer special discounts for bulk/wholesale purchases. The discount depends on quantity. Please contact our sales team via email or WhatsApp listed on the contact page."
+      }
+    ]
+  },
+  "history": {
+    "titlePrefix": "History of Batik",
+    "titleBrand": "Gumelem",
+    "subtitle": "Trace the long journey of Batik Gumelem through time",
+    "section1Title": "A cultural legacy since the kingdom era",
+    "section2Title": "Crafting techniques passed down generations",
+    "philosophyTitle": "The philosophy behind Batik Gumelem motifs",
+    "philosophySubtitle": "Each Batik Gumelem motif carries deep meaning that reflects the values and worldview of the Banjarnegara community",
+    "preservationTitle": "Preserving Batik Gumelem",
+    "preservationSubtitle": "Efforts by various parties to preserve and develop Batik Gumelem as a cultural heritage",
+    "ctaCommunity": "Learn more about our community",
+    "videoTitle": "History of Batik Gumelem",
+    "section1Paragraphs": [
+      "The history of Batik Gumelem is closely tied to the Gumelem Regency (Kadipaten Gumelem), a territory under the Mataram Kingdom. It is believed Batik Gumelem has existed since the 17th century, during the reign of Sultan Agung Hanyokrokusumo.",
+      "At that time, batik was made only for nobles and royalty, with highly exclusive motifs. These motifs carried deep philosophical meaning and reflected the wearer’s social status.",
+      "Over time, batik spread to the wider community and developed into a people’s industry as we know it today. Even so, the uniqueness and distinct character of Batik Gumelem motifs remain preserved."
+    ],
+    "makingAlt": "Batik Gumelem crafting process",
+    "section2Paragraphs": [
+      "Batik Gumelem is still produced using traditional techniques that take time. The process starts with preparing the fabric, drawing patterns, applying wax with a canting, dyeing, and finishing with pelorodan (removing the wax).",
+      "There are two main techniques: hand-drawn (batik tulis) and stamped (batik cap). Hand-drawn batik is created by drawing motifs using a canting filled with hot wax, while stamped batik uses a copper stamp to form patterns.",
+      "Traditional coloring often uses natural materials such as bark, leaves, and roots. This requires precision and patience because fabrics must be dyed repeatedly to achieve the perfect color."
+    ],
+    "motifs": [
+      {
+        "key": "pring-sedapur",
+        "label": "Pring Sedapur",
+        "title": "Pring Sedapur motif",
+        "image": "images/product_image_1.png",
+        "alt": "Pring Sedapur motif",
+        "paragraphs": [
+          "A motif depicting a cluster of bamboo (pring) in one garden (sedapur). Bamboo is chosen because it carries deep meaning in Javanese life.",
+          "Its philosophy teaches humility: the higher one grows in knowledge, the more humble one becomes—like bamboo that bends as it grows taller. Bamboo also symbolizes usefulness because nearly every part can be utilized.",
+          "Bamboo clusters also represent togetherness and cooperation, as bamboo grows in groups, never alone."
+        ]
+      },
+      {
+        "key": "sekar-jagad",
+        "label": "Sekar Jagad",
+        "title": "Sekar Jagad motif",
+        "image": "images/product_image_2.png",
+        "alt": "Sekar Jagad motif",
+        "paragraphs": [
+          "Sekar Jagad means \"flowers of the world\". The motif consists of shapes resembling islands surrounded by the sea, representing the diversity of the world.",
+          "Its philosophy is beauty in diversity. It symbolizes unity in difference, aligned with the spirit of \"Bhinneka Tunggal Ika\"—different yet one.",
+          "It also teaches that everything in the world is interconnected and complementary, like the balance of the universe."
+        ]
+      },
+      {
+        "key": "semen-rama",
+        "label": "Semen Rama",
+        "title": "Semen Rama motif",
+        "image": "images/product_image_2.png",
+        "alt": "Semen Rama motif",
+        "paragraphs": [
+          "\"Semen\" comes from \"semi\", meaning to grow or develop. Semen Rama is inspired by the Ramayana epic and the story of King Rama—wise and just.",
+          "Its philosophy represents fertility and prosperity, and carries lessons of fair and wise leadership as exemplified by King Rama.",
+          "This motif often includes ornaments of mountains, plants, birds, and animals, symbolizing harmony between humans, nature, and the cosmos."
+        ]
+      },
+      {
+        "key": "parang-kusuma",
+        "label": "Parang Kusuma",
+        "title": "Parang Kusuma motif",
+        "image": "images/product_image_3.png",
+        "alt": "Parang Kusuma motif",
+        "paragraphs": [
+          "Parang means blade or weapon, while kusuma means flower or beauty. The motif is composed of diagonal shapes arranged in rows like blades.",
+          "It symbolizes wisdom and resilience in facing life’s challenges, as well as strength and perseverance—like waves that never stop moving.",
+          "In Javanese tradition, parang is among the oldest and most respected motifs, once reserved only for nobles."
+        ]
+      },
+      {
+        "key": "gilar-gilar",
+        "label": "Gilar-gilar",
+        "title": "Gilar-gilar motif",
+        "image": "images/product_image_4.png",
+        "alt": "Gilar-gilar motif",
+        "paragraphs": [
+          "Gilar-gilar means \"shining\" or \"sparkling\". It is inspired by a golden bracelet from the Gumelem Regency that shimmers brightly.",
+          "It symbolizes prosperity, nobility, and hope for a better life—carrying meanings of beauty and grandeur.",
+          "Gilar-gilar is a distinctive Gumelem motif not found in other batik regions, making it a unique identity for Batik Gumelem."
+        ]
+      }
+    ],
+    "preservationCards": [
+      {
+        "title": "Training & education",
+        "body": "Training and educational programs are held to teach Batik Gumelem techniques to younger generations, especially in schools and local communities.",
+        "image": "images/batik-gumelem-pelatihan.jpeg",
+        "alt": "Batik training"
+      },
+      {
+        "title": "Festivals & exhibitions",
+        "body": "Batik Gumelem festivals are held regularly to promote and introduce Batik Gumelem to wider audiences, both nationally and internationally.",
+        "image": "images/batik-gumelem-festival.png",
+        "alt": "Batik festival"
+      },
+      {
+        "title": "Innovation & development",
+        "body": "Gumelem artisans continue to innovate by creating new motifs and applying batik to various products, while preserving its distinctive character and traditional values.",
+        "image": "images/batik-gumelem-inovasi.jpeg",
+        "alt": "Batik innovation"
+      }
+    ]
+  },
+  "aboutPage": {
+    "title": "About us",
+    "subtitle": "Get to know the Batik Amorista community and our journey preserving Batik Gumelem",
+    "storyTitle": "Our story",
+    "missionTitle": "Our mission",
+    "locationTitle": "Location & contact",
+    "locationSubtitle": "We invite you to visit our batik workshop and see the making process firsthand.",
+    "contactInfoTitle": "Contact information",
+    "addressLabel": "Address",
+    "phoneLabel": "Phone",
+    "emailLabel": "Email",
+    "hoursLabel": "Business hours",
+    "storyP1": "The Batik Amorista community was founded in 2010 by a group of Gumelem batik artisans with a vision to preserve and develop traditional Gumelem batik. The name \"Amorista\" comes from \"Amor\" meaning love and \"Ista\" meaning desire—reflecting our passion and dedication to the art of batik.",
+    "missionIntro": "Our mission is to preserve the cultural heritage of Batik Gumelem while embracing innovation and progress. We are committed to:",
+    "missionItems": [
+      "Preserving the authenticity of traditional Gumelem batik techniques and motifs",
+      "Empowering local artisans through training and job opportunities",
+      "Developing new motifs that still respect Batik Gumelem’s philosophical values",
+      "Introducing Batik Gumelem to national and international markets"
+    ],
+    "hours": {
+      "monFri": "Mon–Fri: 09:00–17:00 (WIB)",
+      "sat": "Sat: 09:00–15:00 (WIB)",
+      "sun": "Sun: Closed"
+    }
+  },
+  "auth": {
+    "loginTitle": "Sign in",
+    "loginHeadingPrefix": "Sign in to",
+    "brand": "Batik Gumelem",
+    "loginSubheading": "Sign in to view your orders and continue shopping",
+    "email": "Email",
+    "password": "Password",
+    "remember": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "processing": "Processing...",
+    "signIn": "Sign in",
+    "noAccount": "Don't have an account?",
+    "registerNow": "Create one",
+    "hidePassword": "Hide password",
+    "showPassword": "Show password",
+    "registerTitle": "Sign up",
+    "registerHeadingPrefix": "Create your",
+    "registerSubheading": "Sign up to enjoy more benefits",
+    "fullName": "Full name",
+    "confirmPassword": "Confirm password",
+    "haveAccount": "Already have an account?",
+    "signInNow": "Sign in",
+    "hideConfirmPassword": "Hide confirm password",
+    "showConfirmPassword": "Show confirm password",
+    "signUp": "Sign up",
+    "forgotTitle": "Forgot password",
+    "forgotHeading": "Forgot your password?",
+    "forgotSubheading": "Enter your email to receive a password reset link",
+    "backToLogin": "Back to sign in",
+    "sendResetLink": "Send reset link",
+    "resetLinkSent": "We have emailed your password reset link (if the email is registered).",
+    "resetTitle": "Reset password",
+    "resetHeading": "Reset password",
+    "resetSubheading": "Please enter your new password",
+    "newPassword": "New password",
+    "confirmNewPassword": "Confirm new password",
+    "verifyEmailTitle": "Verify email",
+    "verifyEmailHeading": "Verify your email",
+    "verifyEmailBody": "Please verify your email address by clicking the link we sent to your inbox.",
+    "verificationLinkSent": "A new verification link has been sent to the email address you provided during registration.",
+    "resending": "Sending...",
+    "resendVerification": "Resend verification email",
+    "backHome": "Back to home",
+    "verifyEmailHelp": "If you didn’t receive the verification email, please check your spam folder or click the button below to resend it.",
+    "confirmPasswordTitle": "Confirm password",
+    "confirmPasswordHeading": "Confirm your password",
+    "confirmPasswordBody": "This is a secure area of the application. Please confirm your password before continuing.",
+    "confirm": "Confirm"
+  }
+  ,
+  "whyBuy": {
+    "titlePrefix": "Why choose Batik",
+    "titleBrand": "Gumelem",
+    "subtitle": "Discover why our Batik Gumelem is a top choice for lovers of quality batik",
+    "reasons": [
+      {
+        "title": "Premium quality",
+        "description": "Each Batik Gumelem product is made to high standards to ensure lasting beauty and durability."
+      },
+      {
+        "title": "Support local artisans",
+        "description": "By buying from us, you directly support the Gumelem artisan community and help preserve Indonesia’s cultural heritage."
+      },
+      {
+        "title": "Natural dyes",
+        "description": "Many of our products use eco-friendly natural dyes derived from plants and natural minerals."
+      },
+      {
+        "title": "Authentic & guaranteed",
+        "description": "We guarantee the authenticity of every Batik Gumelem product and provide a guarantee for each purchase."
+      },
+      {
+        "title": "Nationwide shipping",
+        "description": "We ship across Indonesia with trusted courier options."
+      },
+      {
+        "title": "Affordable price",
+        "description": "We offer quality products at fair prices—directly from artisans with no middlemen."
+      }
+    ]
+  },
+  "shipping": {
+    "title": "Shipping & returns",
+    "subtitle": "Complete information about shipping and our return policy",
+    "shippingInfoTitle": "Shipping information",
+    "methodsTitle": "Shipping methods",
+    "methodsBody": "We work with trusted couriers to ensure your items arrive safely and on time:",
+    "costTitle": "Shipping cost",
+    "costBody1": "Shipping cost is calculated based on package weight, dimensions, and destination. You can see the estimated shipping cost at checkout after entering your shipping address.",
+    "costBody2": "For certain areas such as Eastern Indonesia and remote regions, additional fees and longer delivery times may apply.",
+    "trackingTitle": "Shipment tracking",
+    "trackingBody1": "After your order ships, you’ll receive a shipping confirmation email containing a tracking number and link to track your shipment.",
+    "trackingBody2": "You can also track your order from the order history page in your account.",
+    "returnsTitle": "Return policy",
+    "returnRequirementsTitle": "Return requirements",
+    "returnRequirementsIntro": "We accept returns under the following conditions:",
+    "returnReq1": "Returns must be made within 7 days after delivery.",
+    "returnReq2": "Items must be unused, unwashed, in new condition, and still have the original tag.",
+    "returnReq3": "Items are defective, damaged during shipping, or not as described.",
+    "returnProcessTitle": "Return process",
+    "returnProcessIntro": "To request a return, follow these steps:",
+    "refundTitle": "Refunds",
+    "refundBody1": "Refunds are processed within 3–7 business days after the item is received and verified by our team. Funds are returned via the same payment method used for the purchase.",
+    "refundBody2": "Return shipping costs are paid by the buyer unless the item is defective or not as described.",
+    "serviceTitle": "Our shipping service",
+    "serviceNationalTitle": "Nationwide delivery",
+    "serviceNationalBody": "Delivery across Indonesia with multiple courier options.",
+    "serviceSecureTitle": "Secure packaging",
+    "serviceSecureBody": "Items are packed safely and neatly to protect them during delivery.",
+    "serviceFastTitle": "Fast delivery",
+    "serviceFastBody": "Express options available for same-city and major-city deliveries.",
+    "serviceEasyReturnTitle": "Easy returns",
+    "serviceEasyReturnBody": "Simple and fast return process if there’s an issue with your order."
+  },
+  "legal": {
+    "termsTitle": "Terms & conditions",
+    "termsSubtitle": "Rules for using the BatikGumelem.com website and services",
+    "privacyTitle": "Privacy policy",
+    "privacySubtitle": "How we protect and manage your personal information",
+    "lastUpdated": "Last updated"
+  },
+  "product": {
+    "breadcrumbsHome": "Home",
+    "breadcrumbsProducts": "Products",
+    "description": "Description",
+    "size": "Size",
+    "chooseSize": "Choose size",
+    "outOfStock": "Sold out",
+    "availableFmt": "{{count}} available",
+    "quantity": "Quantity",
+    "stockEmptyForSize": "Out of stock for this size",
+    "availableItemsFmt": "Available: {{count}} item(s)",
+    "adding": "Adding...",
+    "stockEmpty": "Sold out",
+    "addToCart": "Add to cart",
+    "mustLoginAddToCart": "Please sign in to add items to your cart.",
+    "addToCartFailed": "Failed to add item to cart",
+    "detailsTab": "Product details",
+    "careTab": "Care",
+    "material": "Material",
+    "technique": "Technique",
+    "dimensions": "Dimensions",
+    "colors": "Colors",
+    "careGuide": "Care guide",
+    "careFallback": "To keep your Batik Gumelem beautiful: hand wash with mild soap and cold water. Avoid bleach and do not wring too hard. Dry in the shade away from direct sunlight. Iron on low heat inside-out or use a cloth layer. Store in a cool, dry place.",
+    "related": "Related products",
+    "cardMustLogin": "Please sign in to add items to your cart.",
+    "cardOutOfStockAll": "This product is out of stock in all sizes.",
+    "cardNoSize": "No size is available for this product."
+  },
+  "dashboard": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "myOrders": "My orders",
+      "addresses": "Shipping addresses",
+      "store": "Store",
+      "documentation": "Documentation",
+      "adminDashboard": "Dashboard",
+      "adminOrders": "Orders",
+      "adminProducts": "Products",
+      "adminUsers": "Users",
+      "adminCoupons": "Coupons",
+      "adminBlogs": "Blog",
+      "adminReports": "Reports",
+      "viewStore": "View store"
+    },
+    "pages": {
+      "adminDashboard": {
+        "headTitle": "Admin dashboard",
+        "title": "Admin dashboard",
+        "revenueTotal": "Total revenue",
+        "revenueTotalHint": "From completed orders",
+        "viewReports": "View reports",
+        "revenuePending": "Pending revenue",
+        "revenuePendingHint": "From in-progress orders",
+        "viewOrders": "View orders",
+        "orders": "Orders",
+        "ordersHint": "Total orders",
+        "manageOrders": "Manage orders",
+        "products": "Products",
+        "productsHint": "Total products",
+        "manageProducts": "Manage products",
+        "usersTotal": "Total users",
+        "usersHint": "Registered users",
+        "manageUsers": "Manage users",
+        "blogs": "Blog",
+        "blogsHint": "Total blog posts",
+        "manageBlogs": "Manage blog"
+      },
+      "addresses": {
+        "breadcrumbs": "Shipping addresses",
+        "headTitle": "Shipping addresses",
+        "title": "Shipping addresses",
+        "addNew": "Add new address",
+        "defaultBadge": "Default",
+        "edit": "Edit",
+        "delete": "Delete",
+        "setDefault": "Set as default"
+      },
+      "orders": {
+        "breadcrumbs": "My orders",
+        "headTitle": "My orders",
+        "title": "My orders",
+        "backToDashboard": "Back to dashboard",
+        "historyTitle": "Order history",
+        "orderNumberFmt": "Order #{{number}}",
+        "status": {
+          "pending": "Pending",
+          "processing": "Processing",
+          "shipped": "Shipped",
+          "completed": "Completed",
+          "cancelled": "Cancelled"
+        }
+      }
+      ,
+      "adminOrders": {
+        "headTitle": "Order management",
+        "title": "Order management",
+        "cards": {
+          "allTitle": "All orders",
+          "allDesc": "Order summary",
+          "allHint": "Total orders in the system",
+          "pendingTitle": "Pending",
+          "pendingDesc": "Orders that need processing",
+          "pendingHint": "Waiting to be processed",
+          "processingTitle": "Processing",
+          "processingDesc": "Orders in progress",
+          "processingHint": "Being handled",
+          "shippedTitle": "Shipped",
+          "shippedDesc": "Orders shipped",
+          "shippedHint": "Orders shipped or delivered"
+        },
+        "searchPlaceholder": "Search orders...",
+        "tabs": {
+          "all": "All",
+          "pending": "Pending",
+          "processing": "Processing",
+          "shipped": "Shipped",
+          "delivered": "Delivered",
+          "cancelled": "Cancelled"
+        },
+        "table": {
+          "date": "Date",
+          "customer": "Customer",
+          "total": "Total",
+          "status": "Status",
+          "payment": "Payment",
+          "actions": "Actions"
+        },
+        "empty": "No orders found",
+        "pagination": {
+          "showingFmt": "Showing {{from}} to {{to}} of {{total}} orders",
+          "rowsPerPage": "Rows per page",
+          "page": "Page",
+          "of": "of",
+          "first": "Go to first page",
+          "prev": "Go to previous page",
+          "next": "Go to next page",
+          "last": "Go to last page"
+        },
+        "dialog": {
+          "confirmTitle": "Are you sure?",
+          "confirmDescFmt": "This action will permanently delete order {{order}}. This action cannot be undone.",
+          "cancel": "Cancel",
+          "delete": "Delete"
+        },
+        "statusLabel": {
+          "pending": "Pending",
+          "processing": "Processing",
+          "shipped": "Shipped",
+          "delivered": "Delivered",
+          "cancelled": "Cancelled"
+        },
+        "paymentLabel": {
+          "paid": "Paid",
+          "pending": "Pending",
+          "failed": "Failed"
+        },
+        "guest": "Guest"
+      }
+      ,
+      "adminProducts": {
+        "headTitle": "Product management",
+        "title": "Product management",
+        "add": "Add product",
+        "searchPlaceholder": "Search products...",
+        "statusAll": "All statuses",
+        "table": {
+          "image": "Image",
+          "name": "Name",
+          "price": "Price",
+          "stock": "Total stock",
+          "status": "Status",
+          "actions": "Actions"
+        },
+        "empty": "No products found",
+        "dialog": {
+          "confirmTitle": "Are you sure?",
+          "cancel": "Cancel",
+          "delete": "Delete"
+        },
+        "pagination": {
+          "first": "Go to first page",
+          "prev": "Go to previous page",
+          "next": "Go to next page",
+          "last": "Go to last page",
+          "page": "Page",
+          "of": "of"
+        }
+      },
+      "adminUsers": {
+        "headTitle": "User management",
+        "title": "User management",
+        "add": "Add user",
+        "searchPlaceholder": "Search users...",
+        "table": { "name": "Name", "email": "Email", "role": "Role" },
+        "empty": "No users found.",
+        "dialog": { "confirmTitle": "Are you sure?", "cancel": "Cancel", "delete": "Delete" },
+        "pagination": { "page": "Page", "of": "of" }
+      },
+      "adminCoupons": {
+        "headTitle": "Coupon management",
+        "title": "Coupon management",
+        "add": "Add coupon",
+        "searchPlaceholder": "Search coupons...",
+        "table": { "code": "Code", "discount": "Discount", "validFrom": "Valid from", "validUntil": "Valid until", "active": "Status", "actions": "Actions" },
+        "active": "Active",
+        "inactive": "Inactive",
+        "empty": "No coupons found.",
+        "dialog": { "confirmTitle": "Are you sure?", "cancel": "Cancel", "delete": "Delete" },
+        "pagination": { "page": "Page", "of": "of" }
+      },
+      "adminReports": {
+        "headTitle": "Sales report",
+        "title": "Sales report",
+        "cardTitle": "Download report",
+        "cardDesc": "Choose a date range and report type",
+        "startDate": "Start date",
+        "endDate": "End date",
+        "reportType": "Report type",
+        "typeDaily": "Daily",
+        "typeWeekly": "Weekly",
+        "typeMonthly": "Monthly",
+        "download": "Download report",
+        "processing": "Processing..."
+      },
+      "adminBlogs": {
+        "headTitle": "Blog management",
+        "title": "Blog management",
+        "add": "Add blog",
+        "searchPlaceholder": "Search blog...",
+        "categoryAll": "All categories",
+        "table": { "title": "Title", "category": "Category", "author": "Author", "date": "Date", "actions": "Actions" },
+        "edit": "Edit",
+        "delete": "Delete",
+        "empty": "No blog posts found",
+        "dialog": {
+          "confirmTitle": "Are you sure?",
+          "confirmDescFmt": "This action cannot be undone. This will delete the blog {{title}}",
+          "cancel": "Cancel",
+          "delete": "Delete"
+        },
+        "pagination": { "page": "Page", "of": "of" }
+      }
+      ,
+      "adminOrderShow": {
+        "headTitleFmt": "Order details {{order}}",
+        "titleFmt": "Order details {{order}}",
+        "status": "Order status",
+        "trackingNumber": "Tracking number",
+        "trackingUrl": "Tracking URL",
+        "adminNotes": "Admin notes",
+        "update": "Update order",
+        "updating": "Updating...",
+        "back": "Back",
+        "customer": "Customer",
+        "guest": "Guest",
+        "amount": "Amount",
+        "payment": "Payment",
+        "createdAt": "Created",
+        "updatedAt": "Updated",
+        "shippingAddress": "Shipping address",
+        "items": "Order items",
+        "product": "Product",
+        "qty": "Qty",
+        "price": "Price",
+        "subtotal": "Subtotal",
+        "shipping": "Shipping",
+        "total": "Total",
+        "timeline": "Timeline",
+        "statusLabel": {
+          "pending": "Pending",
+          "processing": "Processing",
+          "shipped": "Shipped",
+          "completed": "Completed",
+          "cancelled": "Cancelled"
+        },
+        "paymentLabel": {
+          "paid": "Paid",
+          "pending": "Pending",
+          "failed": "Failed"
+        }
+      },
+      "adminProductForm": {
+        "createHead": "Add product",
+        "editHead": "Edit product",
+        "createTitle": "Add product",
+        "editTitle": "Edit product",
+        "basicInfo": "Product information",
+        "name": "Product name",
+        "slug": "Slug",
+        "description": "Description",
+        "price": "Price",
+        "active": "Active",
+        "images": "Product images",
+        "upload": "Upload images",
+        "sizes": "Sizes & stock",
+        "size": "Size",
+        "stock": "Stock",
+        "addSize": "Add size",
+        "remove": "Remove",
+        "setPrimary": "Set as primary",
+        "primary": "Primary",
+        "save": "Save",
+        "saving": "Saving...",
+        "update": "Update",
+        "updating": "Updating...",
+        "cancel": "Cancel",
+        "back": "Back"
+      },
+      "adminUserCreate": {
+        "headTitle": "Add user",
+        "title": "Add user",
+        "sectionTitle": "User information",
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "password": "Password",
+        "passwordConfirm": "Confirm password",
+        "namePlaceholder": "Enter name",
+        "emailPlaceholder": "Enter email",
+        "rolePlaceholder": "Select role",
+        "passwordPlaceholder": "Enter password",
+        "passwordConfirmPlaceholder": "Confirm password",
+        "submit": "Add user"
+      },
+      "adminCouponCreate": {
+        "title": "Add new coupon",
+        "desc": "Create a new discount coupon for customers",
+        "code": "Coupon code",
+        "discountPercent": "Discount percentage",
+        "validFrom": "Valid from",
+        "validUntil": "Valid until",
+        "active": "Active",
+        "codePlaceholder": "Example: SUMMER2024",
+        "discountPlaceholder": "10",
+        "save": "Save coupon",
+        "saving": "Saving..."
+      },
+      "adminBlogCreate": {
+        "headTitle": "Create blog post",
+        "title": "Create blog post",
+        "cardTitle": "Post details",
+        "fieldTitle": "Title",
+        "fieldCategory": "Category",
+        "fieldAuthor": "Author",
+        "fieldImage": "Post image",
+        "fieldExcerpt": "Excerpt",
+        "fieldContent": "Content",
+        "titlePlaceholder": "Post title",
+        "categoryPlaceholder": "Category",
+        "authorPlaceholder": "Author name",
+        "excerptPlaceholder": "Short description for the post",
+        "previewAlt": "Preview",
+        "cancel": "Cancel",
+        "save": "Save post"
+      }
+      ,
+      "adminUserEdit": {
+        "headTitle": "Edit user",
+        "title": "Edit user",
+        "sectionTitle": "User information",
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "rolePlaceholder": "Select role",
+        "namePlaceholder": "Enter name",
+        "emailPlaceholder": "Enter email",
+        "passwordNew": "New password (leave blank to keep unchanged)",
+        "passwordNewPlaceholder": "Enter new password",
+        "passwordConfirm": "Confirm new password",
+        "passwordConfirmPlaceholder": "Confirm new password",
+        "submit": "Save changes"
+      },
+      "adminCouponEdit": {
+        "title": "Edit coupon",
+        "desc": "Update discount coupon details",
+        "save": "Save changes",
+        "saving": "Saving..."
+      },
+      "adminBlogEdit": {
+        "headTitleFmt": "Edit post: {{title}}",
+        "title": "Edit post",
+        "save": "Save changes",
+        "saving": "Saving...",
+        "cancel": "Cancel"
+      },
+      "adminBlogShow": {
+        "headTitleFmt": "Blog: {{title}}",
+        "title": "View blog",
+        "backToList": "Back to list",
+        "edit": "Edit blog",
+        "byFmt": "By {{author}} • Published {{date}}",
+        "excerpt": "Excerpt",
+        "content": "Content",
+        "createdAt": "Created",
+        "updatedAt": "Last updated"
+      },
+      "adminProductShow": {
+        "headTitleFmt": "Product: {{name}}",
+        "title": "Product details",
+        "back": "Back to products",
+        "edit": "Edit product",
+        "mainImage": "Main image",
+        "noImage": "No image",
+        "allImages": "All images",
+        "availableSizes": "Available sizes",
+        "stockFmt": "Stock: {{count}}",
+        "info": "Product information",
+        "fieldName": "Name",
+        "fieldSlug": "Slug",
+        "fieldPrice": "Price",
+        "fieldTotalStock": "Total stock",
+        "fieldStatus": "Status",
+        "fieldImages": "Images",
+        "imagesCountFmt": "{{count}} image(s)",
+        "fieldDescription": "Description",
+        "createdAt": "Created",
+        "updatedAt": "Updated"
+      },
+      "adminSalesReport": {
+        "title": "Sales report",
+        "startDate": "Start date",
+        "endDate": "End date",
+        "reportType": "Report type",
+        "typeDaily": "Daily",
+        "typeWeekly": "Weekly",
+        "typeMonthly": "Monthly",
+        "processing": "Processing...",
+        "downloadPdf": "Download PDF"
+      }
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Manage your profile and account settings",
+    "nav": {
+      "profile": "Profile",
+      "password": "Password",
+      "appearance": "Appearance"
+    },
+    "language": {
+      "label": "Language",
+      "helper": "Choose a language for the dashboard and website",
+      "id": "🇮🇩 Indonesia (ID)",
+      "en": "🇺🇸 English (EN)"
+    },
+    "profile": {
+      "breadcrumbs": "Profile settings",
+      "headTitle": "Profile settings",
+      "headingTitle": "Profile information",
+      "headingDesc": "Update your name and email address",
+      "name": "Name",
+      "namePlaceholder": "Full name",
+      "email": "Email address",
+      "emailPlaceholder": "Email address",
+      "save": "Save",
+      "saved": "Saved"
+    },
+    "password": {
+      "breadcrumbs": "Password settings",
+      "headTitle": "Password settings",
+      "headingTitle": "Update password",
+      "headingDesc": "Ensure your account uses a long, random password for maximum security",
+      "current": "Current password",
+      "currentPlaceholder": "Current password",
+      "new": "New password",
+      "newPlaceholder": "New password",
+      "confirm": "Confirm password",
+      "confirmPlaceholder": "Confirm password",
+      "save": "Save password",
+      "saved": "Saved"
+    },
+    "appearance": {
+      "breadcrumbs": "Appearance settings",
+      "headTitle": "Appearance settings",
+      "headingTitle": "Appearance settings",
+      "headingDesc": "Update your account's appearance settings"
+    }
+  }
+}
+

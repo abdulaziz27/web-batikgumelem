@@ -1,0 +1,867 @@
+{
+  "nav": {
+    "home": "Beranda",
+    "history": "Sejarah",
+    "products": "Produk",
+    "blog": "Blog",
+    "faq": "FAQ",
+    "about": "Tentang Kami",
+    "login": "Masuk",
+    "logout": "Keluar",
+    "profile": "Profil",
+    "myOrders": "Pesanan Saya",
+    "adminDashboard": "Dashboard Admin",
+    "language": "Bahasa"
+  },
+  "home": {
+    "heroTitle": "Keindahan Batik Gumelem Dari Banjarnegara",
+    "heroSubtitle": "Temukan keindahan batik tradisional Gumelem dengan motif dan filosofi mendalam yang telah diwariskan dari generasi ke generasi.",
+    "viewProducts": "Lihat Produk",
+    "aboutBatik": "Tentang Batik Gumelem",
+    "featuredTitle": "Produk Unggulan",
+    "featuredSubtitle": "Karya terbaik dari pengrajin batik Gumelem dengan kualitas premium dan motif yang khas.",
+    "viewAllProducts": "Lihat Semua Produk",
+    "heritageTitle": "Warisan Budaya yang Berharga",
+    "heritageP1": "Batik Gumelem adalah warisan budaya dari Desa Gumelem, Banjarnegara, Jawa Tengah yang telah ada sejak zaman Kerajaan Mataram.",
+    "heritageP2": "Keunikan Batik Gumelem terletak pada motif yang terinspirasi dari lingkungan alam sekitar dan filosofi kehidupan masyarakat setempat.",
+    "heritageLearnMore": "Pelajari Lebih Lanjut",
+    "features": [
+      "Dibuat dengan metode tradisional tulis dan cap",
+      "Menggunakan pewarna alami dari tumbuhan",
+      "Motif yang kaya akan filosofi dan sejarah",
+      "Hasil karya pengrajin yang berpengalaman",
+      "Bahan berkualitas tinggi untuk kenyamanan pemakai"
+    ],
+    "latestArticlesTitle": "Artikel Terbaru",
+    "latestArticlesSubtitle": "Jelajahi artikel menarik tentang batik Gumelem, teknik pembuatan, dan filosofi di baliknya",
+    "readMore": "Baca selengkapnya",
+    "viewAllArticles": "Lihat Semua Artikel",
+    "ctaTitle": "Siap untuk memiliki Batik Gumelem?",
+    "ctaSubtitle": "Jelajahi koleksi eksklusif kami sekarang.",
+    "shopNow": "Belanja Sekarang"
+  },
+  "products": {
+    "titlePrefix": "Produk Batik",
+    "titleBrand": "Gumelem",
+    "subtitle": "Jelajahi koleksi batik tradisional Gumelem dengan berbagai motif khas dan filosofi mendalam",
+    "searchPlaceholder": "Cari produk...",
+    "filters": "Filter",
+    "searchTitle": "Pencarian",
+    "sortTitle": "Urutkan",
+    "sortDefault": "Default",
+    "sortPriceAsc": "Harga: Rendah ke Tinggi",
+    "sortPriceDesc": "Harga: Tinggi ke Rendah",
+    "sortNameAsc": "Nama: A-Z",
+    "sortNameDesc": "Nama: Z-A",
+    "priceRange": "Rentang Harga",
+    "noResults": "Tidak ada produk yang sesuai dengan pencarian Anda.",
+    "reset": "Lihat Semua Produk"
+  }
+  ,
+  "footer": {
+    "about": "Melestarikan warisan budaya Batik Gumelem dari Banjarnegara, Jawa Tengah. Setiap kain batik kami dibuat dengan teknik tradisional dan mengandung filosofi mendalam.",
+    "quickLinks": "Tautan Cepat",
+    "customerService": "Layanan Pelanggan",
+    "contactUs": "Kontak",
+    "shippingReturns": "Pengiriman & Pengembalian",
+    "terms": "Syarat & Ketentuan",
+    "privacy": "Kebijakan Privasi",
+    "rights": "Hak cipta dilindungi."
+  },
+  "blog": {
+    "titlePrefix": "Blog Batik",
+    "titleBrand": "Gumelem",
+    "subtitle": "Temukan artikel menarik tentang sejarah, teknik pembuatan, dan filosofi batik Gumelem",
+    "searchPlaceholder": "Cari artikel...",
+    "noResults": "Tidak ada artikel yang sesuai dengan pencarian Anda.",
+    "viewAll": "Lihat Semua Artikel",
+    "by": "Oleh",
+    "related": "Artikel Terkait",
+    "breadcrumbsHome": "Beranda",
+    "breadcrumbsBlog": "Blog"
+  },
+  "faq": {
+    "title": "Pertanyaan yang Sering Diajukan",
+    "subtitle": "Temukan jawaban untuk pertanyaan umum tentang produk dan layanan kami",
+    "moreQuestionsTitle": "Masih Ada Pertanyaan?",
+    "moreQuestionsBody": "Jika Anda memiliki pertanyaan lain yang belum terjawab, jangan ragu untuk menghubungi tim kami.",
+    "emailUs": "Email Kami",
+    "whatsapp": "WhatsApp",
+    "items": [
+      {
+        "question": "Apa itu Batik Gumelem?",
+        "answer": "Batik Gumelem adalah batik tradisional yang berasal dari Desa Gumelem, Kabupaten Banjarnegara, Jawa Tengah. Batik ini memiliki ciri khas motif yang terinspirasi dari alam sekitar dan kehidupan masyarakat Gumelem. Batik ini sudah ada sejak abad ke-17 dan merupakan salah satu warisan budaya Indonesia."
+      },
+      {
+        "question": "Apa perbedaan antara Batik Tulis dan Batik Cap?",
+        "answer": "Batik Tulis dibuat dengan cara menggambar motif langsung di atas kain menggunakan canting dan lilin (malam) secara manual. Proses ini memakan waktu lama dan membutuhkan ketelitian tinggi. Sedangkan Batik Cap dibuat dengan menggunakan stempel dari tembaga yang sudah memiliki pola tertentu. Proses ini lebih cepat dari batik tulis, namun tetap mempertahankan kualitas dan keindahan motif. Di BatikGumelem.com, kami menawarkan kedua jenis batik ini."
+      },
+      {
+        "question": "Bagaimana cara merawat batik agar tetap awet?",
+        "answer": "Untuk merawat batik agar tetap awet, sebaiknya cuci dengan tangan menggunakan air dingin dan deterjen lembut. Hindari penggunaan pemutih dan jangan merendam batik terlalu lama. Keringkan di tempat teduh dengan cara digantung dan setrika pada suhu sedang. Untuk penyimpanan, lipat batik dengan rapi dan simpan di tempat yang kering dan terhindar dari sinar matahari langsung."
+      },
+      {
+        "question": "Apakah batik yang dijual di BatikGumelem.com menggunakan pewarna alami?",
+        "answer": "Ya, sebagian besar batik yang kami jual menggunakan pewarna alami yang berasal dari tumbuhan seperti kulit kayu, daun, dan akar. Namun, kami juga menawarkan batik dengan pewarna sintetis untuk beberapa koleksi tertentu. Informasi tentang jenis pewarna yang digunakan selalu kami cantumkan pada deskripsi setiap produk."
+      },
+      {
+        "question": "Berapa lama waktu pengiriman pesanan?",
+        "answer": "Waktu pengiriman tergantung pada alamat tujuan pengiriman. Untuk wilayah Jawa, biasanya membutuhkan waktu 2-3 hari kerja. Sedangkan untuk luar Jawa, bisa memakan waktu 3-7 hari kerja. Untuk luar Indonesia, pengiriman membutuhkan waktu 1-3 minggu, tergantung pada negara tujuan dan metode pengiriman yang dipilih."
+      },
+      {
+        "question": "Apakah BatikGumelem.com menerima pesanan khusus?",
+        "answer": "Ya, kami menerima pesanan khusus atau custom order. Anda dapat menghubungi tim Customer Service kami untuk mendiskusikan kebutuhan Anda. Mohon diingat bahwa pesanan khusus membutuhkan waktu produksi yang lebih lama dan mungkin dikenakan biaya tambahan tergantung pada tingkat kesulitan dan jumlah pesanan."
+      },
+      {
+        "question": "Bagaimana kebijakan pengembalian barang di BatikGumelem.com?",
+        "answer": "Kami menerima pengembalian barang dalam waktu 7 hari setelah barang diterima, dengan syarat barang belum dipakai, belum dicuci, masih dalam kondisi baru, dan masih memiliki label asli. Biaya pengiriman untuk pengembalian barang ditanggung oleh pembeli. Untuk informasi lebih lanjut, silakan kunjungi halaman Kebijakan Pengembalian di website kami."
+      },
+      {
+        "question": "Apakah BatikGumelem.com melayani pengiriman internasional?",
+        "answer": "Ya, kami melayani pengiriman internasional ke berbagai negara. Biaya pengiriman internasional bervariasi tergantung pada berat paket dan negara tujuan. Untuk estimasi biaya pengiriman, silakan tambahkan produk ke keranjang belanja dan masukkan alamat pengiriman Anda pada halaman checkout."
+      },
+      {
+        "question": "Bagaimana cara mengetahui ukuran yang tepat untuk produk pakaian jadi?",
+        "answer": "Setiap produk pakaian jadi di website kami memiliki panduan ukuran yang tertera pada halaman produk. Kami sangat menyarankan untuk mengukur badan Anda sebelum memilih ukuran. Jika Anda masih ragu, silakan hubungi Customer Service kami untuk bantuan lebih lanjut dalam memilih ukuran yang tepat."
+      },
+      {
+        "question": "Apakah ada diskon untuk pembelian dalam jumlah banyak?",
+        "answer": "Ya, kami memberikan diskon khusus untuk pembelian dalam jumlah banyak atau grosir. Besaran diskon disesuaikan dengan jumlah pembelian. Untuk informasi lebih lanjut mengenai harga grosir, silakan hubungi tim Sales kami melalui email atau WhatsApp yang tertera di halaman Kontak."
+      }
+    ]
+  },
+  "history": {
+    "titlePrefix": "Sejarah Batik",
+    "titleBrand": "Gumelem",
+    "subtitle": "Telusuri perjalanan panjang batik Gumelem dari masa ke masa",
+    "section1Title": "Warisan Budaya dari Masa Kerajaan",
+    "section2Title": "Teknik Pembuatan yang Diwariskan",
+    "philosophyTitle": "Filosofi Motif Batik Gumelem",
+    "philosophySubtitle": "Setiap motif batik Gumelem mengandung makna filosofis mendalam yang mencerminkan pandangan hidup dan nilai-nilai masyarakat Banjarnegara",
+    "preservationTitle": "Pelestarian Batik Gumelem",
+    "preservationSubtitle": "Upaya yang dilakukan berbagai pihak untuk melestarikan dan mengembangkan batik Gumelem sebagai warisan budaya",
+    "ctaCommunity": "Pelajari Lebih Lanjut tentang Komunitas Kami",
+    "videoTitle": "Sejarah Batik Gumelem",
+    "section1Paragraphs": [
+      "Sejarah batik Gumelem tidak lepas dari keberadaan Kadipaten Gumelem yang merupakan wilayah bawahan Kerajaan Mataram. Konon, batik Gumelem sudah ada sejak abad ke-17, pada masa pemerintahan Sultan Agung Hanyokrokusumo.",
+      "Pada masa itu, batik hanya dibuat oleh keluarga bangsawan atau raja, dan motif-motifnya sangat eksklusif. Motif-motif tersebut memiliki makna filosofis yang mendalam dan mencerminkan status sosial pemakainya.",
+      "Seiring berjalannya waktu, batik mulai menyebar ke masyarakat umum dan berkembang menjadi industri rakyat seperti yang kita kenal sekarang. Meski demikian, keunikan dan kekhasan motif batik Gumelem tetap terjaga hingga kini."
+    ],
+    "makingAlt": "Proses pembuatan batik Gumelem",
+    "section2Paragraphs": [
+      "Teknik pembuatan batik Gumelem masih sangat tradisional dan memakan waktu yang lama. Proses pembuatan dimulai dari tahap persiapan kain, pembuatan pola, pencantingan, pewarnaan, hingga pelorodan (menghilangkan lilin).",
+      "Batik Gumelem dibuat dengan dua teknik utama, yaitu batik tulis dan batik cap. Batik tulis dibuat dengan menggambar motif menggunakan canting yang diisi dengan lilin (malam) panas, sementara batik cap menggunakan stempel dari tembaga untuk membuat pola.",
+      "Pewarnaan batik Gumelem tradisional menggunakan bahan-bahan alami seperti kulit kayu, daun, dan akar tumbuhan. Proses ini membutuhkan ketelitian dan kesabaran, karena untuk mendapatkan warna yang sempurna, kain harus dicelup berulang kali."
+    ],
+    "motifs": [
+      {
+        "key": "pring-sedapur",
+        "label": "Pring Sedapur",
+        "title": "Motif Pring Sedapur",
+        "image": "images/product_image_1.png",
+        "alt": "Motif Pring Sedapur",
+        "paragraphs": [
+          "Motif yang menggambarkan rumpun bambu (pring) dalam satu kebun (sedapur). Bambu dipilih sebagai motif karena memiliki filosofi yang mendalam dalam kehidupan masyarakat Jawa.",
+          "Filosofi dari motif ini adalah semakin tinggi ilmu seseorang, semakin rendah hati dia. Seperti bambu yang semakin tinggi semakin merunduk. Bambu juga melambangkan kemanfaatan yang tinggi, karena hampir seluruh bagian bambu dapat dimanfaatkan.",
+          "Selain itu, rumpun bambu juga melambangkan kebersamaan dan gotong royong, karena bambu selalu tumbuh berumpun, tidak pernah sendiri."
+        ]
+      },
+      {
+        "key": "sekar-jagad",
+        "label": "Sekar Jagad",
+        "title": "Motif Sekar Jagad",
+        "image": "images/product_image_2.png",
+        "alt": "Motif Sekar Jagad",
+        "paragraphs": [
+          "Sekar Jagad berarti \"bunga dunia\" atau \"bunga semesta\". Motif ini terdiri dari berbagai macam bentuk yang menyerupai pulau-pulau yang dikelilingi oleh lautan, mewakili keberagaman dunia.",
+          "Filosofi dari motif Sekar Jagad adalah keindahan dalam keberagaman. Motif ini melambangkan kesatuan dalam perbedaan, seperti semboyan \"Bhinneka Tunggal Ika\" yang berarti berbeda-beda tetapi tetap satu.",
+          "Motif ini juga mengajarkan bahwa segala sesuatu di dunia ini saling terhubung dan saling melengkapi, seperti keseimbangan alam semesta."
+        ]
+      },
+      {
+        "key": "semen-rama",
+        "label": "Semen Rama",
+        "title": "Motif Semen Rama",
+        "image": "images/product_image_2.png",
+        "alt": "Motif Semen Rama",
+        "paragraphs": [
+          "Kata \"semen\" berasal dari kata \"semi\" yang berarti tumbuh atau berkembang. Motif Semen Rama terinspirasi dari kisah Ramawijaya dalam Epos Ramayana, seorang raja yang bijaksana dan adil.",
+          "Filosofi dari motif ini melambangkan kesuburan dan kemakmuran. Motif ini juga mengandung ajaran tentang kepemimpinan yang adil dan bijaksana, seperti yang dicontohkan oleh Raja Rama.",
+          "Motif Semen Rama biasanya terdiri dari ornamen gunung, tumbuhan, burung, dan hewan lainnya, yang melambangkan harmoni antara manusia, alam, dan kosmos."
+        ]
+      },
+      {
+        "key": "parang-kusuma",
+        "label": "Parang Kusuma",
+        "title": "Motif Parang Kusuma",
+        "image": "images/product_image_3.png",
+        "alt": "Motif Parang Kusuma",
+        "paragraphs": [
+          "Parang berarti pisau atau senjata, sedangkan kusuma berarti bunga atau keindahan. Motif ini terdiri dari bentuk-bentuk diagonal menyerupai pisau yang disusun berderet.",
+          "Filosofi dari motif Parang Kusuma menggambarkan kebijaksanaan dan keteguhan dalam menghadapi berbagai rintangan kehidupan. Motif ini juga melambangkan kekuatan dan kegigihan, seperti ombak laut yang tidak pernah berhenti bergerak.",
+          "Dalam tradisi Jawa, motif parang merupakan salah satu motif tertua dan paling dihormati, yang pada masa lalu hanya boleh dikenakan oleh kalangan bangsawan."
+        ]
+      },
+      {
+        "key": "gilar-gilar",
+        "label": "Gilar-gilar",
+        "title": "Motif Gilar-gilar",
+        "image": "images/product_image_4.png",
+        "alt": "Motif Gilar-gilar",
+        "paragraphs": [
+          "Gilar-gilar berarti \"bersinar\" atau \"gemerlap\". Motif ini terinspirasi dari gelang emas milik Kadipaten Gumelem yang memancarkan cahaya gemerlap.",
+          "Filosofi dari motif ini melambangkan kemakmuran, kemuliaan, dan harapan akan kehidupan yang lebih baik. Motif ini juga mengandung makna keindahan dan keagungan.",
+          "Motif Gilar-gilar merupakan salah satu motif khas Gumelem yang tidak ditemukan di daerah penghasil batik lainnya, sehingga menjadi identitas tersendiri bagi batik Gumelem."
+        ]
+      }
+    ],
+    "preservationCards": [
+      {
+        "title": "Pelatihan dan Pendidikan",
+        "body": "Berbagai program pelatihan dan pendidikan diadakan untuk mengajarkan teknik pembuatan batik Gumelem kepada generasi muda, terutama di sekolah-sekolah dan komunitas lokal.",
+        "image": "images/batik-gumelem-pelatihan.jpeg",
+        "alt": "Pelatihan batik"
+      },
+      {
+        "title": "Festival dan Pameran",
+        "body": "Festival Batik Gumelem diadakan secara rutin untuk mempromosikan dan memperkenalkan batik Gumelem kepada masyarakat luas, baik dalam skala nasional maupun internasional.",
+        "image": "images/batik-gumelem-festival.png",
+        "alt": "Festival batik"
+      },
+      {
+        "title": "Inovasi dan Pengembangan",
+        "body": "Para pengrajin batik Gumelem terus berinovasi dengan menciptakan motif-motif baru dan aplikasi batik pada berbagai produk, sambil tetap menjaga kekhasan dan nilai-nilai tradisional.",
+        "image": "images/batik-gumelem-inovasi.jpeg",
+        "alt": "Inovasi batik"
+      }
+    ]
+  },
+  "aboutPage": {
+    "title": "Tentang Kami",
+    "subtitle": "Mengenal lebih dekat Komunitas Batik Amorista dan perjalanan kami melestarikan warisan budaya batik Gumelem",
+    "storyTitle": "Perjalanan Kami",
+    "missionTitle": "Misi Kami",
+    "locationTitle": "Lokasi & Kontak",
+    "locationSubtitle": "Kami mengundang Anda untuk mengunjungi workshop batik kami dan menyaksikan langsung proses pembuatan batik Gumelem.",
+    "contactInfoTitle": "Informasi Kontak",
+    "addressLabel": "Alamat",
+    "phoneLabel": "Telepon",
+    "emailLabel": "Email",
+    "hoursLabel": "Jam Operasional",
+    "storyP1": "Komunitas Batik Amorista didirikan pada tahun 2010 oleh sekelompok pengrajin batik Gumelem yang memiliki visi untuk melestarikan dan mengembangkan batik tradisional Gumelem. Nama \"Amorista\" diambil dari kata \"Amor\" yang berarti cinta dan \"Ista\" yang berarti keinginan, mencerminkan kecintaan dan dedikasi kami terhadap seni batik.",
+    "missionIntro": "Misi kami adalah melestarikan warisan budaya batik Gumelem dengan tetap membuka diri pada inovasi dan perkembangan zaman. Kami berkomitmen untuk:",
+    "missionItems": [
+      "Menjaga keaslian teknik dan motif tradisional batik Gumelem",
+      "Memberdayakan pengrajin lokal dengan memberikan pelatihan dan lapangan kerja",
+      "Mengembangkan motif-motif baru yang tetap menghormati nilai-nilai filosofis batik Gumelem",
+      "Memperkenalkan batik Gumelem ke pasar nasional dan internasional"
+    ],
+    "hours": {
+      "monFri": "Senin - Jumat: 09.00 - 17.00 WIB",
+      "sat": "Sabtu: 09.00 - 15.00 WIB",
+      "sun": "Minggu: Tutup"
+    }
+  },
+  "auth": {
+    "loginTitle": "Masuk",
+    "loginHeadingPrefix": "Masuk ke",
+    "brand": "Batik Gumelem",
+    "loginSubheading": "Masuk untuk melihat pesanan dan melanjutkan belanja",
+    "email": "Email",
+    "password": "Password",
+    "remember": "Ingat saya",
+    "forgotPassword": "Lupa password?",
+    "processing": "Memproses...",
+    "signIn": "Masuk",
+    "noAccount": "Belum memiliki akun?",
+    "registerNow": "Daftar sekarang",
+    "hidePassword": "Sembunyikan password",
+    "showPassword": "Tampilkan password",
+    "registerTitle": "Daftar",
+    "registerHeadingPrefix": "Daftar di",
+    "registerSubheading": "Buat akun untuk menikmati berbagai keuntungan",
+    "fullName": "Nama Lengkap",
+    "confirmPassword": "Konfirmasi Password",
+    "haveAccount": "Sudah memiliki akun?",
+    "signInNow": "Masuk sekarang",
+    "hideConfirmPassword": "Sembunyikan konfirmasi password",
+    "showConfirmPassword": "Tampilkan konfirmasi password",
+    "signUp": "Daftar"
+    ,
+    "forgotTitle": "Lupa Password",
+    "forgotHeading": "Lupa Password",
+    "forgotSubheading": "Masukkan email Anda untuk menerima tautan reset password",
+    "backToLogin": "Kembali ke halaman masuk",
+    "sendResetLink": "Kirim Tautan Reset",
+    "resetLinkSent": "Kami telah mengirim tautan reset ke email Anda (jika email terdaftar).",
+    "resetTitle": "Reset Password",
+    "resetHeading": "Reset Password",
+    "resetSubheading": "Silakan masukkan password baru Anda",
+    "newPassword": "Password Baru",
+    "confirmNewPassword": "Konfirmasi Password Baru",
+    "verifyEmailTitle": "Verifikasi Email",
+    "verifyEmailHeading": "Verifikasi Email",
+    "verifyEmailBody": "Silakan verifikasi alamat email Anda dengan mengklik tautan yang telah kami kirimkan ke email Anda.",
+    "verificationLinkSent": "Tautan verifikasi baru telah dikirim ke alamat email yang Anda berikan saat pendaftaran.",
+    "resending": "Mengirim...",
+    "resendVerification": "Kirim Ulang Email Verifikasi",
+    "backHome": "Kembali ke Beranda",
+    "verifyEmailHelp": "Jika Anda tidak menerima email verifikasi, silakan periksa folder spam atau klik tombol di bawah ini untuk mengirim ulang.",
+    "confirmPasswordTitle": "Konfirmasi password",
+    "confirmPasswordHeading": "Konfirmasi password",
+    "confirmPasswordBody": "Ini adalah area aman. Silakan konfirmasi password Anda sebelum melanjutkan.",
+    "confirm": "Konfirmasi"
+  }
+  ,
+  "whyBuy": {
+    "titlePrefix": "Mengapa Memilih Batik",
+    "titleBrand": "Gumelem",
+    "subtitle": "Temukan alasan mengapa batik Gumelem dari kami menjadi pilihan utama para pencinta batik berkualitas",
+    "reasons": [
+      {
+        "title": "Kualitas Premium",
+        "description": "Setiap produk batik Gumelem kami dibuat dengan standar kualitas tertinggi untuk memastikan ketahanan dan keindahan yang tahan lama."
+      },
+      {
+        "title": "Mendukung Pengrajin Lokal",
+        "description": "Dengan membeli dari kami, Anda secara langsung mendukung komunitas pengrajin batik Gumelem dan membantu melestarikan warisan budaya Indonesia."
+      },
+      {
+        "title": "Pewarna Alami",
+        "description": "Sebagian besar produk kami menggunakan pewarna alami yang ramah lingkungan, diambil dari tumbuhan dan mineral alami."
+      },
+      {
+        "title": "Produk Asli & Bergaransi",
+        "description": "Kami menjamin keaslian setiap produk batik Gumelem dan memberikan garansi untuk setiap pembelian."
+      },
+      {
+        "title": "Pengiriman Ke Seluruh Indonesia",
+        "description": "Kami melayani pengiriman ke seluruh wilayah Indonesia dengan berbagai pilihan jasa pengiriman terpercaya."
+      },
+      {
+        "title": "Harga Terjangkau",
+        "description": "Kami menawarkan produk berkualitas dengan harga terjangkau karena langsung dari pengrajin tanpa perantara."
+      }
+    ]
+  },
+  "shipping": {
+    "title": "Pengiriman & Pengembalian",
+    "subtitle": "Informasi lengkap mengenai pengiriman dan kebijakan pengembalian produk",
+    "shippingInfoTitle": "Informasi Pengiriman",
+    "methodsTitle": "Metode Pengiriman",
+    "methodsBody": "Kami bekerja sama dengan berbagai jasa pengiriman terpercaya untuk memastikan produk Anda sampai dengan aman dan tepat waktu:",
+    "costTitle": "Biaya Pengiriman",
+    "costBody1": "Biaya pengiriman dihitung berdasarkan berat paket, dimensi, dan alamat tujuan. Anda dapat melihat estimasi biaya pengiriman pada halaman checkout setelah memasukkan alamat pengiriman.",
+    "costBody2": "Untuk wilayah tertentu seperti Indonesia Timur dan daerah terpencil, mungkin dikenakan biaya tambahan dan waktu pengiriman yang lebih lama.",
+    "trackingTitle": "Pelacakan Pengiriman",
+    "trackingBody1": "Setelah pesanan Anda dikirim, Anda akan menerima email konfirmasi pengiriman yang berisi nomor resi dan tautan untuk melacak status pengiriman Anda.",
+    "trackingBody2": "Anda juga dapat melacak pesanan Anda melalui halaman \"Riwayat Pesanan\" di akun Anda.",
+    "returnsTitle": "Kebijakan Pengembalian",
+    "returnRequirementsTitle": "Syarat Pengembalian",
+    "returnRequirementsIntro": "Kami menerima pengembalian produk dengan ketentuan berikut:",
+    "returnReq1": "Pengembalian dilakukan dalam waktu 7 hari setelah produk diterima.",
+    "returnReq2": "Produk belum dipakai, belum dicuci, masih dalam kondisi baru, dan masih memiliki label asli.",
+    "returnReq3": "Produk cacat, rusak saat pengiriman, atau tidak sesuai dengan deskripsi.",
+    "returnProcessTitle": "Proses Pengembalian",
+    "returnProcessIntro": "Untuk melakukan pengembalian produk, ikuti langkah-langkah berikut:",
+    "refundTitle": "Pengembalian Dana",
+    "refundBody1": "Pengembalian dana akan diproses dalam waktu 3-7 hari kerja setelah produk diterima dan diverifikasi oleh tim kami. Dana akan dikembalikan melalui metode pembayaran yang sama saat Anda melakukan pembelian.",
+    "refundBody2": "Biaya pengiriman untuk pengembalian produk ditanggung oleh pembeli, kecuali jika produk cacat atau tidak sesuai dengan deskripsi.",
+    "serviceTitle": "Layanan Pengiriman Kami",
+    "serviceNationalTitle": "Pengiriman Nasional",
+    "serviceNationalBody": "Melayani pengiriman ke seluruh wilayah Indonesia dengan berbagai pilihan jasa pengiriman.",
+    "serviceSecureTitle": "Kemasan Aman",
+    "serviceSecureBody": "Produk dikemas dengan aman dan rapi untuk melindungi produk selama pengiriman.",
+    "serviceFastTitle": "Pengiriman Cepat",
+    "serviceFastBody": "Opsi pengiriman cepat tersedia untuk pengiriman dalam kota dan antar kota besar.",
+    "serviceEasyReturnTitle": "Pengembalian Mudah",
+    "serviceEasyReturnBody": "Proses pengembalian yang mudah dan cepat jika terjadi masalah dengan produk."
+  },
+  "legal": {
+    "termsTitle": "Syarat & Ketentuan",
+    "termsSubtitle": "Kebijakan penggunaan website dan layanan BatikGumelem.com",
+    "privacyTitle": "Kebijakan Privasi",
+    "privacySubtitle": "Bagaimana kami melindungi dan mengelola informasi pribadi Anda",
+    "lastUpdated": "Terakhir diperbarui"
+  },
+  "product": {
+    "breadcrumbsHome": "Beranda",
+    "breadcrumbsProducts": "Produk",
+    "description": "Deskripsi",
+    "size": "Ukuran",
+    "chooseSize": "Pilih Ukuran",
+    "outOfStock": "Habis",
+    "availableFmt": "{{count}} tersedia",
+    "quantity": "Jumlah",
+    "stockEmptyForSize": "Stok habis untuk ukuran ini",
+    "availableItemsFmt": "Tersedia: {{count}} item",
+    "adding": "Menambahkan...",
+    "stockEmpty": "Stok Habis",
+    "addToCart": "Tambahkan ke Keranjang",
+    "mustLoginAddToCart": "Anda harus login untuk menambah produk ke keranjang. Silakan login terlebih dahulu.",
+    "addToCartFailed": "Gagal menambahkan produk ke keranjang",
+    "detailsTab": "Detail Produk",
+    "careTab": "Perawatan",
+    "material": "Bahan",
+    "technique": "Teknik Pembuatan",
+    "dimensions": "Dimensi",
+    "colors": "Warna",
+    "careGuide": "Panduan Perawatan",
+    "careFallback": "Jaga keindahan Batik Gumelem Anda: Cuci dengan tangan menggunakan sabun lembut (contohnya lerak) dan air dingin. Hindari pemutih dan jangan diperas terlalu kuat. Jemur di tempat teduh, jauhkan dari sinar matahari langsung. Setrika dengan suhu rendah pada bagian dalam kain atau gunakan kain pelapis. Simpan di tempat yang sejuk dan kering.",
+    "related": "Produk Terkait",
+    "cardMustLogin": "Anda harus login untuk menambah produk ke keranjang. Silakan login terlebih dahulu.",
+    "cardOutOfStockAll": "Produk ini sedang habis stok untuk semua ukuran.",
+    "cardNoSize": "Ukuran produk tidak tersedia."
+  },
+  "dashboard": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "myOrders": "Pesanan Saya",
+      "addresses": "Alamat Pengiriman",
+      "store": "Toko",
+      "documentation": "Dokumentasi",
+      "adminDashboard": "Dasbor",
+      "adminOrders": "Pesanan",
+      "adminProducts": "Produk",
+      "adminUsers": "Pengguna",
+      "adminCoupons": "Kupon",
+      "adminBlogs": "Blog",
+      "adminReports": "Laporan",
+      "viewStore": "Lihat Toko"
+    },
+    "pages": {
+      "adminDashboard": {
+        "headTitle": "Dashboard Admin",
+        "title": "Dashboard Admin",
+        "revenueTotal": "Total Penghasilan",
+        "revenueTotalHint": "Dari pesanan selesai",
+        "viewReports": "Lihat Laporan",
+        "revenuePending": "Penghasilan Tertunda",
+        "revenuePendingHint": "Dari pesanan dalam proses",
+        "viewOrders": "Lihat Pesanan",
+        "orders": "Pesanan",
+        "ordersHint": "Total pesanan",
+        "manageOrders": "Kelola Pesanan",
+        "products": "Produk",
+        "productsHint": "Total produk",
+        "manageProducts": "Kelola Produk",
+        "usersTotal": "Total Pengguna",
+        "usersHint": "Pengguna terdaftar",
+        "manageUsers": "Kelola Pengguna",
+        "blogs": "Blog",
+        "blogsHint": "Total artikel blog",
+        "manageBlogs": "Kelola Blog"
+      },
+      "addresses": {
+        "breadcrumbs": "Alamat Pengiriman",
+        "headTitle": "Alamat Pengiriman",
+        "title": "Alamat Pengiriman",
+        "addNew": "Tambah Alamat Baru",
+        "defaultBadge": "Utama",
+        "edit": "Edit",
+        "delete": "Hapus",
+        "setDefault": "Jadikan Utama"
+      },
+      "orders": {
+        "breadcrumbs": "Pesanan Saya",
+        "headTitle": "Pesanan Saya",
+        "title": "Pesanan Saya",
+        "backToDashboard": "Kembali ke Dashboard",
+        "historyTitle": "Riwayat Pesanan",
+        "orderNumberFmt": "Pesanan #{{number}}",
+        "status": {
+          "pending": "Menunggu",
+          "processing": "Diproses",
+          "shipped": "Dikirim",
+          "completed": "Selesai",
+          "cancelled": "Dibatalkan"
+        }
+      }
+      ,
+      "adminOrders": {
+        "headTitle": "Manajemen Pesanan",
+        "title": "Manajemen Pesanan",
+        "cards": {
+          "allTitle": "Semua Pesanan",
+          "allDesc": "Ringkasan pesanan",
+          "allHint": "Total pesanan dalam sistem",
+          "pendingTitle": "Menunggu",
+          "pendingDesc": "Pesanan yang perlu diproses",
+          "pendingHint": "Menunggu untuk diproses",
+          "processingTitle": "Diproses",
+          "processingDesc": "Pesanan dalam proses",
+          "processingHint": "Sedang ditangani",
+          "shippedTitle": "Dikirim",
+          "shippedDesc": "Pesanan terkirim",
+          "shippedHint": "Pesanan dikirim atau diterima"
+        },
+        "searchPlaceholder": "Cari pesanan...",
+        "tabs": {
+          "all": "Semua",
+          "pending": "Menunggu",
+          "processing": "Diproses",
+          "shipped": "Dikirim",
+          "delivered": "Diterima",
+          "cancelled": "Dibatalkan"
+        },
+        "table": {
+          "date": "Tanggal",
+          "customer": "Pelanggan",
+          "total": "Total",
+          "status": "Status",
+          "payment": "Pembayaran",
+          "actions": "Aksi"
+        },
+        "empty": "Tidak ada pesanan ditemukan",
+        "pagination": {
+          "showingFmt": "Menampilkan {{from}} sampai {{to}} dari {{total}} pesanan",
+          "rowsPerPage": "Baris per halaman",
+          "page": "Halaman",
+          "of": "dari",
+          "first": "Ke halaman pertama",
+          "prev": "Ke halaman sebelumnya",
+          "next": "Ke halaman berikutnya",
+          "last": "Ke halaman terakhir"
+        },
+        "dialog": {
+          "confirmTitle": "Apakah Anda yakin?",
+          "confirmDescFmt": "Tindakan ini akan menghapus pesanan {{order}} secara permanen. Tindakan ini tidak dapat dibatalkan.",
+          "cancel": "Batal",
+          "delete": "Hapus"
+        },
+        "statusLabel": {
+          "pending": "Menunggu",
+          "processing": "Diproses",
+          "shipped": "Dikirim",
+          "delivered": "Diterima",
+          "cancelled": "Dibatalkan"
+        },
+        "paymentLabel": {
+          "paid": "Lunas",
+          "pending": "Menunggu",
+          "failed": "Gagal"
+        },
+        "guest": "Tamu"
+      }
+      ,
+      "adminProducts": {
+        "headTitle": "Manajemen Produk",
+        "title": "Manajemen Produk",
+        "add": "Tambah Produk",
+        "searchPlaceholder": "Cari produk...",
+        "statusAll": "Semua Status",
+        "table": {
+          "image": "Gambar",
+          "name": "Nama",
+          "price": "Harga",
+          "stock": "Total Stok",
+          "status": "Status",
+          "actions": "Aksi"
+        },
+        "empty": "Tidak ada produk ditemukan",
+        "dialog": {
+          "confirmTitle": "Apakah Anda yakin?",
+          "cancel": "Batal",
+          "delete": "Hapus"
+        },
+        "pagination": {
+          "first": "Ke halaman pertama",
+          "prev": "Ke halaman sebelumnya",
+          "next": "Ke halaman berikutnya",
+          "last": "Ke halaman terakhir",
+          "page": "Halaman",
+          "of": "dari"
+        }
+      },
+      "adminUsers": {
+        "headTitle": "Manajemen Pengguna",
+        "title": "Manajemen Pengguna",
+        "add": "Tambah Pengguna",
+        "searchPlaceholder": "Cari pengguna...",
+        "table": { "name": "Nama", "email": "Email", "role": "Role" },
+        "empty": "Tidak ada pengguna ditemukan.",
+        "dialog": { "confirmTitle": "Apakah Anda yakin?", "cancel": "Batal", "delete": "Hapus" },
+        "pagination": { "page": "Halaman", "of": "dari" }
+      },
+      "adminCoupons": {
+        "headTitle": "Manajemen Kupon",
+        "title": "Manajemen Kupon",
+        "add": "Tambah Kupon",
+        "searchPlaceholder": "Cari kupon...",
+        "table": { "code": "Kode", "discount": "Diskon", "validFrom": "Berlaku Dari", "validUntil": "Berlaku Sampai", "active": "Status", "actions": "Aksi" },
+        "active": "Aktif",
+        "inactive": "Nonaktif",
+        "empty": "Tidak ada kupon ditemukan.",
+        "dialog": { "confirmTitle": "Apakah Anda yakin?", "cancel": "Batal", "delete": "Hapus" },
+        "pagination": { "page": "Halaman", "of": "dari" }
+      },
+      "adminReports": {
+        "headTitle": "Laporan Penjualan",
+        "title": "Laporan Penjualan",
+        "cardTitle": "Unduh Laporan",
+        "cardDesc": "Pilih rentang tanggal dan tipe laporan yang diinginkan",
+        "startDate": "Tanggal Mulai",
+        "endDate": "Tanggal Akhir",
+        "reportType": "Tipe Laporan",
+        "typeDaily": "Harian",
+        "typeWeekly": "Mingguan",
+        "typeMonthly": "Bulanan",
+        "download": "Unduh Laporan",
+        "processing": "Memproses..."
+      },
+      "adminBlogs": {
+        "headTitle": "Manajemen Blog",
+        "title": "Manajemen Blog",
+        "add": "Tambah Blog",
+        "searchPlaceholder": "Cari blog...",
+        "categoryAll": "Semua Kategori",
+        "table": { "title": "Judul", "category": "Kategori", "author": "Penulis", "date": "Tanggal", "actions": "Aksi" },
+        "edit": "Edit",
+        "delete": "Hapus",
+        "empty": "Tidak ada blog ditemukan",
+        "dialog": {
+          "confirmTitle": "Apakah Anda yakin?",
+          "confirmDescFmt": "Tindakan ini tidak dapat dibatalkan. Ini akan menghapus blog {{title}}",
+          "cancel": "Batal",
+          "delete": "Hapus"
+        },
+        "pagination": { "page": "Halaman", "of": "dari" }
+      }
+      ,
+      "adminOrderShow": {
+        "headTitleFmt": "Detail Pesanan {{order}}",
+        "titleFmt": "Detail Pesanan {{order}}",
+        "status": "Status Pesanan",
+        "trackingNumber": "Nomor Resi",
+        "trackingUrl": "URL Pelacakan",
+        "adminNotes": "Catatan Admin",
+        "update": "Perbarui Pesanan",
+        "updating": "Memperbarui...",
+        "back": "Kembali",
+        "customer": "Pelanggan",
+        "guest": "Tamu",
+        "amount": "Total",
+        "payment": "Pembayaran",
+        "createdAt": "Dibuat",
+        "updatedAt": "Diperbarui",
+        "shippingAddress": "Alamat Pengiriman",
+        "items": "Item Pesanan",
+        "product": "Produk",
+        "qty": "Jumlah",
+        "price": "Harga",
+        "subtotal": "Subtotal",
+        "shipping": "Ongkir",
+        "total": "Total",
+        "timeline": "Timeline",
+        "statusLabel": {
+          "pending": "Menunggu",
+          "processing": "Diproses",
+          "shipped": "Dikirim",
+          "completed": "Selesai",
+          "cancelled": "Dibatalkan"
+        },
+        "paymentLabel": {
+          "paid": "Lunas",
+          "pending": "Menunggu",
+          "failed": "Gagal"
+        }
+      },
+      "adminProductForm": {
+        "createHead": "Tambah Produk",
+        "editHead": "Edit Produk",
+        "createTitle": "Tambah Produk",
+        "editTitle": "Edit Produk",
+        "basicInfo": "Informasi Produk",
+        "name": "Nama Produk",
+        "slug": "Slug",
+        "description": "Deskripsi",
+        "price": "Harga",
+        "active": "Aktif",
+        "images": "Gambar Produk",
+        "upload": "Unggah Gambar",
+        "sizes": "Ukuran & Stok",
+        "size": "Ukuran",
+        "stock": "Stok",
+        "addSize": "Tambah Ukuran",
+        "remove": "Hapus",
+        "setPrimary": "Jadikan Utama",
+        "primary": "Utama",
+        "save": "Simpan",
+        "saving": "Menyimpan...",
+        "update": "Perbarui",
+        "updating": "Memperbarui...",
+        "cancel": "Batal",
+        "back": "Kembali"
+      },
+      "adminUserCreate": {
+        "headTitle": "Tambah Pengguna",
+        "title": "Tambah Pengguna",
+        "sectionTitle": "Informasi Pengguna",
+        "name": "Nama",
+        "email": "Email",
+        "role": "Role",
+        "password": "Kata Sandi",
+        "passwordConfirm": "Konfirmasi Kata Sandi",
+        "namePlaceholder": "Masukkan nama",
+        "emailPlaceholder": "Masukkan email",
+        "rolePlaceholder": "Pilih role",
+        "passwordPlaceholder": "Masukkan kata sandi",
+        "passwordConfirmPlaceholder": "Konfirmasi kata sandi",
+        "submit": "Tambah Pengguna"
+      },
+      "adminCouponCreate": {
+        "title": "Tambah Kupon Baru",
+        "desc": "Buat kupon diskon baru untuk pelanggan",
+        "code": "Kode Kupon",
+        "discountPercent": "Persentase Diskon",
+        "validFrom": "Berlaku Dari",
+        "validUntil": "Berlaku Sampai",
+        "active": "Aktif",
+        "codePlaceholder": "Contoh: SUMMER2024",
+        "discountPlaceholder": "10",
+        "save": "Simpan Kupon",
+        "saving": "Menyimpan..."
+      },
+      "adminBlogCreate": {
+        "headTitle": "Buat Artikel Blog",
+        "title": "Buat Artikel Blog",
+        "cardTitle": "Detail Artikel",
+        "fieldTitle": "Judul",
+        "fieldCategory": "Kategori",
+        "fieldAuthor": "Penulis",
+        "fieldImage": "Gambar Artikel",
+        "fieldExcerpt": "Ringkasan",
+        "fieldContent": "Konten",
+        "titlePlaceholder": "Judul Artikel",
+        "categoryPlaceholder": "Kategori",
+        "authorPlaceholder": "Nama Penulis",
+        "excerptPlaceholder": "Deskripsi singkat untuk artikel",
+        "previewAlt": "Pratinjau",
+        "cancel": "Batal",
+        "save": "Simpan Artikel"
+      }
+      ,
+      "adminUserEdit": {
+        "headTitle": "Edit Pengguna",
+        "title": "Edit Pengguna",
+        "sectionTitle": "Informasi Pengguna",
+        "name": "Nama",
+        "email": "Email",
+        "role": "Role",
+        "rolePlaceholder": "Pilih role",
+        "namePlaceholder": "Masukkan nama",
+        "emailPlaceholder": "Masukkan email",
+        "passwordNew": "Kata Sandi Baru (kosongkan jika tidak ingin mengubah)",
+        "passwordNewPlaceholder": "Masukkan kata sandi baru",
+        "passwordConfirm": "Konfirmasi Kata Sandi Baru",
+        "passwordConfirmPlaceholder": "Konfirmasi kata sandi baru",
+        "submit": "Simpan Perubahan"
+      },
+      "adminCouponEdit": {
+        "title": "Edit Kupon",
+        "desc": "Ubah detail kupon diskon",
+        "save": "Simpan Perubahan",
+        "saving": "Menyimpan..."
+      },
+      "adminBlogEdit": {
+        "headTitleFmt": "Edit Artikel: {{title}}",
+        "title": "Edit Artikel",
+        "save": "Simpan Perubahan",
+        "saving": "Menyimpan...",
+        "cancel": "Batal"
+      },
+      "adminBlogShow": {
+        "headTitleFmt": "Blog: {{title}}",
+        "title": "Lihat Blog",
+        "backToList": "Kembali ke Daftar",
+        "edit": "Edit Blog",
+        "byFmt": "Oleh {{author}} • Dipublikasikan {{date}}",
+        "excerpt": "Ringkasan",
+        "content": "Konten",
+        "createdAt": "Dibuat pada",
+        "updatedAt": "Terakhir diperbarui"
+      },
+      "adminProductShow": {
+        "headTitleFmt": "Produk: {{name}}",
+        "title": "Detail Produk",
+        "back": "Kembali ke Produk",
+        "edit": "Edit Produk",
+        "mainImage": "Gambar Utama",
+        "noImage": "Tidak ada gambar",
+        "allImages": "Semua Gambar",
+        "availableSizes": "Ukuran yang Tersedia",
+        "stockFmt": "Stok: {{count}}",
+        "info": "Informasi Produk",
+        "fieldName": "Nama",
+        "fieldSlug": "Slug",
+        "fieldPrice": "Harga",
+        "fieldTotalStock": "Total Stok",
+        "fieldStatus": "Status",
+        "fieldImages": "Gambar",
+        "imagesCountFmt": "{{count}} gambar",
+        "fieldDescription": "Deskripsi",
+        "createdAt": "Dibuat pada",
+        "updatedAt": "Diperbarui pada"
+      },
+      "adminSalesReport": {
+        "title": "Laporan Penjualan",
+        "startDate": "Tanggal Mulai",
+        "endDate": "Tanggal Akhir",
+        "reportType": "Tipe Laporan",
+        "typeDaily": "Harian",
+        "typeWeekly": "Mingguan",
+        "typeMonthly": "Bulanan",
+        "processing": "Memproses...",
+        "downloadPdf": "Download PDF"
+      }
+    }
+  },
+  "settings": {
+    "title": "Pengaturan",
+    "description": "Kelola profil dan pengaturan akun Anda",
+    "nav": {
+      "profile": "Profil",
+      "password": "Kata Sandi",
+      "appearance": "Tampilan"
+    },
+    "language": {
+      "label": "Bahasa",
+      "helper": "Pilih bahasa untuk dashboard dan website",
+      "id": "🇮🇩 Indonesia (ID)",
+      "en": "🇺🇸 English (EN)"
+    },
+    "profile": {
+      "breadcrumbs": "Pengaturan Profil",
+      "headTitle": "Pengaturan Profil",
+      "headingTitle": "Informasi Profil",
+      "headingDesc": "Perbarui nama dan alamat email Anda",
+      "name": "Nama",
+      "namePlaceholder": "Nama lengkap",
+      "email": "Alamat Email",
+      "emailPlaceholder": "Alamat email",
+      "save": "Simpan",
+      "saved": "Tersimpan"
+    },
+    "password": {
+      "breadcrumbs": "Pengaturan Kata Sandi",
+      "headTitle": "Pengaturan Kata Sandi",
+      "headingTitle": "Perbarui Kata Sandi",
+      "headingDesc": "Pastikan akun Anda menggunakan kata sandi yang panjang dan acak untuk keamanan maksimal",
+      "current": "Kata Sandi Saat Ini",
+      "currentPlaceholder": "Kata sandi saat ini",
+      "new": "Kata Sandi Baru",
+      "newPlaceholder": "Kata sandi baru",
+      "confirm": "Konfirmasi Kata Sandi",
+      "confirmPlaceholder": "Konfirmasi kata sandi",
+      "save": "Simpan Kata Sandi",
+      "saved": "Tersimpan"
+    },
+    "appearance": {
+      "breadcrumbs": "Pengaturan Tampilan",
+      "headTitle": "Pengaturan Tampilan",
+      "headingTitle": "Pengaturan Tampilan",
+      "headingDesc": "Perbarui pengaturan tampilan akun Anda"
+    }
+  }
+}
+

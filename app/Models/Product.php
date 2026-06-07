@@ -25,28 +25,40 @@ class Product extends Model
         'is_active' => 'boolean',
     ];
 
+    /**
+     * Relasi ke semua gambar produk ini.
+     */
     public function images()
     {
         return $this->hasMany(ProductImage::class);
     }
 
+    /**
+     * Relasi ke semua ukuran produk ini.
+     */
     public function sizes()
     {
         return $this->hasMany(ProductSize::class);
     }
 
+    /**
+     * Relasi ke semua order item yang berisi produk ini.
+     */
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
     }
 
+    /**
+     * Relasi ke semua cart item yang berisi produk ini.
+     */
     public function cartItems()
     {
         return $this->hasMany(\App\Models\CartItem::class);
     }
 
     /**
-     * Get total stock from all sizes, or 0 if no sizes exist
+     * Get total stock dari semua ukuran produk, 0 jika tidak ada size.
      */
     public function getTotalStockAttribute()
     {
@@ -54,7 +66,7 @@ class Product extends Model
     }
 
     /**
-     * Check if product has stock available
+     * Mengecek apakah produk punya stok tersedia.
      */
     public function hasStock()
     {

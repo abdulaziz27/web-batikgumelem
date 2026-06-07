@@ -10,31 +10,29 @@ use Inertia\Inertia;
 class HomeController extends Controller
 {
     /**
-     * Display the home page.
+     * Menampilkan halaman utama (beranda) website.
      */
     public function index()
     {
-        // Get 3 featured products
+        // Ambil 3 produk unggulan secara acak
         $featuredProducts = Product::with(['images', 'sizes'])
             ->inRandomOrder()
             ->take(3)
             ->get()
             ->map(function ($product) {
-                // Transform the product to include proper image URL
+                // Tambahkan URL gambar utama
                 $product->image = $product->image ? asset('storage/' . $product->image) : null;
-                
-                // Transform product images if they exist
+                // Transformasi gambar produk jika ada
                 if ($product->images) {
                     $product->images->transform(function ($image) {
                         $image->image = asset('storage/' . $image->image);
                         return $image;
                     });
                 }
-                
                 return $product;
             });
 
-        // Get 3 latest blog posts
+        // Ambil 3 blog terbaru
         $latestBlogs = Blog::latest()
             ->take(3)
             ->get()
@@ -43,6 +41,7 @@ class HomeController extends Controller
                 return $blog;
             });
 
+        // Kirim data ke halaman beranda
         return Inertia::render('Index', [
             'featuredProducts' => $featuredProducts,
             'latestBlogs' => $latestBlogs,

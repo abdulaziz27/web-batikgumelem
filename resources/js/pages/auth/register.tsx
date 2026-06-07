@@ -1,6 +1,7 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
@@ -17,6 +18,7 @@ type RegisterForm = {
 export default function Register() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const { t } = useTranslation();
 
     const { data, setData, post, processing, errors } = useForm<RegisterForm>({
         name: '',
@@ -37,24 +39,24 @@ export default function Register() {
                     <div className="bg-card rounded-lg border p-6 shadow-sm">
                         <div className="mb-6 text-center">
                             <h1 className="text-batik-brown text-2xl font-bold tracking-tight">
-                                Daftar di <span className="text-batik-indigo">Batik Gumelem</span>
+                                {t('auth.registerHeadingPrefix')} <span className="text-batik-indigo">{t('auth.brand')}</span>
                             </h1>
-                            <p className="text-muted-foreground mt-2 text-sm">Buat akun untuk menikmati berbagai keuntungan</p>
+                            <p className="text-muted-foreground mt-2 text-sm">{t('auth.registerSubheading')}</p>
                         </div>
 
-                        <Head title="Daftar" />
+                        <Head title={t('auth.registerTitle')} />
 
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="grid gap-4">
                                 <div>
-                                    <Label htmlFor="name">Nama Lengkap</Label>
+                                    <Label htmlFor="name">{t('auth.fullName')}</Label>
                                     <div className="relative">
                                         <User className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
                                         <Input
                                             id="name"
                                             name="name"
                                             type="text"
-                                            placeholder="Nama Lengkap"
+                                            placeholder={t('auth.fullName')}
                                             className="pl-10"
                                             value={data.name}
                                             onChange={(e) => setData('name', e.target.value)}
@@ -64,7 +66,7 @@ export default function Register() {
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="email">Email</Label>
+                                    <Label htmlFor="email">{t('auth.email')}</Label>
                                     <div className="relative">
                                         <Mail className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
                                         <Input
@@ -81,7 +83,7 @@ export default function Register() {
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="password">Password</Label>
+                                    <Label htmlFor="password">{t('auth.password')}</Label>
                                     <div className="relative">
                                         <Lock className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
                                         <Input
@@ -105,14 +107,14 @@ export default function Register() {
                                             ) : (
                                                 <Eye className="text-muted-foreground h-4 w-4" />
                                             )}
-                                            <span className="sr-only">{showPassword ? 'Sembunyikan password' : 'Tampilkan password'}</span>
+                                            <span className="sr-only">{showPassword ? t('auth.hidePassword') : t('auth.showPassword')}</span>
                                         </Button>
                                     </div>
                                     {errors.password && <p className="mt-1 text-sm text-red-500">{errors.password}</p>}
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="password_confirmation">Konfirmasi Password</Label>
+                                    <Label htmlFor="password_confirmation">{t('auth.confirmPassword')}</Label>
                                     <div className="relative">
                                         <Lock className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
                                         <Input
@@ -137,7 +139,7 @@ export default function Register() {
                                                 <Eye className="text-muted-foreground h-4 w-4" />
                                             )}
                                             <span className="sr-only">
-                                                {showConfirmPassword ? 'Sembunyikan konfirmasi password' : 'Tampilkan konfirmasi password'}
+                                                {showConfirmPassword ? t('auth.hideConfirmPassword') : t('auth.showConfirmPassword')}
                                             </span>
                                         </Button>
                                     </div>
@@ -146,14 +148,14 @@ export default function Register() {
                             </div>
 
                             <Button type="submit" className="bg-batik-indigo hover:bg-batik-indigo/90 mt-4 w-full" disabled={processing}>
-                                {processing ? 'Memproses...' : 'Daftar'}
+                                {processing ? t('auth.processing') : t('auth.signUp')}
                             </Button>
 
                             <div className="mt-6 text-center text-sm">
                                 <p>
-                                    Sudah memiliki akun?{' '}
+                                    {t('auth.haveAccount')}{' '}
                                     <Link href={route('login')} className="text-batik-indigo font-medium hover:underline">
-                                        Masuk sekarang
+                                        {t('auth.signInNow')}
                                     </Link>
                                 </p>
                             </div>

@@ -19,11 +19,17 @@ class ProductSize extends Model
         'stock' => 'integer',
     ];
 
+    /**
+     * Relasi ke produk induk dari size ini.
+     */
     public function product()
     {
         return $this->belongsTo(Product::class);
     }
 
+    /**
+     * Relasi ke cart item yang menggunakan size ini.
+     */
     public function cartItems()
     {
         return $this->hasMany(\App\Models\CartItem::class, 'size', 'size');

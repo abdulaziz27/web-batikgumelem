@@ -10,13 +10,13 @@ use Inertia\Inertia;
 class UserDashboardController extends Controller
 {
     /**
-     * Display the user dashboard
+     * Menampilkan dashboard user (statistik, order terakhir, alamat, dsb).
      */
     public function index(Request $request)
     {
         $user = auth()->user();
         
-        // Get recent orders
+        // Ambil 2 pesanan terakhir user
         $recentOrders = Order::where('user_id', $user->id)
             ->latest()
             ->take(2)
@@ -32,7 +32,7 @@ class UserDashboardController extends Controller
                 ];
             });
             
-        // Get order statistics
+        // Statistik pesanan user
         $orderStats = [
             'pending' => Order::where('user_id', $user->id)->where('status', 'pending')->count(),
             'processing' => Order::where('user_id', $user->id)->where('status', 'processing')->count(),
@@ -40,7 +40,7 @@ class UserDashboardController extends Controller
             'completed' => Order::where('user_id', $user->id)->where('status', 'completed')->count(),
         ];
         
-        // Get shipping addresses
+        // Daftar alamat pengiriman user
         $shippingAddresses = ShippingAddress::where('user_id', $user->id)
             ->latest()
             ->get()
@@ -54,7 +54,7 @@ class UserDashboardController extends Controller
                 ];
             });
             
-        // Calculate total spent amount (for completed orders)
+        // Total belanja user (hanya pesanan selesai & dibayar)
         $totalSpent = Order::where('user_id', $user->id)
             ->where('status', 'completed')
             ->where('payment_status', 'paid')

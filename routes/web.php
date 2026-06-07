@@ -30,6 +30,20 @@ use Inertia\Inertia;
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+// Locale switch (cookie-based) - MVP i18n
+Route::post('/locale', function (\Illuminate\Http\Request $request) {
+    $locale = $request->string('locale')->toString();
+    $supported = ['id', 'en'];
+    if (!in_array($locale, $supported, true)) {
+        $locale = config('app.locale', 'id');
+    }
+
+    $redirect = $request->string('redirect')->toString();
+    $response = $redirect ? redirect($redirect) : back();
+
+    return $response->withCookie(cookie()->forever('locale', $locale));
+})->name('locale.set');
+
 // Authentication Routes
 require __DIR__ . '/auth.php';
 

@@ -2,9 +2,11 @@ import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink } from '@/components/ui/pagination';
-import { Link, useForm } from '@inertiajs/react';
+import { Link, useForm, usePage } from '@inertiajs/react';
 import { Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { formatDate } from '@/utils/formatters';
 
 // Define the Blog interface
 interface Blog {
@@ -55,6 +57,9 @@ const Blog = ({ blogs, filters }: BlogProps) => {
     const { data, setData, get, processing } = useForm({
         search: filters.search || '',
     });
+    const { locale } = usePage().props as any;
+    const { t } = useTranslation();
+    const lang = locale === 'en' ? 'en' : 'id';
 
     // Apply the search filter
     const handleSearch = (e: React.FormEvent) => {
@@ -76,10 +81,10 @@ const Blog = ({ blogs, filters }: BlogProps) => {
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center">
                         <h1 className="text-batik-brown text-3xl font-bold tracking-tight sm:text-4xl">
-                            Blog Batik <span className="text-batik-indigo">Gumelem</span>
+                            {t('blog.titlePrefix')} <span className="text-batik-indigo">{t('blog.titleBrand')}</span>
                         </h1>
                         <p className="mx-auto mt-4 max-w-xl text-base text-gray-600">
-                            Temukan artikel menarik tentang sejarah, teknik pembuatan, dan filosofi batik Gumelem
+                            {t('blog.subtitle')}
                         </p>
                     </div>
                 </div>
@@ -91,7 +96,7 @@ const Blog = ({ blogs, filters }: BlogProps) => {
                     <div className="relative">
                         <Search className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-gray-500" />
                         <Input
-                            placeholder="Cari artikel..."
+                            placeholder={t('blog.searchPlaceholder')}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="py-6 pl-10"
@@ -116,20 +121,22 @@ const Blog = ({ blogs, filters }: BlogProps) => {
                                         <span className="text-batik-indigo bg-batik-indigo/10 rounded-full px-3 py-1 text-xs font-medium">
                                             {post.category}
                                         </span>
-                                        <span className="text-sm text-gray-500">{new Date(post.created_at).toLocaleDateString('id-ID')}</span>
+                                        <span className="text-sm text-gray-500">{formatDate(post.created_at, lang)}</span>
                                     </div>
                                     <h3 className="text-batik-brown group-hover:text-batik-indigo text-lg font-semibold transition-colors duration-300">
                                         {post.title}
                                     </h3>
                                     <p className="mt-2 line-clamp-2 text-sm text-gray-600">{post.excerpt}</p>
-                                    <div className="mt-3 text-xs text-gray-700">Oleh {post.author}</div>
+                                    <div className="mt-3 text-xs text-gray-700">
+                                        {t('blog.by')} {post.author}
+                                    </div>
                                 </div>
                             </Link>
                         ))}
                     </div>
                 ) : (
                     <div className="py-12 text-center">
-                        <p className="text-lg text-gray-600">Tidak ada artikel yang sesuai dengan pencarian Anda.</p>
+                        <p className="text-lg text-gray-600">{t('blog.noResults')}</p>
                         <Button
                             className="bg-batik-brown hover:bg-batik-brown/90 mt-4"
                             onClick={() => {
@@ -138,7 +145,7 @@ const Blog = ({ blogs, filters }: BlogProps) => {
                                 get('/blog');
                             }}
                         >
-                            Lihat Semua Artikel
+                            {t('blog.viewAll')}
                         </Button>
                     </div>
                 )}

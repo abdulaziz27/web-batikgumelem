@@ -14,6 +14,7 @@ use Inertia\Inertia;
 
 class ProductController extends Controller
 {
+    // Menampilkan daftar produk
     public function index()
     {
         $products = Product::with('sizes')
@@ -26,7 +27,7 @@ class ProductController extends Controller
                     'name' => $product->name,
                     'slug' => $product->slug,
                     'price' => $product->price,
-                    'total_stock' => $product->total_stock, // Using the accessor from model
+                    'total_stock' => $product->total_stock, // Menggunakan accessor dari model
                     'is_active' => $product->is_active,
                     'image_url' => $product->image ? asset('storage/' . $product->image) : null,
                 ];
@@ -37,13 +38,16 @@ class ProductController extends Controller
         ]);
     }
 
+    // Menampilkan form tambah produk
     public function create()
     {
         return Inertia::render('Admin/Products/Create');
     }
 
+    // Menyimpan produk baru ke database
     public function store(Request $request)
     {
+        // Validasi input
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:products',
@@ -59,8 +63,9 @@ class ProductController extends Controller
             'new_images.max' => 'Maksimal 6 gambar yang boleh diunggah.'
         ]);
 
+        // Simpan data produk dan relasi dalam transaksi database
         return DB::transaction(function () use ($request, $validated) {
-            // Create product
+            // Buat produk
             $product = Product::create([
                 'name' => $validated['name'],
                 'slug' => $validated['slug'],
@@ -69,12 +74,12 @@ class ProductController extends Controller
                 'is_active' => $validated['is_active'] ?? true,
             ]);
 
-            // Process images
+            // Proses gambar produk
             if ($request->hasFile('new_images')) {
                 foreach ($request->file('new_images') as $index => $image) {
                     $path = $image->store('products', 'public');
                     
-                    $isPrimary = $index === 0; // First image is primary by default
+                    $isPrimary = $index === 0; // Gambar pertama jadi utama
                     
                     ProductImage::create([
                         'product_id' => $product->id,
@@ -82,14 +87,14 @@ class ProductController extends Controller
                         'is_primary' => $isPrimary,
                     ]);
 
-                    // Set the primary image as the product's main image
+                    // Set gambar utama ke field image produk
                     if ($isPrimary) {
                         $product->update(['image' => $path]);
                     }
                 }
             }
 
-            // Process sizes - now required for all products
+            // Proses ukuran produk
             foreach ($validated['sizes'] as $sizeData) {
                 ProductSize::create([
                     'product_id' => $product->id,
@@ -103,14 +108,15 @@ class ProductController extends Controller
         });
     }
 
+    // Menampilkan detail produk
     public function show($id)
     {
         $product = Product::with(['images', 'sizes'])->findOrFail($id);
         
-        // Add image_url to main product
+        // Tambahkan image_url ke produk utama
         $product->image_url = $product->image ? asset('storage/' . $product->image) : null;
         
-        // Add image_url to all images
+        // Tambahkan image_url ke semua gambar
         $product->images->transform(function ($image) {
             $image->image_url = asset('storage/' . $image->image);
             return $image;
@@ -121,14 +127,15 @@ class ProductController extends Controller
         ]);
     }
 
+    // Menampilkan form edit produk
     public function edit($id)
     {
         $product = Product::with(['images', 'sizes'])->findOrFail($id);
         
-        // Add image_url to main product
+        // Tambahkan image_url ke produk utama
         $product->image_url = $product->image ? asset('storage/' . $product->image) : null;
         
-        // Add image_url to all images
+        // Tambahkan image_url ke semua gambar
         $product->images->transform(function ($image) {
             $image->image_url = asset('storage/' . $image->image);
             return $image;
@@ -139,10 +146,12 @@ class ProductController extends Controller
         ]);
     }
 
+    // Update data produk
     public function update(Request $request, $id)
     {
         $product = Product::findOrFail($id);
         
+        // Validasi input
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:products,slug,'.$id,
@@ -162,8 +171,9 @@ class ProductController extends Controller
             'new_images.max' => 'Maksimal 6 gambar yang boleh diunggah.'
         ]);
 
+        // Simpan update produk dan relasi dalam transaksi database
         return DB::transaction(function () use ($request, $product, $validated) {
-            // Update basic product info
+            // Update data produk
             $product->update([
                 'name' => $validated['name'],
                 'slug' => $validated['slug'],
@@ -172,7 +182,7 @@ class ProductController extends Controller
                 'is_active' => $validated['is_active'] ?? $product->is_active,
             ]);
 
-            // Delete images if requested
+            // Hapus gambar jika diminta
             if ($request->has('deleted_image_ids') && is_array($request->deleted_image_ids)) {
                 foreach ($request->deleted_image_ids as $imageId) {
                     $image = ProductImage::where('product_id', $product->id)
@@ -188,7 +198,7 @@ class ProductController extends Controller
                 }
             }
 
-            // Process new images
+            // Proses gambar baru
             if ($request->hasFile('new_images')) {
                 foreach ($request->file('new_images') as $image) {
                     $path = $image->store('products', 'public');

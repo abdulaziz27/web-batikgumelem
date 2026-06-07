@@ -6,6 +6,7 @@ import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useTranslation } from 'react-i18next';
 
 interface ResetPasswordProps {
     token: string;
@@ -15,6 +16,7 @@ interface ResetPasswordProps {
 export default function ResetPassword({ token, email }: ResetPasswordProps) {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const { t } = useTranslation();
 
     const { data, setData, post, processing, errors } = useForm({
         token: token,
@@ -34,16 +36,16 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                 <div className="mx-auto max-w-md">
                     <div className="bg-card rounded-lg border p-6 shadow-sm">
                         <div className="mb-6 text-center">
-                            <h1 className="text-batik-brown text-2xl font-bold tracking-tight">Reset Password</h1>
-                            <p className="text-muted-foreground mt-2 text-sm">Silakan masukkan password baru Anda</p>
+                            <h1 className="text-batik-brown text-2xl font-bold tracking-tight">{t('auth.resetHeading')}</h1>
+                            <p className="text-muted-foreground mt-2 text-sm">{t('auth.resetSubheading')}</p>
                         </div>
 
-                        <Head title="Reset Password" />
+                        <Head title={t('auth.resetTitle')} />
 
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="grid gap-4">
                                 <div>
-                                    <Label htmlFor="email">Email</Label>
+                                    <Label htmlFor="email">{t('auth.email')}</Label>
                                     <div className="relative">
                                         <Mail className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
                                         <Input id="email" name="email" type="email" value={data.email} className="pl-10" readOnly />
@@ -51,7 +53,7 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="password">Password Baru</Label>
+                                    <Label htmlFor="password">{t('auth.newPassword')}</Label>
                                     <div className="relative">
                                         <Lock className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
                                         <Input
@@ -75,14 +77,14 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                                             ) : (
                                                 <Eye className="text-muted-foreground h-4 w-4" />
                                             )}
-                                            <span className="sr-only">{showPassword ? 'Sembunyikan password' : 'Tampilkan password'}</span>
+                                            <span className="sr-only">{showPassword ? t('auth.hidePassword') : t('auth.showPassword')}</span>
                                         </Button>
                                     </div>
                                     {errors.password && <p className="mt-1 text-sm text-red-500">{errors.password}</p>}
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="password_confirmation">Konfirmasi Password Baru</Label>
+                                    <Label htmlFor="password_confirmation">{t('auth.confirmNewPassword')}</Label>
                                     <div className="relative">
                                         <Lock className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
                                         <Input
@@ -107,7 +109,7 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                                                 <Eye className="text-muted-foreground h-4 w-4" />
                                             )}
                                             <span className="sr-only">
-                                                {showConfirmPassword ? 'Sembunyikan konfirmasi password' : 'Tampilkan konfirmasi password'}
+                                                {showConfirmPassword ? t('auth.hideConfirmPassword') : t('auth.showConfirmPassword')}
                                             </span>
                                         </Button>
                                     </div>
@@ -116,7 +118,7 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                             </div>
 
                             <Button type="submit" className="bg-batik-indigo hover:bg-batik-indigo/90 mt-4 w-full" disabled={processing}>
-                                {processing ? 'Memproses...' : 'Reset Password'}
+                                {processing ? t('auth.processing') : t('auth.resetTitle')}
                             </Button>
                         </form>
                     </div>

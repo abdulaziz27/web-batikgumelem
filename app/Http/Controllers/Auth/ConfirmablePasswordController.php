@@ -13,7 +13,7 @@ use Inertia\Response;
 class ConfirmablePasswordController extends Controller
 {
     /**
-     * Show the confirm password page.
+     * Menampilkan halaman konfirmasi password.
      */
     public function show(): Response
     {
@@ -21,10 +21,11 @@ class ConfirmablePasswordController extends Controller
     }
 
     /**
-     * Confirm the user's password.
+     * Memproses konfirmasi password user.
      */
     public function store(Request $request): RedirectResponse
     {
+        // Validasi password user
         if (! Auth::guard('web')->validate([
             'email' => $request->user()->email,
             'password' => $request->password,
@@ -34,6 +35,7 @@ class ConfirmablePasswordController extends Controller
             ]);
         }
 
+        // Simpan waktu konfirmasi password di session
         $request->session()->put('auth.password_confirmed_at', time());
 
         return redirect()->intended(route('dashboard', absolute: false));

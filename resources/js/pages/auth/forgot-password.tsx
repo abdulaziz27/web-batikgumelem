@@ -5,12 +5,14 @@ import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useTranslation } from 'react-i18next';
 
 interface ForgotPasswordProps {
     status?: string;
 }
 
 export default function ForgotPassword({ status }: ForgotPasswordProps) {
+    const { t } = useTranslation();
     const { data, setData, post, processing, errors } = useForm({
         email: '',
     });
@@ -26,17 +28,21 @@ export default function ForgotPassword({ status }: ForgotPasswordProps) {
                 <div className="mx-auto max-w-md">
                     <div className="bg-card rounded-lg border p-6 shadow-sm">
                         <div className="mb-6 text-center">
-                            <h1 className="text-batik-brown text-2xl font-bold tracking-tight">Lupa Password</h1>
-                            <p className="text-muted-foreground mt-2 text-sm">Masukkan email Anda untuk menerima tautan reset password</p>
+                            <h1 className="text-batik-brown text-2xl font-bold tracking-tight">{t('auth.forgotHeading')}</h1>
+                            <p className="text-muted-foreground mt-2 text-sm">{t('auth.forgotSubheading')}</p>
                         </div>
 
-                        <Head title="Lupa Password" />
+                        <Head title={t('auth.forgotTitle')} />
 
-                        {status && <div className="mb-4 rounded-md bg-green-50 p-4 text-sm text-green-600">{status}</div>}
+                        {status && (
+                            <div className="mb-4 rounded-md bg-green-50 p-4 text-sm text-green-600">
+                                {t('auth.resetLinkSent')}
+                            </div>
+                        )}
 
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div className="grid gap-2">
-                                <Label htmlFor="email">Email</Label>
+                                <Label htmlFor="email">{t('auth.email')}</Label>
                                 <div className="relative">
                                     <Mail className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
                                     <Input
@@ -54,11 +60,11 @@ export default function ForgotPassword({ status }: ForgotPasswordProps) {
 
                             <div className="flex items-center justify-between">
                                 <Link href={route('login')} className="text-batik-indigo text-sm hover:underline">
-                                    Kembali ke halaman masuk
+                                    {t('auth.backToLogin')}
                                 </Link>
 
                                 <Button type="submit" className="bg-batik-indigo hover:bg-batik-indigo/90" disabled={processing}>
-                                    {processing ? 'Memproses...' : 'Kirim Tautan Reset'}
+                                    {processing ? t('auth.processing') : t('auth.sendResetLink')}
                                 </Button>
                             </div>
                         </form>

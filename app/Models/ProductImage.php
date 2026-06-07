@@ -24,11 +24,17 @@ class ProductImage extends Model
         'image_url',
     ];
 
+    /**
+     * Relasi ke produk induk dari gambar ini.
+     */
     public function product()
     {
         return $this->belongsTo(Product::class);
     }
 
+    /**
+     * Mendapatkan URL gambar (untuk frontend).
+     */
     public function getImageUrlAttribute()
     {
         return $this->image ? asset('storage/' . $this->image) : null;

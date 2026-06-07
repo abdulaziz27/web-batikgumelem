@@ -10,13 +10,14 @@ class CartController extends Controller
 {
     protected $cartService;
 
+    // Konstruktor untuk dependency injection CartService
     public function __construct(CartService $cartService)
     {
         $this->cartService = $cartService;
     }
 
     /**
-     * Display a listing of the resource.
+     * Menampilkan halaman keranjang belanja.
      */
     public function index()
     {
@@ -27,7 +28,7 @@ class CartController extends Controller
     }
 
     /**
-     * Get cart data as JSON without navigation
+     * Mengambil data keranjang dalam format JSON (tanpa navigasi halaman).
      */
     public function getData()
     {
@@ -36,15 +37,7 @@ class CartController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Menambah produk ke keranjang belanja.
      */
     public function store(Request $request)
     {
@@ -80,7 +73,7 @@ class CartController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Mengupdate jumlah item di keranjang.
      */
     public function update(Request $request)
     {
@@ -105,7 +98,7 @@ class CartController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Menghapus item dari keranjang.
      */
     public function destroy(Request $request)
     {
@@ -128,6 +121,9 @@ class CartController extends Controller
         }
     }
 
+    /**
+     * Mengosongkan seluruh keranjang belanja.
+     */
     public function clear()
     {
         $result = $this->cartService->clearCart();

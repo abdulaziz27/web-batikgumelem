@@ -32,6 +32,8 @@ import { Separator } from '@/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AdminLayout from '@/layouts/admin-layout';
 import { type BreadcrumbItem } from '@/types';
+import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 interface Blog {
     id: number;
@@ -51,18 +53,13 @@ interface BlogsIndexProps {
     categories: string[];
 }
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Dasbor',
-        href: '/admin/dashboard',
-    },
-    {
-        title: 'Blog',
-        href: '/admin/blogs',
-    },
-];
-
 export default function BlogsIndex({ blogs, categories }: BlogsIndexProps) {
+    const { t } = useTranslation();
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: t('dashboard.nav.adminDashboard'), href: '/admin/dashboard' },
+        { title: t('dashboard.nav.adminBlogs'), href: '/admin/blogs' },
+    ];
+
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [blogToDelete, setBlogToDelete] = useState<Blog | null>(null);
     const [sorting, setSorting] = useState<SortingState>([]);
@@ -116,7 +113,7 @@ export default function BlogsIndex({ blogs, categories }: BlogsIndexProps) {
             header: ({ column }) => (
                 <div className="flex items-center">
                     <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="p-0 hover:bg-transparent">
-                        Judul
+                        {t('dashboard.pages.adminBlogs.table.title')}
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 </div>
@@ -127,7 +124,7 @@ export default function BlogsIndex({ blogs, categories }: BlogsIndexProps) {
         },
         {
             accessorKey: 'category',
-            header: 'Kategori',
+            header: t('dashboard.pages.adminBlogs.table.category'),
             cell: ({ row }) => <Badge variant="outline">{row.getValue('category')}</Badge>,
             enableColumnFilter: true,
             filterFn: (row, id, value) => {
@@ -138,14 +135,14 @@ export default function BlogsIndex({ blogs, categories }: BlogsIndexProps) {
         },
         {
             accessorKey: 'author',
-            header: 'Penulis',
+            header: t('dashboard.pages.adminBlogs.table.author'),
         },
         {
             accessorKey: 'created_at',
             header: ({ column }) => (
                 <div className="flex items-center">
                     <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="p-0 hover:bg-transparent">
-                        Tanggal
+                        {t('dashboard.pages.adminBlogs.table.date')}
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 </div>
@@ -159,7 +156,7 @@ export default function BlogsIndex({ blogs, categories }: BlogsIndexProps) {
         },
         {
             id: 'actions',
-            header: 'Aksi',
+            header: t('dashboard.pages.adminBlogs.table.actions'),
             cell: ({ row }) => {
                 const blog = row.original;
                 return (
@@ -298,7 +295,7 @@ export default function BlogsIndex({ blogs, categories }: BlogsIndexProps) {
                                 </Link>
                             </Button>
                             <Button variant="outline" size="sm" className="h-9 px-3 py-1" onClick={() => confirmDelete(blog)}>
-                                <Trash className="mr-1 h-4 w-4" /> Delete
+                                <Trash className="mr-1 h-4 w-4" /> {t('dashboard.pages.adminBlogs.delete')}
                             </Button>
                         </div>
                     </CardContent>
@@ -309,15 +306,15 @@ export default function BlogsIndex({ blogs, categories }: BlogsIndexProps) {
 
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
-            <Head title="Manajemen Blog" />
+            <Head title={t('dashboard.pages.adminBlogs.headTitle')} />
 
             <div className="space-y-6 p-3 sm:p-6">
                 <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-                    <h1 className="text-2xl font-bold tracking-tight">Manajemen Blog</h1>
+                    <h1 className="text-2xl font-bold tracking-tight">{t('dashboard.pages.adminBlogs.title')}</h1>
                     <Button asChild className="w-full sm:w-auto">
                         <Link href="/admin/blogs/create">
                             <PlusCircle className="mr-2 h-4 w-4" />
-                            Tambah Blog
+                            {t('dashboard.pages.adminBlogs.add')}
                         </Link>
                     </Button>
                 </div>
@@ -331,7 +328,7 @@ export default function BlogsIndex({ blogs, categories }: BlogsIndexProps) {
                                 <Search className="text-muted-foreground absolute top-2.5 left-2.5 h-4 w-4" />
                                 <Input
                                     type="search"
-                                    placeholder="Cari blog..."
+                                    placeholder={t('dashboard.pages.adminBlogs.searchPlaceholder')}
                                     value={searchValue}
                                     onChange={(e) => setSearchValue(e.target.value)}
                                     className="w-full pl-8"
@@ -342,7 +339,7 @@ export default function BlogsIndex({ blogs, categories }: BlogsIndexProps) {
                                     <SelectValue placeholder="Filter kategori" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="all">Semua Kategori</SelectItem>
+                                    <SelectItem value="all">{t('dashboard.pages.adminBlogs.categoryAll')}</SelectItem>
                                     {categories.map((category) => (
                                         <SelectItem key={category} value={category}>
                                             {category}
@@ -360,7 +357,7 @@ export default function BlogsIndex({ blogs, categories }: BlogsIndexProps) {
                                     {table.getRowModel().rows.length > 0 ? (
                                         renderBlogCards()
                                     ) : (
-                                        <div className="text-muted-foreground py-10 text-center">Tidak ada blog ditemukan</div>
+                                        <div className="text-muted-foreground py-10 text-center">{t('dashboard.pages.adminBlogs.empty')}</div>
                                     )}
                                 </div>
                             ) : (
@@ -392,7 +389,7 @@ export default function BlogsIndex({ blogs, categories }: BlogsIndexProps) {
                                         ) : (
                                             <TableRow>
                                                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                                                    Tidak ada blog ditemukan
+                                                    {t('dashboard.pages.adminBlogs.empty')}
                                                 </TableCell>
                                             </TableRow>
                                         )}
@@ -454,7 +451,7 @@ export default function BlogsIndex({ blogs, categories }: BlogsIndexProps) {
                                     <div className="flex items-center gap-1">
                                         <span className="text-sm">Halaman</span>
                                         <strong className="text-sm font-medium">
-                                            {table.getState().pagination.pageIndex + 1} dari {table.getPageCount()}
+                                            {table.getState().pagination.pageIndex + 1} {t('dashboard.pages.adminBlogs.pagination.of')} {table.getPageCount()}
                                         </strong>
                                     </div>
                                     <Button
@@ -499,15 +496,15 @@ export default function BlogsIndex({ blogs, categories }: BlogsIndexProps) {
             <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Apakah Anda yakin?</AlertDialogTitle>
+                        <AlertDialogTitle>{t('dashboard.pages.adminBlogs.dialog.confirmTitle')}</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Tindakan ini tidak dapat dibatalkan. Ini akan menghapus blog <span className="font-medium">{blogToDelete?.title}</span>{' '}
+                            {t('dashboard.pages.adminBlogs.dialog.confirmDescFmt', { title: blogToDelete?.title })}
                             secara permanen dan menghapus datanya dari server.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel>Batal</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleDelete}>Hapus</AlertDialogAction>
+                        <AlertDialogCancel>{t('dashboard.pages.adminBlogs.dialog.cancel')}</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDelete}>{t('dashboard.pages.adminBlogs.dialog.delete')}</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

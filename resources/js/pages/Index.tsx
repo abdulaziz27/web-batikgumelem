@@ -6,6 +6,8 @@ import WhyBuySection from '@/components/WhyBuySection';
 import { Link, usePage } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { ArrowRight, CheckCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { formatDate } from '@/utils/formatters';
 
 // Define types for our props from backend
 interface ProductSize {
@@ -40,14 +42,6 @@ interface PageProps {
     latestBlogs: Blog[];
 }
 
-const features = [
-    'Dibuat dengan metode tradisional tulis dan cap',
-    'Menggunakan pewarna alami dari tumbuhan',
-    'Motif yang kaya akan filosofi dan sejarah',
-    'Hasil karya pengrajin yang berpengalaman',
-    'Bahan berkualitas tinggi untuk kenyamanan pemakai',
-];
-
 const testimonials = [
     {
         name: 'Abdul Aziz',
@@ -71,17 +65,10 @@ const testimonials = [
 
 const Index = () => {
     // Get data from Inertia props
-    const { featuredProducts, latestBlogs } = usePage().props as unknown as PageProps;
-
-    // Format date for blog posts
-    const formatDate = (dateString: string) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('id-ID', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-        });
-    };
+    const { featuredProducts, latestBlogs, locale } = usePage().props as unknown as PageProps & { locale?: 'id' | 'en' };
+    const { t } = useTranslation();
+    const lang = locale === 'en' ? 'en' : 'id';
+    const features = t('home.features', { returnObjects: true }) as string[];
 
     return (
         <Layout>
@@ -91,18 +78,17 @@ const Index = () => {
                     <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
                         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
                             <h1 className="text-batik-brown text-4xl leading-tight font-bold tracking-tight sm:text-5xl md:text-6xl">
-                                Keindahan Batik <span className="text-batik-brown">Gumelem</span> Dari Banjarnegara
+                                {t('home.heroTitle')}
                             </h1>
                             <p className="mt-6 max-w-md text-lg text-gray-600">
-                                Temukan keindahan batik tradisional Gumelem dengan motif dan filosofi mendalam yang telah diwariskan dari generasi ke
-                                generasi.
+                                {t('home.heroSubtitle')}
                             </p>
                             <div className="mt-8 flex flex-wrap gap-x-4 gap-y-4">
                                 <Button asChild className="bg-batik-brown hover:bg-batik-brown/90 hover-lift">
-                                    <Link href="/products">Lihat Produk</Link>
+                                    <Link href="/products">{t('home.viewProducts')}</Link>
                                 </Button>
                                 <Button asChild variant="outline" className="border-batik-brown text-batik-brown hover:bg-batik-brown/10 hover-lift">
-                                    <Link href="/history">Tentang Batik Gumelem</Link>
+                                    <Link href="/history">{t('home.aboutBatik')}</Link>
                                 </Button>
                             </div>
                         </motion.div>
@@ -124,9 +110,9 @@ const Index = () => {
             <section className="py-16 sm:py-24">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center">
-                        <h2 className="text-batik-brown text-3xl font-bold tracking-tight sm:text-4xl">Produk Unggulan</h2>
+                        <h2 className="text-batik-brown text-3xl font-bold tracking-tight sm:text-4xl">{t('home.featuredTitle')}</h2>
                         <p className="mx-auto mt-4 max-w-2xl text-gray-600">
-                            Karya terbaik dari pengrajin batik Gumelem dengan kualitas premium dan motif yang khas.
+                            {t('home.featuredSubtitle')}
                         </p>
                     </div>
 
@@ -147,7 +133,7 @@ const Index = () => {
                     <div className="mt-12 text-center">
                         <Button asChild variant="outline" className="border-batik-brown text-batik-brown hover:bg-batik-brown/10 hover-lift">
                             <Link href="/products" className="flex items-center">
-                                Lihat Semua Produk
+                                {t('home.viewAllProducts')}
                                 <ArrowRight className="ml-2 h-4 w-4" />
                             </Link>
                         </Button>
@@ -183,14 +169,12 @@ const Index = () => {
                             transition={{ duration: 0.8 }}
                             viewport={{ once: true }}
                         >
-                            <h2 className="text-batik-brown text-3xl font-bold tracking-tight sm:text-4xl">Warisan Budaya yang Berharga</h2>
+                            <h2 className="text-batik-brown text-3xl font-bold tracking-tight sm:text-4xl">{t('home.heritageTitle')}</h2>
                             <p className="mt-4 text-lg text-gray-600">
-                                Batik Gumelem adalah warisan budaya dari Desa Gumelem, Banjarnegara, Jawa Tengah yang telah ada sejak zaman Kerajaan
-                                Mataram.
+                                {t('home.heritageP1')}
                             </p>
                             <p className="mt-4 text-lg text-gray-600">
-                                Keunikan Batik Gumelem terletak pada motif yang terinspirasi dari lingkungan alam sekitar dan filosofi kehidupan
-                                masyarakat setempat.
+                                {t('home.heritageP2')}
                             </p>
                             <div className="mt-8">
                                 <ul className="space-y-4">
@@ -213,7 +197,7 @@ const Index = () => {
                             </div>
                             <div className="mt-8">
                                 <Button asChild className="bg-batik-brown hover:bg-batik-brown/90 hover-lift">
-                                    <Link href="/history">Pelajari Lebih Lanjut</Link>
+                                    <Link href="/history">{t('home.heritageLearnMore')}</Link>
                                 </Button>
                             </div>
                         </motion.div>
@@ -225,9 +209,9 @@ const Index = () => {
             <section className="py-16 sm:py-24">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center">
-                        <h2 className="text-batik-brown text-3xl font-bold tracking-tight sm:text-4xl">Artikel Terbaru</h2>
+                        <h2 className="text-batik-brown text-3xl font-bold tracking-tight sm:text-4xl">{t('home.latestArticlesTitle')}</h2>
                         <p className="mx-auto mt-4 max-w-2xl text-gray-600">
-                            Jelajahi artikel menarik tentang batik Gumelem, teknik pembuatan, dan filosofi di baliknya
+                            {t('home.latestArticlesSubtitle')}
                         </p>
                     </div>
 
@@ -253,14 +237,14 @@ const Index = () => {
                                             <span className="text-batik-indigo bg-batik-indigo/10 rounded-full px-3 py-1 text-xs font-medium">
                                                 {blog.category}
                                             </span>
-                                            <span className="text-sm text-gray-500">{formatDate(blog.created_at)}</span>
+                                            <span className="text-sm text-gray-500">{formatDate(blog.created_at, lang)}</span>
                                         </div>
                                         <h3 className="text-batik-brown group-hover:text-batik-indigo font-semibold transition-colors duration-300">
                                             {blog.title}
                                         </h3>
                                         <p className="mt-2 line-clamp-2 text-sm text-gray-600">{blog.excerpt}</p>
                                         <div className="text-batik-indigo mt-4 flex items-center text-sm font-medium">
-                                            Baca selengkapnya
+                                            {t('home.readMore')}
                                             <ArrowRight className="ml-1 h-4 w-4" />
                                         </div>
                                     </div>
@@ -272,7 +256,7 @@ const Index = () => {
                     <div className="mt-12 text-center">
                         <Button asChild variant="outline" className="border-batik-brown text-batik-brown hover:bg-batik-brown/10 hover-lift">
                             <Link href="/blog" className="flex items-center">
-                                Lihat Semua Artikel
+                                {t('home.viewAllArticles')}
                                 <ArrowRight className="ml-2 h-4 w-4" />
                             </Link>
                         </Button>
@@ -322,8 +306,8 @@ const Index = () => {
                             transition={{ duration: 0.5 }}
                             viewport={{ once: true }}
                         >
-                            <span className="block">Siap untuk memiliki Batik Gumelem?</span>
-                            <span className="text-batik-cream block">Jelajahi koleksi eksklusif kami sekarang.</span>
+                            <span className="block">{t('home.ctaTitle')}</span>
+                            <span className="text-batik-cream block">{t('home.ctaSubtitle')}</span>
                         </motion.h2>
                         <motion.div
                             className="mt-8 flex lg:mt-0 lg:flex-shrink-0"
@@ -334,7 +318,7 @@ const Index = () => {
                         >
                             <div className="inline-flex rounded-md shadow">
                                 <Button asChild className="text-batik-brown hover-lift bg-white hover:bg-gray-100">
-                                    <Link href="/products">Belanja Sekarang</Link>
+                                    <Link href="/products">{t('home.shopNow')}</Link>
                                 </Button>
                             </div>
                         </motion.div>

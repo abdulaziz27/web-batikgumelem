@@ -17,11 +17,17 @@ class OrderItem extends Model
         'size'
     ];
 
+    /**
+     * Relasi ke order induk dari item ini.
+     */
     public function order()
     {
         return $this->belongsTo(Order::class);
     }
 
+    /**
+     * Relasi ke produk yang dipesan (meski sudah dihapus/soft delete).
+     */
     public function product()
     {
         return $this->belongsTo(Product::class)->withTrashed();

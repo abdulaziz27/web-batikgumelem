@@ -20,16 +20,25 @@ class CartItem extends Model
         'quantity' => 'integer',
     ];
 
+    /**
+     * Relasi ke user yang memiliki cart item ini.
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * Relasi ke produk yang ada di cart item ini.
+     */
     public function product()
     {
         return $this->belongsTo(Product::class);
     }
 
+    /**
+     * Menghasilkan key unik untuk cart item berdasarkan product_id dan size.
+     */
     public function getKeyString()
     {
         return $this->size ? $this->product_id . '-' . $this->size : (string)$this->product_id;

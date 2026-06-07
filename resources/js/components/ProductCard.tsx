@@ -5,6 +5,7 @@ import { Link, router, usePage } from '@inertiajs/react';
 import { ShoppingCart } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 
 interface ProductSize {
     id: number;
@@ -30,6 +31,9 @@ const ProductCard = ({ product, className = '' }: ProductCardProps) => {
     const { addToCart, isLoading } = useCart();
     const [isHovering, setIsHovering] = useState(false);
     const { auth } = usePage().props as any;
+    const { locale } = usePage().props as any;
+    const { t } = useTranslation();
+    const lang = locale === 'en' ? 'en' : 'id';
 
     // Get first available size (with stock > 0) or first size if none have stock
     const getFirstAvailableSize = () => {
@@ -53,19 +57,19 @@ const ProductCard = ({ product, className = '' }: ProductCardProps) => {
         e.stopPropagation();
         
         if (!auth?.user) {
-            toast.error('Anda harus login untuk menambah produk ke keranjang. Silakan login terlebih dahulu.');
+            toast.error(t('product.cardMustLogin'));
             router.visit('/login');
             return;
         }
 
         if (!hasStock()) {
-            toast.error('Produk ini sedang habis stok untuk semua ukuran.');
+            toast.error(t('product.cardOutOfStockAll'));
             return;
         }
 
         const selectedSize = getFirstAvailableSize();
         if (!selectedSize) {
-            toast.error('Ukuran produk tidak tersedia.');
+            toast.error(t('product.cardNoSize'));
             return;
         }
 
@@ -101,7 +105,7 @@ const ProductCard = ({ product, className = '' }: ProductCardProps) => {
                             <h3 className="text-batik-brown group-hover:text-batik-brown/80 line-clamp-2 font-medium transition-colors">
                                 {product.name}
                             </h3>
-                            <p className="text-batik-indigo mt-1 font-semibold">{formatRupiah(product.price)}</p>
+                            <p className="text-batik-indigo mt-1 font-semibold">{formatRupiah(product.price, lang)}</p>
                         </div>
                         <Button
                             onClick={handleAddToCart}

@@ -34,6 +34,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import AdminLayout from '@/layouts/admin-layout';
 import { type BreadcrumbItem } from '@/types';
 import { format } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 
 interface ShippingAddress {
     id: number;
@@ -84,20 +85,15 @@ interface OrdersIndexProps {
     };
 }
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Dasbor',
-        href: '/admin/dashboard',
-    },
-    {
-        title: 'Pesanan',
-        href: '/admin/orders',
-    },
-];
-
 type StatusBadgeVariant = 'default' | 'secondary' | 'destructive' | 'outline';
 
 export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) {
+    const { t } = useTranslation();
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: t('dashboard.nav.adminDashboard'), href: '/admin/dashboard' },
+        { title: t('dashboard.nav.adminOrders'), href: '/admin/orders' },
+    ];
+
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [orderToDelete, setOrderToDelete] = useState<Order | null>(null);
     const [sorting, setSorting] = useState<SortingState>([]);
@@ -189,7 +185,7 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
             header: ({ column }) => (
                 <div className="flex items-center">
                     <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="p-0 hover:bg-transparent">
-                        Tanggal
+                        {t('dashboard.pages.adminOrders.table.date')}
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 </div>
@@ -202,9 +198,9 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
             },
         },
         {
-            accessorFn: (row) => (row.user ? row.user.name : row.guest_name || 'Guest'),
+            accessorFn: (row) => (row.user ? row.user.name : row.guest_name || t('dashboard.pages.adminOrders.guest')),
             id: 'customer',
-            header: 'Pelanggan',
+            header: t('dashboard.pages.adminOrders.table.customer'),
             cell: ({ getValue }) => <span>{getValue<string>()}</span>,
             enableColumnFilter: true,
             filterFn: 'includesString',
@@ -214,7 +210,7 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
             header: ({ column }) => (
                 <div className="flex items-center">
                     <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="p-0 hover:bg-transparent">
-                        Total
+                        {t('dashboard.pages.adminOrders.table.total')}
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 </div>
@@ -228,10 +224,12 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
         },
         {
             accessorKey: 'status',
-            header: 'Status',
+            header: t('dashboard.pages.adminOrders.table.status'),
             cell: ({ row }) => {
                 const status = row.getValue('status') as string;
-                return <Badge variant={getStatusColor(status)}>{status.charAt(0).toUpperCase() + status.slice(1)}</Badge>;
+                const normalized = (status || '').toLowerCase();
+                const label = t(`dashboard.pages.adminOrders.statusLabel.${normalized}`, { defaultValue: status });
+                return <Badge variant={getStatusColor(status)}>{label}</Badge>;
             },
             enableColumnFilter: true,
             filterFn: (row, id, value) => {
@@ -241,15 +239,17 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
         },
         {
             accessorKey: 'payment_status',
-            header: 'Pembayaran',
+            header: t('dashboard.pages.adminOrders.table.payment'),
             cell: ({ row }) => {
                 const status = row.getValue('payment_status') as string;
-                return <Badge variant={status === 'paid' ? 'default' : 'secondary'}>{status.charAt(0).toUpperCase() + status.slice(1)}</Badge>;
+                const normalized = (status || '').toLowerCase();
+                const label = t(`dashboard.pages.adminOrders.paymentLabel.${normalized}`, { defaultValue: status });
+                return <Badge variant={status === 'paid' ? 'default' : 'secondary'}>{label}</Badge>;
             },
         },
         {
             id: 'actions',
-            header: 'Aksi',
+            header: t('dashboard.pages.adminOrders.table.actions'),
             cell: ({ row }) => {
                 const order = row.original;
                 return (
@@ -384,55 +384,55 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
 
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
-            <Head title="Manajemen Pesanan" />
+            <Head title={t('dashboard.pages.adminOrders.headTitle')} />
 
             <div className="space-y-6 p-3 sm:p-6">
                 <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-                    <h1 className="text-2xl font-bold tracking-tight">Manajemen Pesanan</h1>
+                    <h1 className="text-2xl font-bold tracking-tight">{t('dashboard.nav.adminOrders')}</h1>
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-4">
                     <Card>
                         <CardHeader className="pb-2">
-                            <CardTitle>Semua Pesanan</CardTitle>
-                            <CardDescription>Ringkasan pesanan</CardDescription>
+                    <CardTitle>{t('dashboard.pages.adminOrders.cards.allTitle')}</CardTitle>
+                    <CardDescription>{t('dashboard.pages.adminOrders.cards.allDesc')}</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">{statusCounts.all}</div>
-                            <p className="text-muted-foreground text-xs">Total pesanan dalam sistem</p>
+                    <p className="text-muted-foreground text-xs">{t('dashboard.pages.adminOrders.cards.allHint')}</p>
                         </CardContent>
                     </Card>
 
                     <Card>
                         <CardHeader className="pb-2">
-                            <CardTitle>Menunggu</CardTitle>
-                            <CardDescription>Pesanan yang perlu diproses</CardDescription>
+                    <CardTitle>{t('dashboard.pages.adminOrders.cards.pendingTitle')}</CardTitle>
+                    <CardDescription>{t('dashboard.pages.adminOrders.cards.pendingDesc')}</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">{statusCounts.pending}</div>
-                            <p className="text-muted-foreground text-xs">Menunggu untuk diproses</p>
+                    <p className="text-muted-foreground text-xs">{t('dashboard.pages.adminOrders.cards.pendingHint')}</p>
                         </CardContent>
                     </Card>
 
                     <Card>
                         <CardHeader className="pb-2">
-                            <CardTitle>Diproses</CardTitle>
-                            <CardDescription>Pesanan dalam proses</CardDescription>
+                    <CardTitle>{t('dashboard.pages.adminOrders.cards.processingTitle')}</CardTitle>
+                    <CardDescription>{t('dashboard.pages.adminOrders.cards.processingDesc')}</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">{statusCounts.processing}</div>
-                            <p className="text-muted-foreground text-xs">Sedang ditangani</p>
+                    <p className="text-muted-foreground text-xs">{t('dashboard.pages.adminOrders.cards.processingHint')}</p>
                         </CardContent>
                     </Card>
 
                     <Card>
                         <CardHeader className="pb-2">
-                            <CardTitle>Dikirim</CardTitle>
-                            <CardDescription>Pesanan terkirim</CardDescription>
+                    <CardTitle>{t('dashboard.pages.adminOrders.cards.shippedTitle')}</CardTitle>
+                    <CardDescription>{t('dashboard.pages.adminOrders.cards.shippedDesc')}</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">{statusCounts.shipped + statusCounts.delivered}</div>
-                            <p className="text-muted-foreground text-xs">Pesanan dikirim atau diterima</p>
+                    <p className="text-muted-foreground text-xs">{t('dashboard.pages.adminOrders.cards.shippedHint')}</p>
                         </CardContent>
                     </Card>
                 </div>
@@ -448,7 +448,7 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
                                     <Input
                                         type="search"
                                         name="search"
-                                        placeholder="Cari pesanan..."
+                                        placeholder={t('dashboard.pages.adminOrders.searchPlaceholder')}
                                         value={searchValue}
                                         onChange={(e) => setSearchValue(e.target.value)}
                                         className="w-full pl-8"
@@ -459,22 +459,22 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
                             <Tabs value={activeTab} onValueChange={handleStatusChange}>
                                 <TabsList className="grid w-full auto-cols-max grid-flow-col overflow-x-auto sm:flex sm:w-auto">
                                     <TabsTrigger className="min-w-[100px] text-center" value="all">
-                                        Semua ({statusCounts.all})
+                                        {t('dashboard.pages.adminOrders.tabs.all')} ({statusCounts.all})
                                     </TabsTrigger>
                                     <TabsTrigger className="min-w-[100px] text-center" value="pending">
-                                        Menunggu ({statusCounts.pending})
+                                        {t('dashboard.pages.adminOrders.tabs.pending')} ({statusCounts.pending})
                                     </TabsTrigger>
                                     <TabsTrigger className="min-w-[100px] text-center" value="processing">
-                                        Diproses ({statusCounts.processing})
+                                        {t('dashboard.pages.adminOrders.tabs.processing')} ({statusCounts.processing})
                                     </TabsTrigger>
                                     <TabsTrigger className="min-w-[100px] text-center" value="shipped">
-                                        Dikirim ({statusCounts.shipped})
+                                        {t('dashboard.pages.adminOrders.tabs.shipped')} ({statusCounts.shipped})
                                     </TabsTrigger>
                                     <TabsTrigger className="min-w-[100px] text-center" value="delivered">
-                                        Diterima ({statusCounts.delivered})
+                                        {t('dashboard.pages.adminOrders.tabs.delivered')} ({statusCounts.delivered})
                                     </TabsTrigger>
                                     <TabsTrigger className="min-w-[100px] text-center" value="cancelled">
-                                        Dibatalkan ({statusCounts.cancelled})
+                                        {t('dashboard.pages.adminOrders.tabs.cancelled')} ({statusCounts.cancelled})
                                     </TabsTrigger>
                                 </TabsList>
                             </Tabs>
@@ -486,7 +486,7 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
                                 {table.getRowModel().rows.length ? (
                                     renderOrderCards()
                                 ) : (
-                                    <div className="text-muted-foreground py-10 text-center">Tidak ada pesanan ditemukan</div>
+                                    <div className="text-muted-foreground py-10 text-center">{t('dashboard.pages.adminOrders.empty')}</div>
                                 )}
                             </div>
                         ) : (
@@ -519,7 +519,7 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
                                         ) : (
                                             <TableRow>
                                                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                                                    Tidak ada pesanan ditemukan
+                                                    {t('dashboard.pages.adminOrders.empty')}
                                                 </TableCell>
                                             </TableRow>
                                         )}
@@ -531,20 +531,21 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
                     <CardFooter className="border-t px-4 py-4 sm:px-6">
                         <div className="flex w-full flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                             <div className="text-muted-foreground text-center text-sm sm:text-left">
-                                Menampilkan{' '}
-                                {table.getFilteredRowModel().rows.length > 0
-                                    ? table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1
-                                    : 0}{' '}
-                                sampai{' '}
-                                {Math.min(
-                                    (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
-                                    table.getFilteredRowModel().rows.length,
-                                )}{' '}
-                                dari {table.getFilteredRowModel().rows.length} pesanan
+                                {t('dashboard.pages.adminOrders.pagination.showingFmt', {
+                                    from:
+                                        table.getFilteredRowModel().rows.length > 0
+                                            ? table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1
+                                            : 0,
+                                    to: Math.min(
+                                        (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
+                                        table.getFilteredRowModel().rows.length,
+                                    ),
+                                    total: table.getFilteredRowModel().rows.length,
+                                })}
                             </div>
                             <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6 lg:gap-8">
                                 <div className="flex w-full items-center gap-2 sm:w-auto">
-                                    <p className="text-sm font-medium whitespace-nowrap">Rows per page</p>
+                                    <p className="text-sm font-medium whitespace-nowrap">{t('dashboard.pages.adminOrders.pagination.rowsPerPage')}</p>
                                     <Select value={String(table.getState().pagination.pageSize)} onValueChange={handlePerPageChange}>
                                         <SelectTrigger className="h-8 w-[80px]">
                                             <SelectValue placeholder={table.getState().pagination.pageSize} />
@@ -566,7 +567,7 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
                                             onClick={() => table.setPageIndex(0)}
                                             disabled={!table.getCanPreviousPage()}
                                         >
-                                            <span className="sr-only">Go to first page</span>
+                                            <span className="sr-only">{t('dashboard.pages.adminOrders.pagination.first')}</span>
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 width="16"
@@ -589,13 +590,14 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
                                             onClick={() => table.previousPage()}
                                             disabled={!table.getCanPreviousPage()}
                                         >
-                                            <span className="sr-only">Go to previous page</span>
+                                            <span className="sr-only">{t('dashboard.pages.adminOrders.pagination.prev')}</span>
                                             <ChevronLeft className="h-4 w-4" />
                                         </Button>
                                         <div className="flex items-center gap-1">
-                                            <span className="text-sm">Page</span>
+                                            <span className="text-sm">{t('dashboard.pages.adminOrders.pagination.page')}</span>
                                             <strong className="text-sm font-medium">
-                                                {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+                                                {table.getState().pagination.pageIndex + 1} {t('dashboard.pages.adminOrders.pagination.of')}{' '}
+                                                {table.getPageCount()}
                                             </strong>
                                         </div>
                                         <Button
@@ -604,7 +606,7 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
                                             onClick={() => table.nextPage()}
                                             disabled={!table.getCanNextPage()}
                                         >
-                                            <span className="sr-only">Go to next page</span>
+                                            <span className="sr-only">{t('dashboard.pages.adminOrders.pagination.next')}</span>
                                             <ChevronRight className="h-4 w-4" />
                                         </Button>
                                         <Button
@@ -613,7 +615,7 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
                                             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
                                             disabled={!table.getCanNextPage()}
                                         >
-                                            <span className="sr-only">Go to last page</span>
+                                            <span className="sr-only">{t('dashboard.pages.adminOrders.pagination.last')}</span>
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 width="16"
@@ -641,17 +643,17 @@ export default function OrdersIndex({ orders, statusCounts }: OrdersIndexProps) 
             <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Apakah Anda yakin?</AlertDialogTitle>
+                        <AlertDialogTitle>{t('dashboard.pages.adminOrders.dialog.confirmTitle')}</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Tindakan ini akan menghapus pesanan{' '}
-                            <span className="font-semibold">{orderToDelete?.order_number || `#${orderToDelete?.id}`}</span> secara permanen. Tindakan
-                            ini tidak dapat dibatalkan.
+                            {t('dashboard.pages.adminOrders.dialog.confirmDescFmt', {
+                                order: orderToDelete?.order_number || `#${orderToDelete?.id}`,
+                            })}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel>Batal</AlertDialogCancel>
+                        <AlertDialogCancel>{t('dashboard.pages.adminOrders.dialog.cancel')}</AlertDialogCancel>
                         <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                            Hapus
+                            {t('dashboard.pages.adminOrders.dialog.delete')}
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>

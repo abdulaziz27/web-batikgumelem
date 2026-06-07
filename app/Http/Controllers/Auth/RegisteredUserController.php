@@ -16,7 +16,7 @@ use Inertia\Response;
 class RegisteredUserController extends Controller
 {
     /**
-     * Show the registration page.
+     * Menampilkan halaman registrasi.
      */
     public function create(): Response
     {
@@ -24,12 +24,13 @@ class RegisteredUserController extends Controller
     }
 
     /**
-     * Handle an incoming registration request.
+     * Memproses permintaan registrasi user baru.
      *
      * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request): RedirectResponse
     {
+        // Validasi input
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:users',
@@ -44,22 +45,20 @@ class RegisteredUserController extends Controller
             'password.confirmed' => 'Konfirmasi password tidak cocok.',
         ]);
 
+        // Simpan user baru
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        // Assign 'user' role to newly registered user
+        // Assign role 'user' ke user baru
         $user->assignRole('user');
 
+        // Trigger event Registered
         event(new Registered($user));
 
-        // Auth::login($user);
-
-        // return redirect()->route('verification.notice');
-
-        // Don't auto-login, redirect to login page instead
+        // Tidak auto-login, redirect ke login page
         return redirect()->route('login')->with('success', 'Akun berhasil dibuat! Silakan cek email Anda untuk verifikasi dan login.');
     }
 }

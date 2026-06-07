@@ -3,6 +3,7 @@ import { Loader2, Mail } from 'lucide-react';
 
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
+import { useTranslation } from 'react-i18next';
 
 interface VerifyEmailProps {
     status?: string;
@@ -10,6 +11,7 @@ interface VerifyEmailProps {
 
 export default function VerifyEmail({ status }: VerifyEmailProps) {
     const { post, processing } = useForm({});
+    const { t } = useTranslation();
 
     const handleResendVerification = (e: React.FormEvent) => {
         e.preventDefault();
@@ -27,41 +29,40 @@ export default function VerifyEmail({ status }: VerifyEmailProps) {
                                     <Mail className="text-batik-indigo h-8 w-8" />
                                 </div>
                             </div>
-                            <h1 className="text-batik-brown mt-4 text-2xl font-bold tracking-tight">Verifikasi Email</h1>
+                            <h1 className="text-batik-brown mt-4 text-2xl font-bold tracking-tight">{t('auth.verifyEmailHeading')}</h1>
                             <p className="text-muted-foreground mt-2 text-sm">
-                                Silakan verifikasi alamat email Anda dengan mengklik tautan yang telah kami kirimkan ke email Anda.
+                                {t('auth.verifyEmailBody')}
                             </p>
                         </div>
 
-                        <Head title="Verifikasi Email" />
+                        <Head title={t('auth.verifyEmailTitle')} />
 
                         {status === 'verification-link-sent' && (
                             <div className="mb-6 rounded-md bg-green-50 p-4 text-sm text-green-600">
-                                Tautan verifikasi baru telah dikirim ke alamat email yang Anda berikan saat pendaftaran.
+                                {t('auth.verificationLinkSent')}
                             </div>
                         )}
 
                         <form onSubmit={handleResendVerification} className="space-y-6">
                             <div className="text-center">
                                 <p className="mb-6 text-sm text-gray-600">
-                                    Jika Anda tidak menerima email verifikasi, silakan periksa folder spam atau klik tombol di bawah ini untuk
-                                    mengirim ulang.
+                                    {t('auth.verifyEmailHelp')}
                                 </p>
 
                                 <Button type="submit" className="bg-batik-indigo hover:bg-batik-indigo/90 w-full" disabled={processing}>
                                     {processing ? (
                                         <>
                                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                            Mengirim...
+                                            {t('auth.resending')}
                                         </>
                                     ) : (
-                                        'Kirim Ulang Email Verifikasi'
+                                        t('auth.resendVerification')
                                     )}
                                 </Button>
 
                                 <div className="mt-6">
                                     <Link href={route('home')} className="text-batik-indigo text-sm hover:underline">
-                                        Kembali ke Beranda
+                                        {t('auth.backHome')}
                                     </Link>
                                 </div>
                             </div>

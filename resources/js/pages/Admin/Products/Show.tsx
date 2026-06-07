@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import AdminLayout from '@/layouts/admin-layout';
 import { type BreadcrumbItem } from '@/types';
+import { useTranslation } from 'react-i18next';
 
 interface ProductImage {
     id: number;
@@ -43,13 +44,14 @@ interface ShowProps {
 }
 
 export default function Show({ product }: ShowProps) {
+    const { t } = useTranslation();
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: 'Dasbor',
+            title: t('dashboard.nav.adminDashboard'),
             href: '/admin/dashboard',
         },
         {
-            title: 'Produk',
+            title: t('dashboard.nav.adminProducts'),
             href: '/admin/products',
         },
         {
@@ -83,22 +85,22 @@ export default function Show({ product }: ShowProps) {
 
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
-            <Head title={`Produk: ${product.name}`} />
+            <Head title={t('dashboard.pages.adminProductShow.headTitleFmt', { name: product.name })} />
 
             <div className="space-y-6 p-6">
                 <div className="flex items-center justify-between">
-                    <h1 className="text-2xl font-bold tracking-tight">Detail Produk</h1>
+                    <h1 className="text-2xl font-bold tracking-tight">{t('dashboard.pages.adminProductShow.title')}</h1>
                     <div className="flex space-x-2">
                         <Button variant="outline" asChild>
                             <Link href="/admin/products">
                                 <ArrowLeft className="mr-2 h-4 w-4" />
-                                Kembali ke Produk
+                                {t('dashboard.pages.adminProductShow.back')}
                             </Link>
                         </Button>
                         <Button asChild>
                             <Link href={`/admin/products/${product.id}/edit`}>
                                 <Edit className="mr-2 h-4 w-4" />
-                                Edit Produk
+                                {t('dashboard.pages.adminProductShow.edit')}
                             </Link>
                         </Button>
                     </div>
@@ -111,7 +113,7 @@ export default function Show({ product }: ShowProps) {
                     <div className="space-y-6 md:col-span-1">
                         <Card>
                             <CardHeader>
-                                <CardTitle>Gambar Utama</CardTitle>
+                                <CardTitle>{t('dashboard.pages.adminProductShow.mainImage')}</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 {mainImageUrl ? (
@@ -120,7 +122,7 @@ export default function Show({ product }: ShowProps) {
                                     </div>
                                 ) : (
                                     <div className="bg-muted flex aspect-square items-center justify-center rounded-lg border">
-                                        <p className="text-muted-foreground">Tidak ada gambar</p>
+                                        <p className="text-muted-foreground">{t('dashboard.pages.adminProductShow.noImage')}</p>
                                     </div>
                                 )}
                             </CardContent>
@@ -129,7 +131,7 @@ export default function Show({ product }: ShowProps) {
                         {product.images.length > 1 && (
                             <Card>
                                 <CardHeader>
-                                    <CardTitle>Semua Gambar</CardTitle>
+                                    <CardTitle>{t('dashboard.pages.adminProductShow.allImages')}</CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <div className="grid grid-cols-3 gap-2">
@@ -149,14 +151,16 @@ export default function Show({ product }: ShowProps) {
                         {product.sizes.length > 0 && (
                             <Card>
                                 <CardHeader>
-                                    <CardTitle>Ukuran yang Tersedia</CardTitle>
+                                    <CardTitle>{t('dashboard.pages.adminProductShow.availableSizes')}</CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <div className="grid grid-cols-2 gap-2">
                                         {product.sizes.map((size) => (
                                             <div key={size.id} className="rounded-md border p-3">
                                                 <div className="font-medium">{size.size}</div>
-                                                <div className="text-muted-foreground text-sm">Stok: {size.stock}</div>
+                                                <div className="text-muted-foreground text-sm">
+                                                    {t('dashboard.pages.adminProductShow.stockFmt', { count: size.stock })}
+                                                </div>
                                             </div>
                                         ))}
                                     </div>
@@ -168,44 +172,46 @@ export default function Show({ product }: ShowProps) {
                     {/* Product Information */}
                     <Card className="md:col-span-2">
                         <CardHeader>
-                            <CardTitle>Informasi Produk</CardTitle>
+                            <CardTitle>{t('dashboard.pages.adminProductShow.info')}</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                 <div>
-                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">Nama</h3>
+                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">{t('dashboard.pages.adminProductShow.fieldName')}</h3>
                                     <p>{product.name}</p>
                                 </div>
                                 <div>
-                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">Slug</h3>
+                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">{t('dashboard.pages.adminProductShow.fieldSlug')}</h3>
                                     <p className="font-mono text-sm">{product.slug}</p>
                                 </div>
                                 <div>
-                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">Harga</h3>
+                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">{t('dashboard.pages.adminProductShow.fieldPrice')}</h3>
                                     <p>{formatPrice(product.price)}</p>
                                 </div>
                                 <div>
-                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">Total Stok</h3>
+                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">{t('dashboard.pages.adminProductShow.fieldTotalStock')}</h3>
                                     <p>{product.sizes.reduce((total, size) => total + size.stock, 0)}</p>
                                 </div>
                                 <div>
-                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">Status</h3>
-                                    <Badge variant={product.is_active ? 'default' : 'outline'}>{product.is_active ? 'Aktif' : 'Nonaktif'}</Badge>
+                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">{t('dashboard.pages.adminProductShow.fieldStatus')}</h3>
+                                    <Badge variant={product.is_active ? 'default' : 'outline'}>
+                                        {product.is_active ? t('dashboard.pages.adminCoupons.active') : t('dashboard.pages.adminCoupons.inactive')}
+                                    </Badge>
                                 </div>
                                 <div>
-                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">Gambar</h3>
-                                    <p>{product.images.length} gambar</p>
+                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">{t('dashboard.pages.adminProductShow.fieldImages')}</h3>
+                                    <p>{t('dashboard.pages.adminProductShow.imagesCountFmt', { count: product.images.length })}</p>
                                 </div>
                                 <div className="col-span-2">
-                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">Deskripsi</h3>
+                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">{t('dashboard.pages.adminProductShow.fieldDescription')}</h3>
                                     <p className="whitespace-pre-wrap">{product.description}</p>
                                 </div>
                                 <div>
-                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">Dibuat pada</h3>
+                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">{t('dashboard.pages.adminProductShow.createdAt')}</h3>
                                     <p>{formatDate(product.created_at)}</p>
                                 </div>
                                 <div>
-                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">Diperbarui pada</h3>
+                                    <h3 className="text-muted-foreground mb-1 text-sm font-medium">{t('dashboard.pages.adminProductShow.updatedAt')}</h3>
                                     <p>{formatDate(product.updated_at)}</p>
                                 </div>
                             </div>

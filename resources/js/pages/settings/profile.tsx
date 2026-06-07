@@ -10,13 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import SettingsLayoutWrapper from '@/layouts/settings/settings-layout-wrapper';
-
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Pengaturan Profil',
-        href: '/settings/profile',
-    },
-];
+import { useTranslation } from 'react-i18next';
 
 type ProfileForm = {
     name: string;
@@ -25,6 +19,8 @@ type ProfileForm = {
 
 export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: boolean; status?: string }) {
     const { auth } = usePage<SharedData>().props;
+    const { t } = useTranslation();
+    const breadcrumbs: BreadcrumbItem[] = [{ title: t('settings.profile.breadcrumbs'), href: '/settings/profile' }];
 
     const { data, setData, patch, errors, processing, recentlySuccessful } = useForm<Required<ProfileForm>>({
         name: auth.user.name,
@@ -41,14 +37,14 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
 
     return (
         <SettingsLayoutWrapper breadcrumbs={breadcrumbs}>
-            <Head title="Pengaturan Profil" />
+            <Head title={t('settings.profile.headTitle')} />
 
             <div className="space-y-6">
-                <HeadingSmall title="Informasi Profil" description="Perbarui nama dan alamat email Anda" />
+                <HeadingSmall title={t('settings.profile.headingTitle')} description={t('settings.profile.headingDesc')} />
 
                 <form onSubmit={submit} className="space-y-6">
                     <div className="grid gap-2">
-                        <Label htmlFor="name">Nama</Label>
+                        <Label htmlFor="name">{t('settings.profile.name')}</Label>
 
                         <Input
                             id="name"
@@ -57,14 +53,14 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                             onChange={(e) => setData('name', e.target.value)}
                             required
                             autoComplete="name"
-                            placeholder="Nama lengkap"
+                            placeholder={t('settings.profile.namePlaceholder')}
                         />
 
                         <InputError className="mt-2" message={errors.name} />
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="email">Alamat Email</Label>
+                        <Label htmlFor="email">{t('settings.profile.email')}</Label>
 
                         <Input
                             id="email"
@@ -74,13 +70,13 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                             onChange={(e) => setData('email', e.target.value)}
                             required
                             autoComplete="username"
-                            placeholder="Alamat email"
+                            placeholder={t('settings.profile.emailPlaceholder')}
                         />
 
                         <InputError className="mt-2" message={errors.email} />
                     </div>
                     <div className="flex items-center gap-4">
-                        <Button disabled={processing}>Simpan</Button>
+                        <Button disabled={processing}>{t('settings.profile.save')}</Button>
 
                         <Transition
                             show={recentlySuccessful}
@@ -89,7 +85,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                             leave="transition ease-in-out"
                             leaveTo="opacity-0"
                         >
-                            <p className="text-sm text-neutral-600">Tersimpan</p>
+                            <p className="text-sm text-neutral-600">{t('settings.profile.saved')}</p>
                         </Transition>
                     </div>
                 </form>

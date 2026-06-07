@@ -1,14 +1,16 @@
 import Layout from '@/components/layout/Layout';
+import { useTranslation } from 'react-i18next';
 
 const Privacy = () => {
+    const { t } = useTranslation();
     return (
         <Layout>
             <div className="bg-batik-cream/30 batik-pattern py-10">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center">
-                        <h1 className="text-batik-brown text-3xl font-bold tracking-tight sm:text-4xl">Kebijakan Privasi</h1>
+                        <h1 className="text-batik-brown text-3xl font-bold tracking-tight sm:text-4xl">{t('legal.privacyTitle')}</h1>
                         <p className="mx-auto mt-4 max-w-xl text-base text-gray-600">
-                            Bagaimana kami melindungi dan mengelola informasi pribadi Anda
+                            {t('legal.privacySubtitle')}
                         </p>
                     </div>
                 </div>
@@ -17,7 +19,7 @@ const Privacy = () => {
             <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
                 <div className="mx-auto max-w-4xl rounded-xl bg-white p-4 shadow-sm sm:p-8">
                     <div className="prose prose-lg max-w-none text-gray-700">
-                        <p className="text-sm text-gray-500">Terakhir diperbarui: 1 Mei 2025</p>
+                        <p className="text-sm text-gray-500">{t('legal.lastUpdated')}: 1 Mei 2025</p>
 
                         <p className="mt-4">
                             BatikGumelem.com menghargai privasi Anda dan berkomitmen untuk melindungi informasi pribadi Anda. Kebijakan Privasi ini

@@ -14,7 +14,7 @@ use Inertia\Response;
 class ProfileController extends Controller
 {
     /**
-     * Show the user's profile settings page.
+     * Menampilkan halaman pengaturan profil user.
      */
     public function edit(Request $request): Response
     {
@@ -25,12 +25,14 @@ class ProfileController extends Controller
     }
 
     /**
-     * Update the user's profile settings.
+     * Memproses update data profil user.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
+        // Update data user dengan data yang sudah divalidasi
         $request->user()->fill($request->validated());
 
+        // Jika email berubah, reset verifikasi email
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
         }
@@ -41,20 +43,24 @@ class ProfileController extends Controller
     }
 
     /**
-     * Delete the user's account.
+     * Menghapus akun user.
      */
     public function destroy(Request $request): RedirectResponse
     {
+        // Validasi password sebelum hapus akun
         $request->validate([
             'password' => ['required', 'current_password'],
         ]);
 
         $user = $request->user();
 
+        // Logout user
         Auth::logout();
 
+        // Hapus user dari database
         $user->delete();
 
+        // Invalidate session
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

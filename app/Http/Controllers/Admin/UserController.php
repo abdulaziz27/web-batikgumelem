@@ -11,6 +11,7 @@ use Inertia\Inertia;
 
 class UserController extends Controller
 {
+    // Menampilkan daftar pengguna
     public function index()
     {
         $users = User::latest()
@@ -32,6 +33,7 @@ class UserController extends Controller
         ]);
     }
 
+    // Menampilkan form tambah pengguna
     public function create()
     {
         $roles = ['admin', 'user'];
@@ -40,8 +42,10 @@ class UserController extends Controller
         ]);
     }
 
+    // Menyimpan pengguna baru ke database
     public function store(Request $request)
     {
+        // Validasi input
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -49,19 +53,21 @@ class UserController extends Controller
             'role' => 'required|string|in:admin,user',
         ]);
 
+        // Simpan data user
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
         ]);
 
-        // Assign role
+        // Assign role ke user
         $user->assignRole($validated['role']);
 
         return redirect()->route('admin.users.index')
             ->with('success', 'Pengguna berhasil ditambahkan');
     }
 
+    // Menampilkan form edit pengguna
     public function edit($id)
     {
         $user = User::with('roles')->findOrFail($id);
@@ -78,10 +84,12 @@ class UserController extends Controller
         ]);
     }
 
+    // Update data pengguna
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
 
+        // Validasi input
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $id,
@@ -94,24 +102,26 @@ class UserController extends Controller
             'email' => $validated['email'],
         ];
 
+        // Update password jika diisi
         if ($request->filled('password')) {
             $updateData['password'] = Hash::make($validated['password']);
         }
 
         $user->update($updateData);
 
-        // Update role
+        // Update role user
         $user->syncRoles([$validated['role']]);
 
         return redirect()->route('admin.users.index')
             ->with('success', 'Pengguna berhasil diperbarui');
     }
 
+    // Menghapus pengguna
     public function destroy($id)
     {
         $user = User::findOrFail($id);
 
-        // Prevent deleting self
+        // Cegah hapus akun sendiri
         if ($user->id === auth()->id()) {
             return redirect()->back()->with('error', 'Tidak dapat menghapus akun sendiri');
         }

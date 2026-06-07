@@ -33,6 +33,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import AdminLayout from '@/layouts/admin-layout';
 import { type BreadcrumbItem } from '@/types';
 import { formatDate } from '@/utils/formatters';
+import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 interface Coupon {
     id: number;
@@ -51,18 +53,13 @@ interface CouponsIndexProps {
     };
 }
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Dasbor',
-        href: '/admin/dashboard',
-    },
-    {
-        title: 'Kupon',
-        href: '/admin/coupons',
-    },
-];
-
 export default function CouponsIndex({ coupons }: CouponsIndexProps) {
+    const { t } = useTranslation();
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: t('dashboard.nav.adminDashboard'), href: '/admin/dashboard' },
+        { title: t('dashboard.nav.adminCoupons'), href: '/admin/coupons' },
+    ];
+
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [couponToDelete, setCouponToDelete] = useState<Coupon | null>(null);
     const [sorting, setSorting] = useState<SortingState>([]);
@@ -75,7 +72,7 @@ export default function CouponsIndex({ coupons }: CouponsIndexProps) {
             header: ({ column }) => (
                 <div className="flex items-center">
                     <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="p-0 hover:bg-transparent">
-                        Kode
+                        {t('dashboard.pages.adminCoupons.table.code')}
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 </div>
@@ -89,7 +86,7 @@ export default function CouponsIndex({ coupons }: CouponsIndexProps) {
             header: ({ column }) => (
                 <div className="flex items-center">
                     <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="p-0 hover:bg-transparent">
-                        Diskon
+                        {t('dashboard.pages.adminCoupons.table.discount')}
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 </div>
@@ -101,7 +98,7 @@ export default function CouponsIndex({ coupons }: CouponsIndexProps) {
             header: ({ column }) => (
                 <div className="flex items-center">
                     <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="p-0 hover:bg-transparent">
-                        Berlaku Dari
+                        {t('dashboard.pages.adminCoupons.table.validFrom')}
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 </div>
@@ -113,7 +110,7 @@ export default function CouponsIndex({ coupons }: CouponsIndexProps) {
             header: ({ column }) => (
                 <div className="flex items-center">
                     <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="p-0 hover:bg-transparent">
-                        Berlaku Sampai
+                        {t('dashboard.pages.adminCoupons.table.validUntil')}
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 </div>
@@ -125,12 +122,16 @@ export default function CouponsIndex({ coupons }: CouponsIndexProps) {
             header: 'Status',
             cell: ({ row }) => {
                 const active = row.getValue('active') as boolean;
-                return <Badge variant={active ? "default" : "outline"}>{active ? 'Aktif' : 'Nonaktif'}</Badge>;
+                return (
+                    <Badge variant={active ? 'default' : 'outline'}>
+                        {active ? t('dashboard.pages.adminCoupons.active') : t('dashboard.pages.adminCoupons.inactive')}
+                    </Badge>
+                );
             },
         },
         {
             id: 'actions',
-            header: 'Aksi',
+            header: t('dashboard.pages.adminCoupons.table.actions'),
             cell: ({ row }) => {
                 const coupon = row.original;
                 return (
@@ -210,15 +211,15 @@ export default function CouponsIndex({ coupons }: CouponsIndexProps) {
 
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
-            <Head title="Manajemen Kupon" />
+            <Head title={t('dashboard.pages.adminCoupons.headTitle')} />
 
             <div className="space-y-6 p-3 sm:p-6">
                 <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-                    <h1 className="text-2xl font-bold tracking-tight">Manajemen Kupon</h1>
+                    <h1 className="text-2xl font-bold tracking-tight">{t('dashboard.pages.adminCoupons.title')}</h1>
                     <Button asChild className="w-full sm:w-auto">
                         <Link href="/admin/coupons/create">
                             <PlusCircle className="mr-2 h-4 w-4" />
-                            Tambah Kupon
+                            {t('dashboard.pages.adminCoupons.add')}
                         </Link>
                     </Button>
                 </div>
@@ -232,7 +233,7 @@ export default function CouponsIndex({ coupons }: CouponsIndexProps) {
                                 <Search className="text-muted-foreground absolute top-2.5 left-2.5 h-4 w-4" />
                                 <Input
                                     type="search"
-                                    placeholder="Cari kupon..."
+                                    placeholder={t('dashboard.pages.adminCoupons.searchPlaceholder')}
                                     value={searchValue}
                                     onChange={(e) => setSearchValue(e.target.value)}
                                     className="w-full pl-8"
@@ -267,7 +268,7 @@ export default function CouponsIndex({ coupons }: CouponsIndexProps) {
                                     ) : (
                                         <TableRow>
                                             <TableCell colSpan={columns.length} className="h-24 text-center">
-                                                Tidak ada kupon ditemukan.
+                                                {t('dashboard.pages.adminCoupons.empty')}
                                             </TableCell>
                                         </TableRow>
                                     )}
@@ -328,7 +329,7 @@ export default function CouponsIndex({ coupons }: CouponsIndexProps) {
                                     <div className="flex items-center gap-1">
                                         <span className="text-sm">Halaman</span>
                                         <strong className="text-sm font-medium">
-                                            {table.getState().pagination.pageIndex + 1} dari {table.getPageCount()}
+                                            {table.getState().pagination.pageIndex + 1} {t('dashboard.pages.adminCoupons.pagination.of')} {table.getPageCount()}
                                         </strong>
                                     </div>
                                     <Button
@@ -373,15 +374,15 @@ export default function CouponsIndex({ coupons }: CouponsIndexProps) {
             <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Apakah Anda yakin?</AlertDialogTitle>
+                        <AlertDialogTitle>{t('dashboard.pages.adminCoupons.dialog.confirmTitle')}</AlertDialogTitle>
                         <AlertDialogDescription>
                             Tindakan ini tidak dapat dibatalkan. Ini akan menghapus kupon <span className="font-medium">{couponToDelete?.code}</span>{' '}
                             secara permanen dan menghapus datanya dari server.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel>Batal</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleDelete}>Hapus</AlertDialogAction>
+                        <AlertDialogCancel>{t('dashboard.pages.adminCoupons.dialog.cancel')}</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDelete}>{t('dashboard.pages.adminCoupons.dialog.delete')}</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

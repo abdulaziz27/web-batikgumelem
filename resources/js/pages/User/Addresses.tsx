@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
+import { useTranslation } from 'react-i18next';
 
 interface Address {
     id: number;
@@ -30,14 +31,15 @@ export default function Addresses({ addresses = [] }: AddressesProps) {
     const { auth, csrf_token } = usePage().props as any;
     const [open, setOpen] = useState(false);
     const [editingAddress, setEditingAddress] = useState<Address | null>(null);
+    const { t } = useTranslation();
 
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: 'Dashboard',
+            title: t('dashboard.nav.dashboard'),
             href: '/dashboard',
         },
         {
-            title: 'Alamat Pengiriman',
+            title: t('dashboard.pages.addresses.breadcrumbs'),
             href: '/addresses',
         },
     ];
@@ -54,14 +56,14 @@ export default function Addresses({ addresses = [] }: AddressesProps) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Alamat Pengiriman" />
+            <Head title={t('dashboard.pages.addresses.headTitle')} />
 
             <div className="space-y-6 p-6">
                 <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between md:space-y-0">
-                    <h1 className="text-2xl font-bold tracking-tight">Alamat Pengiriman</h1>
+                    <h1 className="text-2xl font-bold tracking-tight">{t('dashboard.pages.addresses.title')}</h1>
                     <Button onClick={handleNew}>
                         <Plus className="mr-2 h-4 w-4" />
-                        Tambah Alamat Baru
+                        {t('dashboard.pages.addresses.addNew')}
                     </Button>
                 </div>
 
@@ -73,7 +75,9 @@ export default function Addresses({ addresses = [] }: AddressesProps) {
                                     <div className="flex items-center justify-between">
                                         <CardTitle className="text-base font-medium">{address.full_name}</CardTitle>
                                         {address.is_default && (
-                                            <span className="bg-primary/10 text-primary rounded-full px-2 py-1 text-xs font-medium">Utama</span>
+                                            <span className="bg-primary/10 text-primary rounded-full px-2 py-1 text-xs font-medium">
+                                                {t('dashboard.pages.addresses.defaultBadge')}
+                                            </span>
                                         )}
                                     </div>
                                     <CardDescription>{address.phone}</CardDescription>
@@ -89,7 +93,7 @@ export default function Addresses({ addresses = [] }: AddressesProps) {
                                     <div className="mt-4 flex items-center justify-end space-x-2">
                                         <Button variant="outline" size="sm" onClick={() => handleEdit(address)}>
                                             <Pencil className="mr-2 h-3 w-3" />
-                                            Edit
+                                            {t('dashboard.pages.addresses.edit')}
                                         </Button>
                                         {!address.is_default && (
                                             <Link
@@ -99,7 +103,7 @@ export default function Addresses({ addresses = [] }: AddressesProps) {
                                                 className="border-input bg-background ring-offset-background hover:bg-destructive hover:text-destructive-foreground inline-flex h-8 items-center justify-center rounded-md border px-3 text-xs font-medium transition-colors"
                                             >
                                                 <Trash2 className="mr-2 h-3 w-3" />
-                                                Hapus
+                                                {t('dashboard.pages.addresses.delete')}
                                             </Link>
                                         )}
                                         {!address.is_default && (
@@ -109,7 +113,7 @@ export default function Addresses({ addresses = [] }: AddressesProps) {
                                                 as="button"
                                                 className="border-input bg-background ring-offset-background hover:bg-accent hover:text-accent-foreground inline-flex h-8 items-center justify-center rounded-md border px-3 text-xs font-medium transition-colors"
                                             >
-                                                Jadikan Utama
+                                                {t('dashboard.pages.addresses.setDefault')}
                                             </Link>
                                         )}
                                     </div>

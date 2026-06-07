@@ -9,6 +9,7 @@ import { type BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
 import { Save } from 'lucide-react';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface Blog {
     id: number;
@@ -28,6 +29,7 @@ interface BlogsEditProps {
 }
 
 export default function BlogsEdit({ blog }: BlogsEditProps) {
+    const { t } = useTranslation();
     const [title, setTitle] = useState(blog.title);
     const [excerpt, setExcerpt] = useState(blog.excerpt);
     const [content, setContent] = useState(blog.content);
@@ -40,15 +42,15 @@ export default function BlogsEdit({ blog }: BlogsEditProps) {
     // Create breadcrumbs
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: 'Dasbor',
+            title: t('dashboard.nav.adminDashboard'),
             href: '/admin/dashboard',
         },
         {
-            title: 'Blog',
+            title: t('dashboard.nav.adminBlogs'),
             href: '/admin/blogs',
         },
         {
-            title: 'Edit',
+            title: t('dashboard.pages.adminBlogEdit.title'),
             href: `/admin/blogs/${blog.id}/edit`,
         },
     ];
@@ -98,38 +100,38 @@ export default function BlogsEdit({ blog }: BlogsEditProps) {
 
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
-            <Head title={`Edit Artikel: ${blog.title}`} />
+            <Head title={t('dashboard.pages.adminBlogEdit.headTitleFmt', { title: blog.title })} />
 
             <div className="space-y-6 p-3 sm:p-6">
                 <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-                    <h1 className="text-2xl font-bold tracking-tight">Edit Artikel</h1>
+                    <h1 className="text-2xl font-bold tracking-tight">{t('dashboard.pages.adminBlogEdit.title')}</h1>
                 </div>
 
                 <Card>
                     <form onSubmit={handleSubmit}>
                         <CardHeader>
-                            <CardTitle>Detail Artikel</CardTitle>
+                            <CardTitle>{t('dashboard.pages.adminBlogCreate.cardTitle')}</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="grid gap-4 sm:grid-cols-2">
                                 <div className="space-y-2">
-                                    <Label htmlFor="title">Judul</Label>
+                                    <Label htmlFor="title">{t('dashboard.pages.adminBlogCreate.fieldTitle')}</Label>
                                     <Input
                                         id="title"
                                         value={title}
                                         onChange={(e) => setTitle(e.target.value)}
-                                        placeholder="Judul Artikel"
+                                        placeholder={t('dashboard.pages.adminBlogCreate.titlePlaceholder')}
                                         required
                                     />
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="category">Kategori</Label>
+                                    <Label htmlFor="category">{t('dashboard.pages.adminBlogCreate.fieldCategory')}</Label>
                                     <Input
                                         id="category"
                                         value={category}
                                         onChange={(e) => setCategory(e.target.value)}
-                                        placeholder="Kategori"
+                                        placeholder={t('dashboard.pages.adminBlogCreate.categoryPlaceholder')}
                                         required
                                     />
                                 </div>
@@ -137,51 +139,55 @@ export default function BlogsEdit({ blog }: BlogsEditProps) {
 
                             <div className="grid gap-4 sm:grid-cols-2">
                                 <div className="space-y-2">
-                                    <Label htmlFor="author">Penulis</Label>
+                                    <Label htmlFor="author">{t('dashboard.pages.adminBlogCreate.fieldAuthor')}</Label>
                                     <Input
                                         id="author"
                                         value={author}
                                         onChange={(e) => setAuthor(e.target.value)}
-                                        placeholder="Nama Penulis"
+                                        placeholder={t('dashboard.pages.adminBlogCreate.authorPlaceholder')}
                                         required
                                     />
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="image">Gambar Artikel</Label>
+                                    <Label htmlFor="image">{t('dashboard.pages.adminBlogCreate.fieldImage')}</Label>
                                     <Input id="image" type="file" onChange={handleImageChange} accept="image/*" />
                                     {imagePreview && (
                                         <div className="mt-2">
-                                            <img src={imagePreview} alt="Pratinjau" className="h-40 rounded-md object-cover" />
+                                            <img
+                                                src={imagePreview}
+                                                alt={t('dashboard.pages.adminBlogCreate.previewAlt')}
+                                                className="h-40 rounded-md object-cover"
+                                            />
                                         </div>
                                     )}
                                 </div>
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="excerpt">Ringkasan</Label>
+                                <Label htmlFor="excerpt">{t('dashboard.pages.adminBlogCreate.fieldExcerpt')}</Label>
                                 <Textarea
                                     id="excerpt"
                                     value={excerpt}
                                     onChange={(e) => setExcerpt(e.target.value)}
-                                    placeholder="Deskripsi singkat untuk artikel"
+                                    placeholder={t('dashboard.pages.adminBlogCreate.excerptPlaceholder')}
                                     rows={3}
                                     required
                                 />
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="content">Konten</Label>
+                                <Label htmlFor="content">{t('dashboard.pages.adminBlogCreate.fieldContent')}</Label>
                                 <RichTextEditor content={content} onChange={setContent} />
                             </div>
                         </CardContent>
                         <CardFooter className="flex justify-end space-x-2 border-t px-6 py-4">
                             <Button type="button" variant="outline" onClick={() => router.visit('/admin/blogs')} disabled={submitting}>
-                                Batal
+                                {t('dashboard.pages.adminBlogEdit.cancel')}
                             </Button>
                             <Button type="submit" disabled={submitting}>
                                 <Save className="mr-2 h-4 w-4" />
-                                Simpan Perubahan
+                                {submitting ? t('dashboard.pages.adminBlogEdit.saving') : t('dashboard.pages.adminBlogEdit.save')}
                             </Button>
                         </CardFooter>
                     </form>

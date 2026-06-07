@@ -9,25 +9,25 @@ use Inertia\Inertia;
 class ProductController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Menampilkan daftar produk dengan fitur pencarian, filter harga, dan sorting.
      */
     public function index(Request $request)
     {
         $query = Product::query()->with(['images', 'sizes']);
 
-        // Handle search
+        // Fitur pencarian produk
         if ($request->has('search')) {
             $search = $request->input('search');
             $query->where('name', 'like', "%{$search}%")
                 ->orWhere('description', 'like', "%{$search}%");
         }
 
-        // Handle price filtering
+        // Fitur filter harga
         if ($request->has('min_price') && $request->has('max_price')) {
             $query->whereBetween('price', [$request->input('min_price'), $request->input('max_price')]);
         }
 
-        // Handle sorting
+        // Fitur sorting
         if ($request->has('sort')) {
             switch ($request->input('sort')) {
                 case 'price_asc':
@@ -50,17 +50,15 @@ class ProductController extends Controller
         }
 
         $products = $query->paginate(15)->through(function ($product) {
-            // Transform the product to include proper image URL
+            // Tambahkan URL gambar utama
             $product->image = $product->image ? asset('storage/' . $product->image) : null;
-            
-            // Transform product images if they exist
+            // Transformasi gambar produk jika ada
             if ($product->images) {
                 $product->images->transform(function ($image) {
                     $image->image = asset('storage/' . $image->image);
                     return $image;
                 });
             }
-            
             return $product;
         })->withQueryString();
 
@@ -87,7 +85,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Menampilkan detail produk berdasarkan slug.
      */
     public function show($slug)
     {
@@ -95,15 +93,15 @@ class ProductController extends Controller
             ->with(['images', 'sizes'])
             ->firstOrFail();
 
-        // Add image_url to main product
+        // Tambahkan URL gambar utama
         $product->image = $product->image ? asset('storage/' . $product->image) : null;
-        
-        // Add image_url to all images
+        // Tambahkan URL ke semua gambar
         $product->images->transform(function ($image) {
             $image->image = asset('storage/' . $image->image);
             return $image;
         });
 
+        // Ambil 3 produk terkait secara acak
         $relatedProducts = Product::where('id', '!=', $product->id)
             ->with('sizes')
             ->inRandomOrder()

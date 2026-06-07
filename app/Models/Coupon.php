@@ -22,11 +22,17 @@ class Coupon extends Model
         'valid_until' => 'date',
     ];
 
+    /**
+     * Relasi ke semua order yang menggunakan kupon ini.
+     */
     public function orders()
     {
         return $this->hasMany(Order::class);
     }
 
+    /**
+     * Mengecek apakah kupon masih aktif dan dalam rentang tanggal berlaku.
+     */
     public function isValid()
     {
         $now = now();

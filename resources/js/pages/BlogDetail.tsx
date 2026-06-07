@@ -2,6 +2,8 @@ import Layout from '@/components/layout/Layout';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { Link, usePage } from '@inertiajs/react';
 import { Calendar, Tag, User } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { formatDate } from '@/utils/formatters';
 
 // Define the Blog interface
 interface Blog {
@@ -24,7 +26,9 @@ interface BlogDetailProps {
 
 const BlogDetail = () => {
     // Get the blog and related blogs from the page props
-    const { blog, relatedBlogs } = usePage().props as unknown as BlogDetailProps;
+    const { blog, relatedBlogs, locale } = usePage().props as unknown as BlogDetailProps & { locale?: string };
+    const { t } = useTranslation();
+    const lang = locale === 'en' ? 'en' : 'id';
 
     return (
         <Layout>
@@ -33,11 +37,11 @@ const BlogDetail = () => {
                 <Breadcrumb className="mb-8">
                     <BreadcrumbList>
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="/">Beranda</BreadcrumbLink>
+                            <BreadcrumbLink href="/">{t('blog.breadcrumbsHome')}</BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="/blog">Blog</BreadcrumbLink>
+                            <BreadcrumbLink href="/blog">{t('blog.breadcrumbsBlog')}</BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
@@ -57,7 +61,7 @@ const BlogDetail = () => {
                         >
                             <div className="flex items-center">
                                 <Calendar className="mr-1 h-4 w-4" />
-                                <span>{new Date(blog.created_at).toLocaleDateString('id-ID')}</span>
+                                <span>{formatDate(blog.created_at, lang)}</span>
                             </div>
                             <div className="flex items-center">
                                 <User className="mr-1 h-4 w-4" />
@@ -91,7 +95,7 @@ const BlogDetail = () => {
                     {/* Related posts */}
                     {relatedBlogs.length > 0 && (
                         <div className="animate-fade-in mt-16 border-t border-gray-200 pt-8" style={{ animationDelay: '400ms' }}>
-                            <h2 className="text-batik-brown mb-6 text-2xl font-bold">Artikel Terkait</h2>
+                            <h2 className="text-batik-brown mb-6 text-2xl font-bold">{t('blog.related')}</h2>
                             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                                 {relatedBlogs.map((related) => (
                                     <Link key={related.id} href={`/blog/${related.slug}`} className="group product-card hover-lift animate-fade-in overflow-hidden">
@@ -108,14 +112,16 @@ const BlogDetail = () => {
                                                     {related.category}
                                                 </span>
                                                 <span className="text-sm text-gray-500">
-                                                    {new Date(related.created_at).toLocaleDateString('id-ID')}
+                                                    {formatDate(related.created_at, lang)}
                                                 </span>
                                             </div>
                                             <h3 className="text-batik-brown group-hover:text-batik-indigo text-lg font-semibold transition-colors duration-300">
                                                 {related.title}
                                             </h3>
                                             <p className="mt-2 line-clamp-2 text-sm text-gray-600">{related.excerpt}</p>
-                                            <div className="mt-3 text-xs text-gray-700">Oleh {related.author}</div>
+                                            <div className="mt-3 text-xs text-gray-700">
+                                                {t('blog.by')} {related.author}
+                                            </div>
                                         </div>
                                     </Link>
                                 ))}

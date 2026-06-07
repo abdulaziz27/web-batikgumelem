@@ -11,11 +11,12 @@ use Inertia\Inertia;
 
 class BlogController extends Controller
 {
+    // Menampilkan daftar blog
     public function index(Request $request)
     {
         $blogs = Blog::query()->latest()->get();
 
-        // Get unique categories for the filter
+        // Mengambil kategori unik untuk filter
         $categories = Blog::select('category')->distinct()->pluck('category');
 
         return Inertia::render('Admin/Blogs/Index', [
@@ -24,13 +25,16 @@ class BlogController extends Controller
         ]);
     }
 
+    // Menampilkan form tambah blog
     public function create()
     {
         return Inertia::render('Admin/Blogs/Create');
     }
 
+    // Menyimpan blog baru ke database
     public function store(Request $request)
     {
+        // Validasi input
         $request->validate([
             'title' => 'required|string|max:255',
             'excerpt' => 'required|string|max:500',
@@ -40,21 +44,23 @@ class BlogController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+        // Membuat slug unik dari judul
         $slug = Str::slug($request->title);
         $originalSlug = $slug;
         $count = 1;
 
-        // Ensure unique slug
+        // Pastikan slug unik
         while (Blog::where('slug', $slug)->exists()) {
             $slug = $originalSlug . '-' . $count++;
         }
 
-        // Store image
+        // Simpan gambar
         $imagePath = null;
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('blogs', 'public');
         }
 
+        // Simpan data blog
         Blog::create([
             'title' => $request->title,
             'slug' => $slug,
@@ -69,6 +75,7 @@ class BlogController extends Controller
             ->with('success', 'Blog post created successfully');
     }
 
+    // Menampilkan detail blog
     public function show($id)
     {
         $blog = Blog::findOrFail($id);
@@ -78,6 +85,7 @@ class BlogController extends Controller
         ]);
     }
 
+    // Menampilkan form edit blog
     public function edit($id)
     {
         $blog = Blog::findOrFail($id);
@@ -87,8 +95,10 @@ class BlogController extends Controller
         ]);
     }
 
+    // Update data blog
     public function update(Request $request, $id)
     {
+        // Validasi input
         $request->validate([
             'title' => 'required|string|max:255',
             'excerpt' => 'required|string|max:500',
@@ -100,13 +110,13 @@ class BlogController extends Controller
 
         $blog = Blog::findOrFail($id);
 
-        // Update slug if title has changed
+        // Update slug jika judul berubah
         if ($blog->title !== $request->title) {
             $slug = Str::slug($request->title);
             $originalSlug = $slug;
             $count = 1;
 
-            // Ensure unique slug
+            // Pastikan slug unik
             while (Blog::where('slug', $slug)->where('id', '!=', $id)->exists()) {
                 $slug = $originalSlug . '-' . $count++;
             }
@@ -114,9 +124,9 @@ class BlogController extends Controller
             $blog->slug = $slug;
         }
 
-        // Update image if provided
+        // Update gambar jika ada
         if ($request->hasFile('image')) {
-            // Delete old image
+            // Hapus gambar lama
             if ($blog->image && Storage::disk('public')->exists($blog->image)) {
                 Storage::disk('public')->delete($blog->image);
             }
@@ -125,6 +135,7 @@ class BlogController extends Controller
             $blog->image = $imagePath;
         }
 
+        // Update data blog
         $blog->title = $request->title;
         $blog->excerpt = $request->excerpt;
         $blog->content = $request->content;
@@ -136,11 +147,12 @@ class BlogController extends Controller
             ->with('success', 'Blog post updated successfully');
     }
 
+    // Menghapus blog
     public function destroy($id)
     {
         $blog = Blog::findOrFail($id);
 
-        // Delete image
+        // Hapus gambar jika ada
         if ($blog->image && Storage::disk('public')->exists($blog->image)) {
             Storage::disk('public')->delete($blog->image);
         }

@@ -9,6 +9,7 @@ use Inertia\Inertia;
 
 class CouponController extends Controller
 {
+    // Menampilkan daftar kupon
     public function index()
     {
         $coupons = Coupon::latest()->paginate(10);
@@ -18,13 +19,16 @@ class CouponController extends Controller
         ]);
     }
 
+    // Menampilkan form tambah kupon
     public function create()
     {
         return Inertia::render('Admin/Coupons/Create');
     }
 
+    // Menyimpan kupon baru ke database
     public function store(Request $request)
     {
+        // Validasi input
         $request->validate([
             'code' => 'required|string|unique:coupons,code',
             'discount_percent' => 'required|numeric|min:1|max:100',
@@ -34,12 +38,14 @@ class CouponController extends Controller
             'description' => 'nullable|string'
         ]);
 
+        // Simpan data kupon
         Coupon::create($request->all());
 
         return redirect()->route('admin.coupons.index')
             ->with('success', 'Kupon berhasil dibuat');
     }
 
+    // Menampilkan form edit kupon
     public function edit(Coupon $coupon)
     {
         return Inertia::render('Admin/Coupons/Edit', [
@@ -47,8 +53,10 @@ class CouponController extends Controller
         ]);
     }
 
+    // Update data kupon
     public function update(Request $request, Coupon $coupon)
     {
+        // Validasi input
         $request->validate([
             'code' => 'required|string|unique:coupons,code,' . $coupon->id,
             'discount_percent' => 'required|numeric|min:1|max:100',
@@ -58,12 +66,14 @@ class CouponController extends Controller
             'description' => 'nullable|string'
         ]);
 
+        // Update data kupon
         $coupon->update($request->all());
 
         return redirect()->route('admin.coupons.index')
             ->with('success', 'Kupon berhasil diperbarui');
     }
 
+    // Menghapus kupon
     public function destroy(Coupon $coupon)
     {
         $coupon->delete();

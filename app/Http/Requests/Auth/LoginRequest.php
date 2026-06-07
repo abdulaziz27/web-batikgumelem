@@ -12,7 +12,8 @@ use Illuminate\Validation\ValidationException;
 class LoginRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Menentukan apakah user boleh melakukan request ini.
+     * Di sini selalu true (siapapun boleh mencoba login).
      */
     public function authorize(): bool
     {
@@ -20,9 +21,7 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * Aturan validasi untuk request login.
      */
     public function rules(): array
     {
@@ -33,9 +32,8 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Attempt to authenticate the request's credentials.
-     *
-     * @throws \Illuminate\Validation\ValidationException
+     * Mencoba melakukan autentikasi dengan kredensial yang diberikan.
+     * Jika gagal, akan menambah hit rate limiter dan melempar error.
      */
     public function authenticate(): void
     {
@@ -53,9 +51,8 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Ensure the login request is not rate limited.
-     *
-     * @throws \Illuminate\Validation\ValidationException
+     * Memastikan request login tidak melebihi batas percobaan (rate limit).
+     * Jika terlalu banyak percobaan gagal, user akan dikunci sementara.
      */
     public function ensureIsNotRateLimited(): void
     {
@@ -76,13 +73,16 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Get the rate limiting throttle key for the request.
+     * Membuat key unik untuk rate limiter berdasarkan email dan IP user.
      */
     public function throttleKey(): string
     {
         return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
     }
 
+    /**
+     * Pesan validasi custom untuk login.
+     */
     public function messages()
     {
         return [

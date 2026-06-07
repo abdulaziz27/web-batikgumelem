@@ -10,12 +10,13 @@ use Carbon\Carbon;
 
 class OrderController extends Controller
 {
+    // Menampilkan daftar pesanan beserta data user dan alamat pengiriman
     public function index(Request $request)
     {
-        // Get all orders with user and shipping address data
+        // Mengambil semua pesanan beserta relasi user dan shipping address
         $orders = Order::with(['user', 'shippingAddress'])->latest()->get();
 
-        // Get count by status for summary
+        // Menghitung jumlah pesanan berdasarkan status
         $statusCounts = [
             'all' => Order::count(),
             'pending' => Order::where('status', 'pending')->count(),
@@ -31,6 +32,7 @@ class OrderController extends Controller
         ]);
     }
 
+    // Menampilkan detail pesanan
     public function show($id)
     {
         $order = Order::with([
@@ -40,7 +42,7 @@ class OrderController extends Controller
             'coupon'
         ])->findOrFail($id);
 
-        // Generate tracking timeline
+        // Membuat data timeline tracking pesanan
         $timeline = $this->generateOrderTimeline($order);
 
         return Inertia::render('Admin/Orders/Show', [
@@ -49,17 +51,19 @@ class OrderController extends Controller
         ]);
     }
     
+    // Edit pesanan (redirect ke halaman detail)
     public function edit($id)
     {
-        // Redirect to show page for simplicity
+        // Redirect ke halaman show agar lebih sederhana
         return redirect()->route('admin.orders.show', $id);
     }
 
+    // Update data pesanan
     public function update(Request $request, $id)
     {
         $order = Order::findOrFail($id);
         
-        // Validasi perubahan status
+        // Validasi perubahan status dan data tracking
         $request->validate([
             'status' => 'required|in:pending,processing,shipped,completed,cancelled',
             'tracking_number' => 'nullable|string',
@@ -67,12 +71,12 @@ class OrderController extends Controller
             'notes' => 'nullable|string'
         ]);
 
-        // Validasi logika status
+        // Cek logika status: pesanan yang sudah dibayar tidak bisa dibatalkan
         if ($request->status === 'cancelled' && $order->payment_status === 'paid') {
             return back()->with('error', 'Pesanan yang sudah dibayar tidak dapat dibatalkan');
         }
 
-        // Update order
+        // Update data pesanan
         $order->update([
             'status' => $request->status,
             'tracking_number' => $request->tracking_number ?: null,
@@ -83,11 +87,12 @@ class OrderController extends Controller
         return back()->with('success', 'Pesanan berhasil diupdate');
     }
 
+    // Menghapus pesanan (hanya jika status cancelled)
     public function destroy($id)
     {
         $order = Order::findOrFail($id);
 
-        // Only allow deletion of cancelled orders
+        // Hanya pesanan yang dibatalkan yang boleh dihapus
         if ($order->status !== 'cancelled') {
             return redirect()->back()->with('error', 'Hanya pesanan yang dibatalkan yang dapat dihapus');
         }
@@ -99,13 +104,13 @@ class OrderController extends Controller
     }
     
     /**
-     * Generate timeline data for order tracking
+     * Membuat data timeline untuk tracking pesanan
      */
     private function generateOrderTimeline($order)
     {
         $timeline = [];
         
-        // Add creation event
+        // Event pesanan dibuat
         $timeline[] = [
             'date' => $order->created_at->format('Y-m-d H:i:s'),
             'status' => 'Pesanan Dibuat',
@@ -113,7 +118,7 @@ class OrderController extends Controller
             'icon' => 'ShoppingCart'
         ];
         
-        // Add payment event if payment exists
+        // Event pembayaran jika sudah dibayar
         if ($order->payment_status === 'paid') {
             $timeline[] = [
                 'date' => $order->updated_at->format('Y-m-d H:i:s'),
@@ -123,7 +128,7 @@ class OrderController extends Controller
             ];
         }
         
-        // Add status update if status is not pending
+        // Event perubahan status jika bukan pending
         if ($order->status !== 'pending') {
             $icon = 'CircleCheck';
             $statusText = '';
@@ -155,7 +160,7 @@ class OrderController extends Controller
             ];
         }
         
-        // Sort timeline by date
+        // Urutkan timeline berdasarkan tanggal
         usort($timeline, function ($a, $b) {
             return strtotime($a['date']) - strtotime($b['date']);
         });

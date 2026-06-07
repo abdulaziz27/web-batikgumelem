@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Mail;
 class SendOrderStatusUpdateNotification implements ShouldQueue
 {
     /**
-     * Handle the event.
+     * Menangani event OrderStatusChanged untuk mengirim notifikasi email ke user jika status order berubah.
      */
     public function handle(OrderStatusChanged $event): void
     {

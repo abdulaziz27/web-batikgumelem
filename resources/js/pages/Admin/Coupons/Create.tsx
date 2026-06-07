@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useForm } from '@inertiajs/react';
 import { Switch } from '@/components/ui/switch';
+import { useTranslation } from 'react-i18next';
 
 interface CouponFormData {
     [key: string]: string | number | boolean | undefined;
@@ -16,6 +17,7 @@ interface CouponFormData {
 }
 
 const CreateCoupon = () => {
+    const { t } = useTranslation();
     const { data, setData, post, processing, errors } = useForm<CouponFormData>({
         code: '',
         discount_percent: '',
@@ -34,24 +36,24 @@ const CreateCoupon = () => {
             <div className="container mx-auto py-6">
                 <Card>
                     <CardHeader>
-                        <CardTitle>Tambah Kupon Baru</CardTitle>
-                        <CardDescription>Buat kupon diskon baru untuk pelanggan</CardDescription>
+                        <CardTitle>{t('dashboard.pages.adminCouponCreate.title')}</CardTitle>
+                        <CardDescription>{t('dashboard.pages.adminCouponCreate.desc')}</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div className="space-y-2">
-                                <Label htmlFor="code">Kode Kupon</Label>
+                                <Label htmlFor="code">{t('dashboard.pages.adminCouponCreate.code')}</Label>
                                 <Input
                                     id="code"
                                     value={data.code}
                                     onChange={e => setData('code', e.target.value)}
-                                    placeholder="Contoh: SUMMER2024"
+                                    placeholder={t('dashboard.pages.adminCouponCreate.codePlaceholder')}
                                 />
                                 {errors.code && <p className="text-sm text-red-600">{errors.code}</p>}
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="discount_percent">Persentase Diskon</Label>
+                                <Label htmlFor="discount_percent">{t('dashboard.pages.adminCouponCreate.discountPercent')}</Label>
                                 <Input
                                     id="discount_percent"
                                     type="number"
@@ -59,14 +61,14 @@ const CreateCoupon = () => {
                                     max="100"
                                     value={data.discount_percent}
                                     onChange={e => setData('discount_percent', e.target.value)}
-                                    placeholder="10"
+                                    placeholder={t('dashboard.pages.adminCouponCreate.discountPlaceholder')}
                                 />
                                 {errors.discount_percent && <p className="text-sm text-red-600">{errors.discount_percent}</p>}
                             </div>
 
                             <div className="grid gap-4 md:grid-cols-2">
                                 <div className="space-y-2">
-                                    <Label htmlFor="valid_from">Berlaku Dari</Label>
+                                    <Label htmlFor="valid_from">{t('dashboard.pages.adminCouponCreate.validFrom')}</Label>
                                     <Input
                                         id="valid_from"
                                         type="date"
@@ -77,7 +79,7 @@ const CreateCoupon = () => {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="valid_until">Berlaku Sampai</Label>
+                                    <Label htmlFor="valid_until">{t('dashboard.pages.adminCouponCreate.validUntil')}</Label>
                                     <Input
                                         id="valid_until"
                                         type="date"
@@ -94,13 +96,13 @@ const CreateCoupon = () => {
                                     checked={data.active}
                                     onCheckedChange={(checked: boolean) => setData('active', checked)}
                                 />
-                                <Label htmlFor="active">Aktif</Label>
+                                <Label htmlFor="active">{t('dashboard.pages.adminCouponCreate.active')}</Label>
                                 {errors.active && <p className="text-sm text-red-600">{errors.active}</p>}
                             </div>
 
                             <div className="flex justify-end">
                                 <Button type="submit" disabled={processing}>
-                                    {processing ? 'Menyimpan...' : 'Simpan Kupon'}
+                                    {processing ? t('dashboard.pages.adminCouponCreate.saving') : t('dashboard.pages.adminCouponCreate.save')}
                                 </Button>
                             </div>
                         </form>

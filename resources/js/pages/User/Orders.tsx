@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { formatRupiah } from '@/utils/formatters';
+import { useTranslation } from 'react-i18next';
 
 // Add Midtrans global window type definition
 declare global {
@@ -14,17 +15,6 @@ declare global {
         snap?: any;
     }
 }
-
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Dashboard',
-        href: '/dashboard',
-    },
-    {
-        title: 'Pesanan Saya',
-        href: '/orders',
-    },
-];
 
 interface OrderItem {
     id: number;
@@ -70,6 +60,12 @@ export default function Orders({ orders, midtrans_client_key, is_production }: O
     const { auth } = usePage().props as any;
     const [paymentTokens, setPaymentTokens] = useState<Record<number, string>>({});
     const [loadingOrder, setLoadingOrder] = useState<number | null>(null);
+    const { t } = useTranslation();
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: t('dashboard.nav.dashboard'), href: '/dashboard' },
+        { title: t('dashboard.pages.orders.breadcrumbs'), href: '/orders' },
+    ];
 
     // Load Snap.js script
     useEffect(() => {
@@ -249,15 +245,15 @@ export default function Orders({ orders, midtrans_client_key, is_production }: O
     const getStatusLabel = (status: string): string => {
         switch (status.toLowerCase()) {
             case 'pending':
-                return 'Menunggu';
+                return t('dashboard.pages.orders.status.pending');
             case 'processing':
-                return 'Diproses';
+                return t('dashboard.pages.orders.status.processing');
             case 'shipped':
-                return 'Dikirim';
+                return t('dashboard.pages.orders.status.shipped');
             case 'completed':
-                return 'Selesai';
+                return t('dashboard.pages.orders.status.completed');
             case 'cancelled':
-                return 'Dibatalkan';
+                return t('dashboard.pages.orders.status.cancelled');
             default:
                 return status;
         }
@@ -265,21 +261,21 @@ export default function Orders({ orders, midtrans_client_key, is_production }: O
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Pesanan Saya" />
+            <Head title={t('dashboard.pages.orders.headTitle')} />
 
             <div className="space-y-6 p-6">
                 <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between md:space-y-0">
-                    <h1 className="text-2xl font-bold tracking-tight">Pesanan Saya</h1>
+                    <h1 className="text-2xl font-bold tracking-tight">{t('dashboard.pages.orders.title')}</h1>
                     <div className="flex items-center space-x-2">
                         <Button asChild variant="outline">
-                            <Link href="/dashboard">Kembali ke Dashboard</Link>
+                            <Link href="/dashboard">{t('dashboard.pages.orders.backToDashboard')}</Link>
                         </Button>
                     </div>
                 </div>
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>Riwayat Pesanan</CardTitle>
+                        <CardTitle>{t('dashboard.pages.orders.historyTitle')}</CardTitle>
                     </CardHeader>
                     <CardContent>
                         {orders.data.length > 0 ? (
@@ -288,7 +284,9 @@ export default function Orders({ orders, midtrans_client_key, is_production }: O
                                     <div key={order.id} className="rounded-lg border p-4">
                                         <div className="flex flex-col space-y-3 md:flex-row md:items-center md:justify-between md:space-y-0">
                                             <div className="space-y-1">
-                                                <div className="font-medium">Pesanan #{order.order_number}</div>
+                                                <div className="font-medium">
+                                                    {t('dashboard.pages.orders.orderNumberFmt', { number: order.order_number })}
+                                                </div>
                                                 <div className="text-muted-foreground text-sm">{formatDate(order.created_at)}</div>
                                                 <div className="flex items-center space-x-2">
                                                     <div

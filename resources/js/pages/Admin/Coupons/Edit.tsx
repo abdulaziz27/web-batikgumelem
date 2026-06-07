@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useForm } from '@inertiajs/react';
 import { Switch } from '@/components/ui/switch';
+import { useTranslation } from 'react-i18next';
 
 interface Coupon {
     id: number;
@@ -29,6 +30,7 @@ interface CouponFormData {
 }
 
 const EditCoupon = ({ coupon }: Props) => {
+    const { t } = useTranslation();
     const { data, setData, put, processing, errors } = useForm<CouponFormData>({
         code: coupon.code,
         discount_percent: coupon.discount_percent.toString(),
@@ -47,8 +49,8 @@ const EditCoupon = ({ coupon }: Props) => {
             <div className="container mx-auto py-6">
                 <Card>
                     <CardHeader>
-                        <CardTitle>Edit Kupon</CardTitle>
-                        <CardDescription>Ubah detail kupon diskon</CardDescription>
+                        <CardTitle>{t('dashboard.pages.adminCouponEdit.title')}</CardTitle>
+                        <CardDescription>{t('dashboard.pages.adminCouponEdit.desc')}</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleSubmit} className="space-y-6">
@@ -113,7 +115,7 @@ const EditCoupon = ({ coupon }: Props) => {
 
                             <div className="flex justify-end">
                                 <Button type="submit" disabled={processing}>
-                                    {processing ? 'Menyimpan...' : 'Simpan Perubahan'}
+                                    {processing ? t('dashboard.pages.adminCouponEdit.saving') : t('dashboard.pages.adminCouponEdit.save')}
                                 </Button>
                             </div>
                         </form>

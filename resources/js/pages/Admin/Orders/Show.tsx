@@ -12,6 +12,7 @@ import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, Table
 import { Textarea } from '@/components/ui/textarea';
 import AdminLayout from '@/layouts/admin-layout';
 import { type BreadcrumbItem } from '@/types';
+import { useTranslation } from 'react-i18next';
 
 interface ShippingAddress {
     id: number;
@@ -93,22 +94,13 @@ type StatusTransitions = {
     [K in OrderStatus]: OrderStatus[];
 };
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Dasbor',
-        href: '/admin/dashboard',
-    },
-    {
-        title: 'Pesanan',
-        href: '/admin/orders',
-    },
-    {
-        title: 'Detail Pesanan',
-        href: '#',
-    },
-];
-
 export default function OrderShow({ order, timeline }: OrderShowProps) {
+    const { t } = useTranslation();
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: t('dashboard.nav.adminDashboard'), href: '/admin/dashboard' },
+        { title: t('dashboard.nav.adminOrders'), href: '/admin/orders' },
+        { title: t('dashboard.pages.adminOrderShow.titleFmt', { order: order.order_number || `#${order.id}` }), href: '#' },
+    ];
     const [orderStatus, setOrderStatus] = useState<OrderStatus>(order.status);
     const [trackingNumber, setTrackingNumber] = useState(order.tracking_number || '');
     const [trackingUrl, setTrackingUrl] = useState(order.tracking_url || '');
@@ -272,15 +264,15 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
     const getStatusLabel = (status: OrderStatus): string => {
         switch (status) {
             case 'pending':
-                return 'Menunggu';
+                return t('dashboard.pages.adminOrderShow.statusLabel.pending');
             case 'processing':
-                return 'Diproses';
+                return t('dashboard.pages.adminOrderShow.statusLabel.processing');
             case 'shipped':
-                return 'Dikirim';
+                return t('dashboard.pages.adminOrderShow.statusLabel.shipped');
             case 'completed':
-                return 'Selesai';
+                return t('dashboard.pages.adminOrderShow.statusLabel.completed');
             case 'cancelled':
-                return 'Dibatalkan';
+                return t('dashboard.pages.adminOrderShow.statusLabel.cancelled');
             default:
                 return status;
         }
@@ -292,7 +284,7 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
 
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
-            <Head title={`Pesanan #${order.order_number || order.id}`} />
+            <Head title={t('dashboard.pages.adminOrderShow.headTitleFmt', { order: order.order_number || `#${order.id}` })} />
 
             <div className="space-y-6 p-3 sm:p-6">
                 <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center sm:gap-4">
@@ -303,14 +295,19 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
                             </a>
                         </Button>
                         <div>
-                            <h1 className="text-2xl font-bold tracking-tight">Pesanan {order.order_number || `#${order.id}`}</h1>
-                            <p className="text-muted-foreground text-sm">Dibuat pada {formatDate(order.created_at)}</p>
+                            <h1 className="text-2xl font-bold tracking-tight">
+                                {t('dashboard.pages.adminOrderShow.titleFmt', { order: order.order_number || `#${order.id}` })}
+                            </h1>
+                            <p className="text-muted-foreground text-sm">
+                                {t('dashboard.pages.adminOrderShow.createdAt')}: {formatDate(order.created_at)}
+                            </p>
                         </div>
                     </div>
                     <div className="mt-3 flex items-center gap-3 sm:mt-0">
                         <Badge variant={getStatusBadgeVariant(order.status)}>{getStatusLabel(order.status)}</Badge>
                         <Badge variant={order.payment_status === 'paid' ? 'default' : 'secondary'}>
-                            Pembayaran: {order.payment_status === 'paid' ? 'Dibayar' : order.payment_status === 'pending' ? 'Menunggu' : 'Gagal'}
+                            {t('dashboard.pages.adminOrderShow.payment')}:{' '}
+                            {t(`dashboard.pages.adminOrderShow.paymentLabel.${order.payment_status}`, { defaultValue: order.payment_status })}
                         </Badge>
                     </div>
                 </div>
@@ -320,16 +317,16 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
                         {/* Order Items */}
                         <Card>
                             <CardHeader>
-                                <CardTitle>Detail Produk</CardTitle>
+                                <CardTitle>{t('dashboard.pages.adminOrderShow.items')}</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <Table>
                                     <TableHeader>
                                         <TableRow>
-                                            <TableHead>Produk</TableHead>
-                                            <TableHead className="text-right">Harga</TableHead>
-                                            <TableHead className="text-center">Jumlah</TableHead>
-                                            <TableHead className="text-right">Total</TableHead>
+                                            <TableHead>{t('dashboard.pages.adminOrderShow.product')}</TableHead>
+                                            <TableHead className="text-right">{t('dashboard.pages.adminOrderShow.price')}</TableHead>
+                                            <TableHead className="text-center">{t('dashboard.pages.adminOrderShow.qty')}</TableHead>
+                                            <TableHead className="text-right">{t('dashboard.pages.adminOrderShow.total')}</TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
@@ -344,16 +341,16 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
                                     </TableBody>
                                     <TableFooter>
                                         <TableRow>
-                                            <TableCell colSpan={3}>Subtotal</TableCell>
+                                            <TableCell colSpan={3}>{t('dashboard.pages.adminOrderShow.subtotal')}</TableCell>
                                             <TableCell className="text-right">{formatPrice(subtotal)}</TableCell>
                                         </TableRow>
                                         <TableRow>
-                                            <TableCell colSpan={3}>Biaya Pengiriman</TableCell>
+                                            <TableCell colSpan={3}>{t('dashboard.pages.adminOrderShow.shipping')}</TableCell>
                                             <TableCell className="text-right">{formatPrice(order.shipping_cost)}</TableCell>
                                         </TableRow>
                                         <TableRow>
                                             <TableCell colSpan={3} className="font-bold">
-                                                Total
+                                                {t('dashboard.pages.adminOrderShow.total')}
                                             </TableCell>
                                             <TableCell className="text-right font-bold">{formatPrice(orderTotal)}</TableCell>
                                         </TableRow>
@@ -365,21 +362,23 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
                         {/* Customer Information */}
                         <Card>
                             <CardHeader>
-                                <CardTitle>Informasi Pelanggan</CardTitle>
+                                <CardTitle>{t('dashboard.pages.adminOrderShow.customer')}</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <div className="grid gap-6 sm:grid-cols-2">
                                     <div>
-                                        <h3 className="text-muted-foreground mb-2 text-sm font-medium">Detail Pelanggan</h3>
-                                        <p className="font-medium">{order.user ? order.user.name : order.guest_name || 'Tamu'}</p>
+                                        <h3 className="text-muted-foreground mb-2 text-sm font-medium">{t('dashboard.pages.adminOrderShow.customer')}</h3>
+                                        <p className="font-medium">
+                                            {order.user ? order.user.name : order.guest_name || t('dashboard.pages.adminOrderShow.guest')}
+                                        </p>
                                         <p className="text-muted-foreground text-sm">{order.user ? order.user.email : order.guest_email}</p>
                                     </div>
                                     <div>
-                                        <h3 className="text-muted-foreground mb-2 text-sm font-medium">Metode Pembayaran</h3>
+                                        <h3 className="text-muted-foreground mb-2 text-sm font-medium">{t('dashboard.pages.adminOrderShow.payment')}</h3>
                                         <p className="font-medium">{order.payment_method}</p>
                                         <p className="text-muted-foreground text-sm">
-                                            Status:{' '}
-                                            {order.payment_status === 'paid' ? 'Dibayar' : order.payment_status === 'pending' ? 'Menunggu' : 'Gagal'}
+                                            {t('dashboard.pages.adminOrderShow.status')}: {' '}
+                                            {t(`dashboard.pages.adminOrderShow.paymentLabel.${order.payment_status}`, { defaultValue: order.payment_status })}
                                         </p>
                                     </div>
                                 </div>
@@ -389,12 +388,12 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
                         {/* Shipping Information */}
                         <Card>
                             <CardHeader>
-                                <CardTitle>Informasi Pengiriman</CardTitle>
+                                <CardTitle>{t('dashboard.pages.adminOrderShow.shippingAddress')}</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <div className="grid gap-6 sm:grid-cols-2">
                                     <div>
-                                        <h3 className="text-muted-foreground mb-2 text-sm font-medium">Alamat Pengiriman</h3>
+                                        <h3 className="text-muted-foreground mb-2 text-sm font-medium">{t('dashboard.pages.adminOrderShow.shippingAddress')}</h3>
                                         {order.shipping_address ? (
                                             <>
                                                 <p className="font-medium">{order.shipping_address.full_name}</p>
@@ -411,19 +410,19 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
                                                     <br />
                                                     {order.shipping_address.country}
                                                     <br />
-                                                    Telepon: {order.shipping_address.phone}
+                                                    {order.shipping_address.phone}
                                                 </p>
                                             </>
                                         ) : (
-                                            <p className="text-muted-foreground">Tidak ada alamat pengiriman</p>
+                                            <p className="text-muted-foreground">-</p>
                                         )}
                                     </div>
                                     <div>
-                                        <h3 className="text-muted-foreground mb-2 text-sm font-medium">Status Pengiriman</h3>
+                                        <h3 className="text-muted-foreground mb-2 text-sm font-medium">{t('dashboard.pages.adminOrderShow.status')}</h3>
                                         <p className="font-medium">{getStatusLabel(order.status)}</p>
                                         {order.tracking_number && (
                                             <p className="text-muted-foreground text-sm">
-                                                No. Resi: {order.tracking_number}
+                                                {t('dashboard.pages.adminOrderShow.trackingNumber')}: {order.tracking_number}
                                                 {order.tracking_url && (
                                                     <>
                                                         <br />
@@ -433,7 +432,7 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
                                                             rel="noopener noreferrer"
                                                             className="text-primary hover:underline"
                                                         >
-                                                            Lacak Pengiriman
+                                                            {t('dashboard.pages.adminOrderShow.trackingUrl')}
                                                         </a>
                                                     </>
                                                 )}
@@ -449,17 +448,17 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
                     <div className="space-y-6">
                         <Card>
                             <CardHeader>
-                                <CardTitle>Kelola Pesanan</CardTitle>
-                                <CardDescription>Perbarui status dan informasi pengiriman</CardDescription>
+                                <CardTitle>{t('dashboard.pages.adminOrders.manageOrders')}</CardTitle>
+                                <CardDescription>{t('dashboard.pages.adminOrders.cards.pendingDesc')}</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="space-y-2">
                                     <label htmlFor="status" className="text-sm font-medium">
-                                        Status Pesanan
+                                        {t('dashboard.pages.adminOrderShow.status')}
                                     </label>
                                     <Select value={orderStatus} onValueChange={(value: OrderStatus) => setOrderStatus(value)} disabled={isSubmitting}>
                                         <SelectTrigger id="status">
-                                            <SelectValue placeholder="Pilih status">{getStatusLabel(orderStatus)}</SelectValue>
+                                            <SelectValue placeholder={t('dashboard.pages.adminOrderShow.status')}>{getStatusLabel(orderStatus)}</SelectValue>
                                         </SelectTrigger>
                                         <SelectContent>
                                             {getAllStatuses().map((status) => (
@@ -473,44 +472,44 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
 
                                 <div className="space-y-2">
                                     <label htmlFor="tracking_number" className="text-sm font-medium">
-                                        Nomor Resi
+                                        {t('dashboard.pages.adminOrderShow.trackingNumber')}
                                     </label>
                                     <Input
                                         id="tracking_number"
                                         value={trackingNumber}
                                         onChange={(e) => setTrackingNumber(e.target.value)}
-                                        placeholder="Masukkan nomor resi"
+                                        placeholder={t('dashboard.pages.adminOrderShow.trackingNumber')}
                                     />
                                 </div>
 
                                 <div className="space-y-2">
                                     <label htmlFor="tracking_url" className="text-sm font-medium">
-                                        Link Pelacakan
+                                        {t('dashboard.pages.adminOrderShow.trackingUrl')}
                                     </label>
                                     <Input
                                         id="tracking_url"
                                         value={trackingUrl}
                                         onChange={(e) => setTrackingUrl(e.target.value)}
-                                        placeholder="Masukkan link pelacakan"
+                                        placeholder={t('dashboard.pages.adminOrderShow.trackingUrl')}
                                     />
                                 </div>
 
                                 <div className="space-y-2">
                                     <label htmlFor="notes" className="text-sm font-medium">
-                                        Catatan Admin
+                                        {t('dashboard.pages.adminOrderShow.adminNotes')}
                                     </label>
                                     <Textarea
                                         id="notes"
                                         value={notes}
                                         onChange={(e) => setNotes(e.target.value)}
-                                        placeholder="Tambahkan catatan internal"
+                                        placeholder={t('dashboard.pages.adminOrderShow.adminNotes')}
                                         rows={4}
                                     />
                                 </div>
                             </CardContent>
                             <CardFooter>
                                 <Button onClick={handleUpdateOrder} disabled={isSubmitting} className="w-full">
-                                    {isSubmitting ? 'Menyimpan...' : 'Simpan Perubahan'}
+                                    {isSubmitting ? t('dashboard.pages.adminOrderShow.updating') : t('dashboard.pages.adminOrderShow.update')}
                                 </Button>
                             </CardFooter>
                         </Card>
@@ -518,7 +517,7 @@ export default function OrderShow({ order, timeline }: OrderShowProps) {
                         {/* Order Timeline */}
                         <Card>
                             <CardHeader>
-                                <CardTitle>Riwayat Pesanan</CardTitle>
+                                <CardTitle>{t('dashboard.pages.adminOrderShow.timeline')}</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <div className="space-y-4">

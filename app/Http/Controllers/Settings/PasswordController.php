@@ -13,7 +13,7 @@ use Inertia\Response;
 class PasswordController extends Controller
 {
     /**
-     * Show the user's password settings page.
+     * Menampilkan halaman pengaturan password user.
      */
     public function edit(): Response
     {
@@ -21,15 +21,17 @@ class PasswordController extends Controller
     }
 
     /**
-     * Update the user's password.
+     * Memproses update password user.
      */
     public function update(Request $request): RedirectResponse
     {
+        // Validasi password lama dan password baru
         $validated = $request->validate([
             'current_password' => ['required', 'current_password'],
             'password' => ['required', Password::defaults(), 'confirmed'],
         ]);
 
+        // Update password user
         $request->user()->update([
             'password' => Hash::make($validated['password']),
         ]);

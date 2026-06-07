@@ -10,19 +10,15 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AdminLayout from '@/layouts/admin-layout';
 import { type BreadcrumbItem } from '@/types';
-
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Dasbor',
-        href: '/admin/dashboard',
-    },
-    {
-        title: 'Laporan',
-        href: '/admin/reports',
-    },
-];
+import { useTranslation } from 'react-i18next';
 
 export default function ReportsIndex() {
+    const { t } = useTranslation();
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: t('dashboard.nav.adminDashboard'), href: '/admin/dashboard' },
+        { title: t('dashboard.nav.adminReports'), href: '/admin/reports' },
+    ];
+
     const [dateRange, setDateRange] = useState({
         start_date: '',
         end_date: '',
@@ -67,23 +63,23 @@ export default function ReportsIndex() {
 
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
-            <Head title="Laporan Penjualan" />
+            <Head title={t('dashboard.pages.adminReports.headTitle')} />
 
             <div className="space-y-6 p-6">
                 <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between md:space-y-0">
-                    <h1 className="text-2xl font-bold tracking-tight">Laporan Penjualan</h1>
+                    <h1 className="text-2xl font-bold tracking-tight">{t('dashboard.pages.adminReports.title')}</h1>
                 </div>
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>Unduh Laporan</CardTitle>
-                        <CardDescription>Pilih rentang tanggal dan tipe laporan yang diinginkan</CardDescription>
+                        <CardTitle>{t('dashboard.pages.adminReports.cardTitle')}</CardTitle>
+                        <CardDescription>{t('dashboard.pages.adminReports.cardDesc')}</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <div className="grid gap-6">
                             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                 <div className="space-y-2">
-                                    <Label htmlFor="start_date">Tanggal Mulai</Label>
+                                    <Label htmlFor="start_date">{t('dashboard.pages.adminReports.startDate')}</Label>
                                     <Input
                                         id="start_date"
                                         type="date"
@@ -97,7 +93,7 @@ export default function ReportsIndex() {
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="end_date">Tanggal Akhir</Label>
+                                    <Label htmlFor="end_date">{t('dashboard.pages.adminReports.endDate')}</Label>
                                     <Input
                                         id="end_date"
                                         type="date"
@@ -113,15 +109,15 @@ export default function ReportsIndex() {
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="report_type">Tipe Laporan</Label>
+                                <Label htmlFor="report_type">{t('dashboard.pages.adminReports.reportType')}</Label>
                                 <Select value={reportType} onValueChange={setReportType}>
                                     <SelectTrigger>
-                                        <SelectValue placeholder="Pilih tipe laporan" />
+                                        <SelectValue placeholder={t('dashboard.pages.adminReports.reportType')} />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="daily">Harian</SelectItem>
-                                        <SelectItem value="weekly">Mingguan</SelectItem>
-                                        <SelectItem value="monthly">Bulanan</SelectItem>
+                                        <SelectItem value="daily">{t('dashboard.pages.adminReports.typeDaily')}</SelectItem>
+                                        <SelectItem value="weekly">{t('dashboard.pages.adminReports.typeWeekly')}</SelectItem>
+                                        <SelectItem value="monthly">{t('dashboard.pages.adminReports.typeMonthly')}</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -134,12 +130,12 @@ export default function ReportsIndex() {
                                 {isLoading ? (
                                     <>
                                         <Download className="mr-2 h-4 w-4 animate-spin" />
-                                        Memproses...
+                                        {t('dashboard.pages.adminReports.processing')}
                                     </>
                                 ) : (
                                     <>
                                         <Download className="mr-2 h-4 w-4" />
-                                        Unduh Laporan
+                                        {t('dashboard.pages.adminReports.download')}
                                     </>
                                 )}
                             </Button>

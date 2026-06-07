@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 class RedirectIfAuthenticated
 {
     /**
-     * Handle an incoming request.
+     * Middleware untuk mencegah user yang sudah login mengakses halaman guest (login/register).
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
@@ -21,16 +21,16 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                // If the user is an admin, redirect to admin dashboard
+                // Jika user admin, redirect ke dashboard admin
                 if (Auth::user()->hasRole('admin')) {
                     return redirect()->route('admin.dashboard');
                 }
-                
-                // Otherwise, redirect to home page
+                // Jika bukan admin, redirect ke home
                 return redirect('/');
             }
         }
 
+        // Jika belum login, lanjutkan request
         return $next($request);
     }
 } 

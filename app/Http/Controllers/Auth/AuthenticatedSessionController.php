@@ -14,10 +14,11 @@ use Inertia\Response;
 class AuthenticatedSessionController extends Controller
 {
     /**
-     * Show the login page.
+     * Menampilkan halaman login.
      */
     public function create(Request $request): Response
     {
+        // Render halaman login dengan status dan opsi reset password
         return Inertia::render('auth/login', [
             'canResetPassword' => Route::has('password.request'),
             'status' => $request->session()->get('status'),
@@ -25,26 +26,27 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Handle an incoming authentication request.
+     * Memproses permintaan login/authentication.
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        // Autentikasi user
         $request->authenticate();
 
+        // Regenerasi session untuk keamanan
         $request->session()->regenerate();
 
-        // Redirect based on user role
+        // Redirect berdasarkan role user
         $user = $request->user();
         if ($user->hasRole('admin')) {
             return redirect()->intended(route('admin.dashboard', absolute: false));
         }
-        
-        // return redirect()->intended('/');
+        // Jika bukan admin, redirect ke dashboard user
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
     /**
-     * Destroy an authenticated session.
+     * Logout user dan hapus session.
      */
     public function destroy(Request $request): RedirectResponse
     {

@@ -9,6 +9,7 @@ import { formatRupiah } from '@/utils/formatters';
 import { usePage } from '@inertiajs/react';
 import { ArrowUpDown, ChevronDown, ChevronUp, Search, SlidersHorizontal } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 // Define types based on your backend
 interface ProductSize {
@@ -37,6 +38,7 @@ interface ProductsProps {
 const Products = () => {
     const { products } = usePage().props as unknown as ProductsProps;
     const allProducts = products.data || [];
+    const { t } = useTranslation();
 
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
@@ -97,10 +99,10 @@ const Products = () => {
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center">
                         <h1 className="text-batik-brown text-3xl font-bold tracking-tight sm:text-4xl">
-                            Produk Batik <span className="text-batik-indigo">Gumelem</span>
+                            {t('products.titlePrefix')} <span className="text-batik-indigo">{t('products.titleBrand')}</span>
                         </h1>
                         <p className="mx-auto mt-4 max-w-xl text-base text-gray-600">
-                            Jelajahi koleksi batik tradisional Gumelem dengan berbagai motif khas dan filosofi mendalam
+                            {t('products.subtitle')}
                         </p>
                     </div>
                 </div>
@@ -111,11 +113,16 @@ const Products = () => {
                 <div className="mb-5 flex items-center justify-between lg:hidden">
                     <div className="relative mr-2 w-full">
                         <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-500" />
-                        <Input placeholder="Cari produk..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-10" />
+                        <Input
+                            placeholder={t('products.searchPlaceholder')}
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="pl-10"
+                        />
                     </div>
                     <Button variant="outline" className="flex-shrink-0" onClick={() => setShowFilters(!showFilters)}>
                         <SlidersHorizontal className="mr-2 h-4 w-4" />
-                        Filter
+                        {t('products.filters')}
                     </Button>
                 </div>
 
@@ -123,11 +130,11 @@ const Products = () => {
                     {/* Sidebar filters */}
                     <div className={`col-span-1 space-y-6 rounded-xl bg-white p-6 shadow-sm ${showFilters ? 'block' : 'hidden lg:block'}`}>
                         <div className="hidden lg:block">
-                            <h3 className="text-batik-brown mb-4 text-lg font-medium">Pencarian</h3>
+                            <h3 className="text-batik-brown mb-4 text-lg font-medium">{t('products.searchTitle')}</h3>
                             <div className="relative">
                                 <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-500" />
                                 <Input
-                                    placeholder="Cari produk..."
+                                    placeholder={t('products.searchPlaceholder')}
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                     className="pl-10"
@@ -136,7 +143,7 @@ const Products = () => {
                         </div>
 
                         <div>
-                            <h3 className="text-batik-brown mb-4 text-lg font-medium">Urutkan</h3>
+                            <h3 className="text-batik-brown mb-4 text-lg font-medium">{t('products.sortTitle')}</h3>
                             <div className="space-y-2">
                                 <Button
                                     variant={sortOrder === 'default' ? 'secondary' : 'outline'}
@@ -144,7 +151,7 @@ const Products = () => {
                                     className="w-full justify-start"
                                 >
                                     <ArrowUpDown className="mr-2 h-4 w-4" />
-                                    Default
+                                    {t('products.sortDefault')}
                                 </Button>
                                 <Button
                                     variant={sortOrder === 'priceAsc' ? 'secondary' : 'outline'}
@@ -152,7 +159,7 @@ const Products = () => {
                                     className="w-full justify-start"
                                 >
                                     <ChevronUp className="mr-2 h-4 w-4" />
-                                    Harga: Rendah ke Tinggi
+                                    {t('products.sortPriceAsc')}
                                 </Button>
                                 <Button
                                     variant={sortOrder === 'priceDesc' ? 'secondary' : 'outline'}
@@ -160,7 +167,7 @@ const Products = () => {
                                     className="w-full justify-start"
                                 >
                                     <ChevronDown className="mr-2 h-4 w-4" />
-                                    Harga: Tinggi ke Rendah
+                                    {t('products.sortPriceDesc')}
                                 </Button>
                                 <Button
                                     variant={sortOrder === 'nameAsc' ? 'secondary' : 'outline'}
@@ -168,7 +175,7 @@ const Products = () => {
                                     className="w-full justify-start"
                                 >
                                     <ChevronUp className="mr-2 h-4 w-4" />
-                                    Nama: A-Z
+                                    {t('products.sortNameAsc')}
                                 </Button>
                                 <Button
                                     variant={sortOrder === 'nameDesc' ? 'secondary' : 'outline'}
@@ -176,13 +183,13 @@ const Products = () => {
                                     className="w-full justify-start"
                                 >
                                     <ChevronDown className="mr-2 h-4 w-4" />
-                                    Nama: Z-A
+                                    {t('products.sortNameDesc')}
                                 </Button>
                             </div>
                         </div>
 
                         <div>
-                            <h3 className="text-batik-brown mb-4 text-lg font-medium">Rentang Harga</h3>
+                            <h3 className="text-batik-brown mb-4 text-lg font-medium">{t('products.priceRange')}</h3>
                             <div className="space-y-4">
                                 <Slider
                                     defaultValue={[0, 1000000]}
@@ -210,9 +217,9 @@ const Products = () => {
                             </div>
                         ) : (
                             <div className="py-12 text-center">
-                                <p className="text-lg text-gray-600">Tidak ada produk yang sesuai dengan pencarian Anda.</p>
+                                <p className="text-lg text-gray-600">{t('products.noResults')}</p>
                                 <Button className="bg-batik-brown hover:bg-batik-brown/90 mt-4" onClick={resetFilters}>
-                                    Lihat Semua Produk
+                                    {t('products.reset')}
                                 </Button>
                             </div>
                         )}

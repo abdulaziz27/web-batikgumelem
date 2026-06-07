@@ -56,26 +56,42 @@ class Order extends Model
         });
     }
 
+    /**
+     * Relasi ke user yang melakukan order.
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * Relasi ke item-item yang ada di order ini.
+     */
     public function items()
     {
         return $this->hasMany(OrderItem::class);
     }
 
+    /**
+     * Relasi ke alamat pengiriman yang digunakan pada order ini.
+     * withTrashed() agar tetap bisa diakses meski alamat sudah dihapus (soft delete).
+     */
     public function shippingAddress()
     {
         return $this->belongsTo(ShippingAddress::class)->withTrashed();
     }
 
+    /**
+     * Relasi ke kupon yang digunakan pada order ini (jika ada).
+     */
     public function coupon()
     {
         return $this->belongsTo(Coupon::class);
     }
     
+    /**
+     * Accessor untuk mengambil total order (total_price atau total_amount).
+     */
     public function getTotalAttribute()
     {
         return $this->total_price ?? $this->total_amount;

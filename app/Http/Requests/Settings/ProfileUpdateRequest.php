@@ -10,9 +10,7 @@ use Illuminate\Validation\Rule;
 class ProfileUpdateRequest extends FormRequest
 {
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
+     * Aturan validasi untuk update profil user.
      */
     public function rules(): array
     {
@@ -25,6 +23,7 @@ class ProfileUpdateRequest extends FormRequest
                 'lowercase',
                 'email',
                 'max:255',
+                // Email harus unik, kecuali untuk user yang sedang login
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
         ];

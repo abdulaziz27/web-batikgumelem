@@ -11,16 +11,15 @@ use Illuminate\Support\Facades\Mail;
 class SendOrderConfirmationEmail implements ShouldQueue
 {
     /**
-     * Handle the event.
+     * Menangani event OrderCreated untuk mengirim email konfirmasi dan instruksi pembayaran ke user.
      */
     public function handle(OrderCreated $event): void
     {
         $order = $event->order;
         if ($order->user && $order->user->email) {
-            // Kirim email konfirmasi
+            // Kirim email konfirmasi order
             Mail::to($order->user->email)->send(new OrderConfirmation($order));
-            
-            // Kirim instruksi pembayaran
+            // Kirim email instruksi pembayaran
             Mail::to($order->user->email)->send(new PaymentInstructions($order));
         }
     }

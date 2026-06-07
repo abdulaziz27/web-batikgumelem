@@ -22,6 +22,9 @@ class ShippingAddress extends Model
         'is_order_address'
     ];
 
+    /**
+     * Relasi ke user pemilik alamat pengiriman ini.
+     */
     public function user()
     {
         return $this->belongsTo(User::class);

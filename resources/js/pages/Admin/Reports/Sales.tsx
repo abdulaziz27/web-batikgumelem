@@ -6,12 +6,14 @@ import { Select, SelectItem } from '@/components/ui/select';
 import axios from 'axios';
 import { Download, Loader2 } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface SalesReportProps {
     // Props definition
 }
 
 export default function SalesReport() {
+    const { t } = useTranslation();
     const [dateRange, setDateRange] = useState({
         start_date: '',
         end_date: '',
@@ -50,13 +52,13 @@ export default function SalesReport() {
         <div>
             <Card>
                 <CardHeader>
-                    <CardTitle>Laporan Penjualan</CardTitle>
+                    <CardTitle>{t('dashboard.pages.adminSalesReport.title')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="grid gap-4">
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <Label>Tanggal Mulai</Label>
+                                <Label>{t('dashboard.pages.adminSalesReport.startDate')}</Label>
                                 <Input
                                     type="date"
                                     value={dateRange.start_date}
@@ -69,7 +71,7 @@ export default function SalesReport() {
                                 />
                             </div>
                             <div>
-                                <Label>Tanggal Akhir</Label>
+                                <Label>{t('dashboard.pages.adminSalesReport.endDate')}</Label>
                                 <Input
                                     type="date"
                                     value={dateRange.end_date}
@@ -83,23 +85,23 @@ export default function SalesReport() {
                             </div>
                         </div>
                         <div>
-                            <Label>Tipe Laporan</Label>
+                            <Label>{t('dashboard.pages.adminSalesReport.reportType')}</Label>
                             <Select value={reportType} onValueChange={setReportType}>
-                                <SelectItem value="daily">Harian</SelectItem>
-                                <SelectItem value="weekly">Mingguan</SelectItem>
-                                <SelectItem value="monthly">Bulanan</SelectItem>
+                                <SelectItem value="daily">{t('dashboard.pages.adminSalesReport.typeDaily')}</SelectItem>
+                                <SelectItem value="weekly">{t('dashboard.pages.adminSalesReport.typeWeekly')}</SelectItem>
+                                <SelectItem value="monthly">{t('dashboard.pages.adminSalesReport.typeMonthly')}</SelectItem>
                             </Select>
                         </div>
                         <Button onClick={handleDownload} disabled={isLoading}>
                             {isLoading ? (
                                 <>
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    Memproses...
+                                    {t('dashboard.pages.adminSalesReport.processing')}
                                 </>
                             ) : (
                                 <>
                                     <Download className="mr-2 h-4 w-4" />
-                                    Download PDF
+                                    {t('dashboard.pages.adminSalesReport.downloadPdf')}
                                 </>
                             )}
                         </Button>

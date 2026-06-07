@@ -1,7 +1,9 @@
 import { Link } from '@inertiajs/react';
 import { Mail, MapPin, Phone } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
+    const { t } = useTranslation();
     return (
         <footer className="bg-batik-cream/50 batik-pattern">
             <div className="container mx-auto px-6 py-12">
@@ -12,58 +14,57 @@ const Footer = () => {
                             Batik<span className="text-batik-indigo">Gumelem</span>
                         </h2>
                         <p className="mt-4 text-sm text-gray-600">
-                            Melestarikan warisan budaya Batik Gumelem dari Banjarnegara, Jawa Tengah. Setiap kain batik kami dibuat dengan teknik
-                            tradisional dan mengandung filosofi mendalam.
+                            {t('footer.about')}
                         </p>
                     </div>
 
                     {/* Quick Links Section */}
                     <div>
-                        <h3 className="text-batik-brown text-sm font-semibold tracking-wider uppercase">Quick Links</h3>
+                        <h3 className="text-batik-brown text-sm font-semibold tracking-wider uppercase">{t('footer.quickLinks')}</h3>
                         <div className="mt-4 space-y-2">
                             <Link href="/" className="hover:text-batik-indigo block text-sm text-gray-600">
-                                Beranda
+                                {t('nav.home')}
                             </Link>
                             <Link href="/history" className="hover:text-batik-indigo block text-sm text-gray-600">
-                                Sejarah
+                                {t('nav.history')}
                             </Link>
                             <Link href="/products" className="hover:text-batik-indigo block text-sm text-gray-600">
-                                Produk
+                                {t('nav.products')}
                             </Link>
                             <Link href="/blog" className="hover:text-batik-indigo block text-sm text-gray-600">
-                                Blog
+                                {t('nav.blog')}
                             </Link>
                             <Link href="/faq" className="hover:text-batik-indigo block text-sm text-gray-600">
-                                FAQ
+                                {t('nav.faq')}
                             </Link>
                             <Link href="/about" className="hover:text-batik-indigo block text-sm text-gray-600">
-                                Tentang Kami
+                                {t('nav.about')}
                             </Link>
                         </div>
                     </div>
 
                     {/* Customer Service Section */}
                     <div>
-                        <h3 className="text-batik-brown text-sm font-semibold tracking-wider uppercase">Customer Service</h3>
+                        <h3 className="text-batik-brown text-sm font-semibold tracking-wider uppercase">{t('footer.customerService')}</h3>
                         <div className="mt-4 space-y-2">
                             <Link href="/faq" className="hover:text-batik-indigo block text-sm text-gray-600">
-                                FAQ
+                                {t('nav.faq')}
                             </Link>
                             <Link href="/shipping" className="hover:text-batik-indigo block text-sm text-gray-600">
-                                Shipping & Returns
+                                {t('footer.shippingReturns')}
                             </Link>
                             <Link href="/terms" className="hover:text-batik-indigo block text-sm text-gray-600">
-                                Terms & Conditions
+                                {t('footer.terms')}
                             </Link>
                             <Link href="/privacy" className="hover:text-batik-indigo block text-sm text-gray-600">
-                                Privacy Policy
+                                {t('footer.privacy')}
                             </Link>
                         </div>
                     </div>
 
                     {/* Contact Us Section */}
                     <div>
-                        <h3 className="text-batik-brown text-sm font-semibold tracking-wider uppercase">Contact Us</h3>
+                        <h3 className="text-batik-brown text-sm font-semibold tracking-wider uppercase">{t('footer.contactUs')}</h3>
                         <div className="mt-4 space-y-4">
                             <div className="flex items-start">
                                 <div className="flex-shrink-0">
@@ -88,7 +89,9 @@ const Footer = () => {
                 </div>
 
                 <div className="border-batik-brown/10 mt-8 border-t pt-8">
-                    <p className="text-center text-xs text-gray-500">&copy; {new Date().getFullYear()} BatikGumelem. All rights reserved.</p>
+                    <p className="text-center text-xs text-gray-500">
+                        &copy; {new Date().getFullYear()} BatikGumelem. {t('footer.rights')}
+                    </p>
                 </div>
             </div>
         </footer>

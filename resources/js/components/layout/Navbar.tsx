@@ -13,15 +13,17 @@ import {
 import { useInitials } from '@/hooks/use-initials';
 import { useCart } from '@/hooks/useCart';
 import { type SharedData } from '@/types';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { Menu, ShoppingCart, User, X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { url } = usePage(); // Inertia way to get current URL
-    const { auth } = usePage<SharedData>().props;
+    const { auth, locale } = usePage<SharedData & { locale: string }>().props;
     const getInitials = useInitials();
+    const { t, i18n } = useTranslation();
 
     // Gunakan try/catch untuk mengatasi kasus jika CartProvider tidak tersedia
     let cartItemCount = 0;
@@ -37,13 +39,34 @@ const Navbar = () => {
     }
 
     const navigation = [
-        { name: 'Beranda', href: '/' },
-        { name: 'Sejarah', href: '/history' },
-        { name: 'Produk', href: '/products' },
-        { name: 'Blog', href: '/blog' },
-        { name: 'FAQ', href: '/faq' },
-        { name: 'Tentang Kami', href: '/about' },
+        { name: t('nav.home'), href: '/' },
+        { name: t('nav.history'), href: '/history' },
+        { name: t('nav.products'), href: '/products' },
+        { name: t('nav.blog'), href: '/blog' },
+        { name: t('nav.faq'), href: '/faq' },
+        { name: t('nav.about'), href: '/about' },
     ];
+
+    // Keep client i18n in sync with server locale cookie
+    useEffect(() => {
+        if (locale && i18n.language !== locale) i18n.changeLanguage(locale);
+    }, [locale, i18n]);
+
+    const setLocale = (nextLocale: 'id' | 'en') => {
+        router.post(
+            route('locale.set'),
+            { locale: nextLocale, redirect: url || '/' },
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    i18n.changeLanguage(nextLocale);
+                },
+            },
+        );
+    };
+
+    const currentLocale = (locale || 'id') as 'id' | 'en';
+    const localeLabel = (loc: 'id' | 'en') => (loc === 'id' ? '🇮🇩 ID' : '🇺🇸 EN');
 
     const isActive = (path: string) => {
         return url === path;
@@ -76,6 +99,17 @@ const Navbar = () => {
                         </div>
                     </div>
                     <div className="flex items-center">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="sm" className="mr-2 hidden items-center md:flex">
+                                    {localeLabel(currentLocale)}
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="w-44" align="end">
+                                <DropdownMenuItem onClick={() => setLocale('id')}>🇮🇩 Indonesia (ID)</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setLocale('en')}>🇺🇸 English (EN)</DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                         {auth.user ? (
                             // <div className="flex items-center gap-4">
                             <DropdownMenu>
@@ -112,21 +146,21 @@ const Navbar = () => {
                                         <DropdownMenuItem asChild>
                                             <Link href="/settings/profile" className="flex w-full cursor-pointer items-center">
                                                 <User className="mr-2 h-4 w-4" />
-                                                <span>Profile</span>
+                                                <span>{t('nav.profile')}</span>
                                             </Link>
                                         </DropdownMenuItem>
                                         {auth.user?.roles?.includes('admin') ? (
                                             <DropdownMenuItem asChild>
                                                 <Link href="/admin/dashboard" className="flex w-full cursor-pointer items-center">
                                                     <ShoppingCart className="mr-2 h-4 w-4" />
-                                                    <span>Dashboard Admin</span>
+                                                    <span>{t('nav.adminDashboard')}</span>
                                                 </Link>
                                             </DropdownMenuItem>
                                         ) : (
                                             <DropdownMenuItem asChild>
                                                 <Link href="/orders" className="flex w-full cursor-pointer items-center">
                                                     <ShoppingCart className="mr-2 h-4 w-4" />
-                                                    <span>Pesanan Saya</span>
+                                                    <span>{t('nav.myOrders')}</span>
                                                 </Link>
                                             </DropdownMenuItem>
                                         )}
@@ -140,7 +174,7 @@ const Navbar = () => {
                                             className="flex w-full cursor-pointer items-center text-red-600 hover:text-red-700 focus:text-red-700"
                                         >
                                             <X className="mr-2 h-4 w-4" />
-                                            <span>Keluar</span>
+                                            <span>{t('nav.logout')}</span>
                                         </Link>
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
@@ -150,7 +184,7 @@ const Navbar = () => {
                             <Link href="/login" className="mr-4 hidden md:block">
                                 <Button variant="ghost" size="sm" className="flex items-center">
                                     <User className="mr-2 h-4 w-4" />
-                                    Masuk
+                                    {t('nav.login')}
                                 </Button>
                             </Link>
                         )}
@@ -180,6 +214,17 @@ const Navbar = () => {
             {isMenuOpen && (
                 <div className="md:hidden">
                     <div className="space-y-1 px-2 pt-2 pb-3 sm:px-3">
+                        <div className="px-3 py-2">
+                            <div className="text-batik-brown mb-2 text-sm font-medium">{t('nav.language')}</div>
+                            <div className="flex gap-2">
+                                <Button variant={currentLocale === 'id' ? 'secondary' : 'outline'} size="sm" onClick={() => setLocale('id')}>
+                                    🇮🇩 ID
+                                </Button>
+                                <Button variant={currentLocale === 'en' ? 'secondary' : 'outline'} size="sm" onClick={() => setLocale('en')}>
+                                    🇺🇸 EN
+                                </Button>
+                            </div>
+                        </div>
                         {navigation.map((item) => (
                             <Link
                                 key={item.name}
@@ -201,14 +246,14 @@ const Navbar = () => {
                                     className="text-batik-brown hover:bg-batik-cream hover:text-batik-indigo block rounded-md px-3 py-2 text-base font-medium"
                                     onClick={() => setIsMenuOpen(false)}
                                 >
-                                    Profil
+                                    {t('nav.profile')}
                                 </Link>
                                 <Link
                                     href="/orders"
                                     className="text-batik-brown hover:bg-batik-cream hover:text-batik-indigo block rounded-md px-3 py-2 text-base font-medium"
                                     onClick={() => setIsMenuOpen(false)}
                                 >
-                                    Pesanan Saya
+                                    {t('nav.myOrders')}
                                 </Link>
                                 <Button
                                     variant="ghost"
@@ -227,7 +272,7 @@ const Navbar = () => {
                                 className="text-batik-brown hover:bg-batik-cream hover:text-batik-indigo block rounded-md px-3 py-2 text-base font-medium"
                                 onClick={() => setIsMenuOpen(false)}
                             >
-                                Masuk / Daftar
+                                {t('nav.login')}
                             </Link>
                         )}
                     </div>

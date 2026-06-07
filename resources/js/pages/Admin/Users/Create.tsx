@@ -10,33 +10,26 @@ import { Separator } from '@/components/ui/separator';
 import AdminLayout from '@/layouts/admin-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Link } from '@inertiajs/react';
-
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Dasbor',
-        href: '/admin/dashboard',
-    },
-    {
-        title: 'Pengguna',
-        href: '/admin/users',
-    },
-    {
-        title: 'Tambah',
-        href: '/admin/users/create',
-    },
-];
+import { useTranslation } from 'react-i18next';
 
 interface CreateProps {
     roles: string[];
 }
 
 export default function Create({ roles }: CreateProps) {
+    const { t } = useTranslation();
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: t('dashboard.nav.adminDashboard'), href: '/admin/dashboard' },
+        { title: t('dashboard.nav.adminUsers'), href: '/admin/users' },
+        { title: t('dashboard.pages.adminUsers.add'), href: '/admin/users/create' },
+    ];
+
     const { data, setData, post, processing, errors } = useForm({
         name: '',
         email: '',
         password: '',
         password_confirmation: '',
-        role: 'user',
+        role: 'admin', // default admin
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -46,7 +39,7 @@ export default function Create({ roles }: CreateProps) {
 
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
-            <Head title="Tambah Pengguna" />
+            <Head title={t('dashboard.pages.adminUserCreate.headTitle')} />
 
             <div className="space-y-6 p-3 sm:p-6">
                 <div className="flex items-center gap-4">
@@ -62,79 +55,75 @@ export default function Create({ roles }: CreateProps) {
 
                 <Card>
                     <CardHeader className="px-4 py-4 sm:px-6">
-                        <h2 className="text-lg font-semibold">Informasi Pengguna</h2>
+                        <h2 className="text-lg font-semibold">{t('dashboard.pages.adminUserCreate.sectionTitle')}</h2>
                     </CardHeader>
 
                     <CardContent>
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div className="space-y-4">
                                 <div className="grid gap-2">
-                                    <Label htmlFor="name">Nama</Label>
+                                    <Label htmlFor="name">{t('dashboard.pages.adminUserCreate.name')}</Label>
                                     <Input
                                         id="name"
                                         value={data.name}
                                         onChange={(e) => setData('name', e.target.value)}
-                                        placeholder="Masukkan nama"
+                                        placeholder={t('dashboard.pages.adminUserCreate.namePlaceholder')}
                                     />
                                     {errors.name && <p className="text-destructive text-sm">{errors.name}</p>}
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="email">Email</Label>
+                                    <Label htmlFor="email">{t('dashboard.pages.adminUserCreate.email')}</Label>
                                     <Input
                                         id="email"
                                         type="email"
                                         value={data.email}
                                         onChange={(e) => setData('email', e.target.value)}
-                                        placeholder="Masukkan email"
+                                        placeholder={t('dashboard.pages.adminUserCreate.emailPlaceholder')}
                                     />
                                     {errors.email && <p className="text-destructive text-sm">{errors.email}</p>}
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="role">Role</Label>
+                                    <Label htmlFor="role">{t('dashboard.pages.adminUserCreate.role')}</Label>
                                     <Select value={data.role} onValueChange={(value) => setData('role', value)}>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Pilih role" />
+                                            <SelectValue placeholder={t('dashboard.pages.adminUserCreate.rolePlaceholder')} />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {roles.map((role) => (
-                                                <SelectItem key={role} value={role}>
-                                                    {role === 'admin' ? 'Admin' : 'User'}
-                                                </SelectItem>
-                                            ))}
+                                            <SelectItem key="admin" value="admin">Admin</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     {errors.role && <p className="text-destructive text-sm">{errors.role}</p>}
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="password">Kata Sandi</Label>
+                                    <Label htmlFor="password">{t('dashboard.pages.adminUserCreate.password')}</Label>
                                     <Input
                                         id="password"
                                         type="password"
                                         value={data.password}
                                         onChange={(e) => setData('password', e.target.value)}
-                                        placeholder="Masukkan kata sandi"
+                                        placeholder={t('dashboard.pages.adminUserCreate.passwordPlaceholder')}
                                     />
                                     {errors.password && <p className="text-destructive text-sm">{errors.password}</p>}
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="password_confirmation">Konfirmasi Kata Sandi</Label>
+                                    <Label htmlFor="password_confirmation">{t('dashboard.pages.adminUserCreate.passwordConfirm')}</Label>
                                     <Input
                                         id="password_confirmation"
                                         type="password"
                                         value={data.password_confirmation}
                                         onChange={(e) => setData('password_confirmation', e.target.value)}
-                                        placeholder="Konfirmasi kata sandi"
+                                        placeholder={t('dashboard.pages.adminUserCreate.passwordConfirmPlaceholder')}
                                     />
                                 </div>
                             </div>
 
                             <div className="flex justify-end">
                                 <Button type="submit" disabled={processing}>
-                                    Tambah Pengguna
+                                    {t('dashboard.pages.adminUserCreate.submit')}
                                 </Button>
                             </div>
                         </form>

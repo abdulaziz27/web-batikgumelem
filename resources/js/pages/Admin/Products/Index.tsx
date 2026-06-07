@@ -32,6 +32,7 @@ import { Separator } from '@/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AdminLayout from '@/layouts/admin-layout';
 import { type BreadcrumbItem } from '@/types';
+import { useTranslation } from 'react-i18next';
 
 interface ProductImage {
     id: number;
@@ -57,18 +58,13 @@ interface ProductsIndexProps {
     products: Product[];
 }
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Dasbor',
-        href: '/admin/dashboard',
-    },
-    {
-        title: 'Produk',
-        href: '/admin/products',
-    },
-];
-
 export default function ProductsIndex({ products }: ProductsIndexProps) {
+    const { t } = useTranslation();
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: t('dashboard.nav.adminDashboard'), href: '/admin/dashboard' },
+        { title: t('dashboard.nav.adminProducts'), href: '/admin/products' },
+    ];
+
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [productToDelete, setProductToDelete] = useState<Product | null>(null);
     const [sorting, setSorting] = useState<SortingState>([]);
@@ -102,7 +98,7 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
     const columns: ColumnDef<Product>[] = [
         {
             accessorKey: 'image_url',
-            header: 'Gambar',
+            header: t('dashboard.pages.adminProducts.table.image'),
             cell: ({ row }) => {
                 const imageUrl = row.getValue('image_url') as string;
                 const name = row.getValue('name') as string;
@@ -115,7 +111,7 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
             header: ({ column }) => {
                 return (
                     <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="hover:bg-transparent">
-                        Nama
+                        {t('dashboard.pages.adminProducts.table.name')}
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 );
@@ -129,7 +125,7 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
             header: ({ column }) => {
                 return (
                     <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="hover:bg-transparent">
-                        Harga
+                        {t('dashboard.pages.adminProducts.table.price')}
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 );
@@ -141,7 +137,7 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
             header: ({ column }) => {
                 return (
                     <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="hover:bg-transparent">
-                        Total Stok
+                        {t('dashboard.pages.adminProducts.table.stock')}
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 );
@@ -149,10 +145,14 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
         },
         {
             accessorKey: 'is_active',
-            header: 'Status',
+            header: t('dashboard.pages.adminProducts.table.status'),
             cell: ({ row }) => {
                 const isActive = row.getValue('is_active') as boolean;
-                return <Badge variant={isActive ? 'default' : 'outline'}>{isActive ? 'Aktif' : 'Nonaktif'}</Badge>;
+                return (
+                    <Badge variant={isActive ? 'default' : 'outline'}>
+                        {isActive ? t('dashboard.pages.adminCoupons.active') : t('dashboard.pages.adminCoupons.inactive')}
+                    </Badge>
+                );
             },
             enableColumnFilter: true,
             filterFn: (row, id, value) => {
@@ -163,7 +163,7 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
         },
         {
             id: 'actions',
-            header: 'Aksi',
+            header: t('dashboard.pages.adminProducts.table.actions'),
             cell: ({ row }) => {
                 const product = row.original;
                 return (
@@ -292,15 +292,15 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
 
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
-            <Head title="Manajemen Produk" />
+            <Head title={t('dashboard.pages.adminProducts.headTitle')} />
 
             <div className="space-y-6 p-3 sm:p-6">
                 <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-                    <h1 className="text-2xl font-bold tracking-tight">Manajemen Produk</h1>
+                    <h1 className="text-2xl font-bold tracking-tight">{t('dashboard.pages.adminProducts.title')}</h1>
                     <Button asChild className="w-full sm:w-auto">
                         <Link href="/admin/products/create">
                             <PlusCircle className="mr-2 h-4 w-4" />
-                            Tambah Produk
+                            {t('dashboard.pages.adminProducts.add')}
                         </Link>
                     </Button>
                 </div>
@@ -314,7 +314,7 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
                                 <Search className="text-muted-foreground absolute top-2.5 left-2.5 h-4 w-4" />
                                 <Input
                                     type="search"
-                                    placeholder="Cari produk..."
+                                    placeholder={t('dashboard.pages.adminProducts.searchPlaceholder')}
                                     value={searchValue}
                                     onChange={(e) => setSearchValue(e.target.value)}
                                     className="w-full pl-8"
@@ -325,12 +325,12 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
                                 onValueChange={(value) => table.getColumn('is_active')?.setFilterValue(value)}
                             >
                                 <SelectTrigger className="w-full sm:w-[180px]">
-                                    <SelectValue placeholder="Filter status" />
+                                    <SelectValue placeholder={t('dashboard.pages.adminProducts.table.status')} />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="all">Semua Status</SelectItem>
-                                    <SelectItem value="active">Aktif</SelectItem>
-                                    <SelectItem value="inactive">Nonaktif</SelectItem>
+                                    <SelectItem value="all">{t('dashboard.pages.adminProducts.statusAll')}</SelectItem>
+                                    <SelectItem value="active">{t('dashboard.pages.adminCoupons.active')}</SelectItem>
+                                    <SelectItem value="inactive">{t('dashboard.pages.adminCoupons.inactive')}</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
@@ -341,7 +341,7 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
                                 {table.getRowModel().rows?.length ? (
                                     renderProductCards()
                                 ) : (
-                                    <div className="text-muted-foreground py-10 text-center">Tidak ada produk ditemukan</div>
+                                    <div className="text-muted-foreground py-10 text-center">{t('dashboard.pages.adminProducts.empty')}</div>
                                 )}
                             </div>
                         ) : (
@@ -374,7 +374,7 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
                                         ) : (
                                             <TableRow>
                                                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                                                    Tidak ada produk ditemukan
+                                                    {t('dashboard.pages.adminProducts.empty')}
                                                 </TableCell>
                                             </TableRow>
                                         )}
@@ -422,7 +422,7 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
                                             onClick={() => table.setPageIndex(0)}
                                             disabled={!table.getCanPreviousPage()}
                                         >
-                                            <span className="sr-only">Go to first page</span>
+                                            <span className="sr-only">{t('dashboard.pages.adminProducts.pagination.first')}</span>
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 width="16"
@@ -445,13 +445,13 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
                                             onClick={() => table.previousPage()}
                                             disabled={!table.getCanPreviousPage()}
                                         >
-                                            <span className="sr-only">Go to previous page</span>
+                                            <span className="sr-only">{t('dashboard.pages.adminProducts.pagination.prev')}</span>
                                             <ChevronLeft className="h-4 w-4" />
                                         </Button>
                                         <div className="flex items-center gap-1">
                                             <span className="text-sm">Halaman</span>
                                             <strong className="text-sm font-medium">
-                                                {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+                                                {table.getState().pagination.pageIndex + 1} {t('dashboard.pages.adminProducts.pagination.of')} {table.getPageCount()}
                                             </strong>
                                         </div>
                                         <Button
@@ -460,7 +460,7 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
                                             onClick={() => table.nextPage()}
                                             disabled={!table.getCanNextPage()}
                                         >
-                                            <span className="sr-only">Go to next page</span>
+                                            <span className="sr-only">{t('dashboard.pages.adminProducts.pagination.next')}</span>
                                             <ChevronRight className="h-4 w-4" />
                                         </Button>
                                         <Button
@@ -469,7 +469,7 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
                                             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
                                             disabled={!table.getCanNextPage()}
                                         >
-                                            <span className="sr-only">Go to last page</span>
+                                            <span className="sr-only">{t('dashboard.pages.adminProducts.pagination.last')}</span>
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 width="16"
@@ -497,15 +497,15 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
             <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Apakah Anda yakin?</AlertDialogTitle>
+                        <AlertDialogTitle>{t('dashboard.pages.adminProducts.dialog.confirmTitle')}</AlertDialogTitle>
                         <AlertDialogDescription>
                             Tindakan ini tidak dapat dibatalkan. Ini akan menghapus produk{' '}
                             <span className="font-medium">{productToDelete?.name}</span> secara permanen dan menghapus datanya dari server.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel>Batal</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleDelete}>Hapus</AlertDialogAction>
+                        <AlertDialogCancel>{t('dashboard.pages.adminProducts.dialog.cancel')}</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDelete}>{t('dashboard.pages.adminProducts.dialog.delete')}</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

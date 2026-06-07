@@ -9,13 +9,13 @@ use Inertia\Inertia;
 class BlogController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Menampilkan daftar blog dengan fitur pencarian dan filter kategori.
      */
     public function index(Request $request)
     {
         $query = Blog::query();
 
-        // Handle search
+        // Fitur pencarian blog
         if ($request->has('search')) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
@@ -25,14 +25,14 @@ class BlogController extends Controller
             });
         }
 
-        // Handle category filter
+        // Fitur filter kategori
         if ($request->has('category')) {
             $query->where('category', $request->input('category'));
         }
 
         $blogs = $query->latest()->paginate(6);
 
-        // Transform blog images to include proper URLs
+        // Transformasi gambar blog agar URL bisa diakses frontend
         $blogs->through(function ($blog) {
             $blog->image = $blog->image ? asset('storage/' . $blog->image) : null;
             return $blog;
@@ -43,7 +43,6 @@ class BlogController extends Controller
             'filters' => $request->only(['search', 'category']),
         ]);
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -62,16 +61,16 @@ class BlogController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Menampilkan detail blog berdasarkan slug.
      */
     public function show($slug)
     {
         $blog = Blog::where('slug', $slug)->firstOrFail();
         
-        // Add proper image URL
+        // Tambahkan URL gambar yang benar
         $blog->image = $blog->image ? asset('storage/' . $blog->image) : null;
 
-        // Get related blogs
+        // Ambil blog terkait berdasarkan kategori
         $relatedBlogs = Blog::where('id', '!=', $blog->id)
             ->where('category', $blog->category)
             ->latest()

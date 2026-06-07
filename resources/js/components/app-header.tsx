@@ -12,29 +12,9 @@ import { cn } from '@/lib/utils';
 import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
-
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: '/dashboard',
-        icon: LayoutGrid,
-    },
-];
-
-const rightNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
-    },
-];
 
 const activeItemStyles = 'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100';
 
@@ -46,6 +26,17 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
     const page = usePage<SharedData>();
     const { auth } = page.props;
     const getInitials = useInitials();
+    const { t } = useTranslation();
+
+    const mainNavItems: NavItem[] = [
+        { title: t('dashboard.nav.dashboard'), href: '/dashboard', icon: LayoutGrid },
+    ];
+
+    const rightNavItems: NavItem[] = [
+        { title: t('dashboard.nav.documentation'), href: 'https://laravel.com/docs/starter-kits#react', icon: BookOpen },
+        { title: 'GitHub', href: 'https://github.com/laravel/react-starter-kit', icon: Folder },
+    ];
+
     return (
         <>
             <div className="border-sidebar-border/80 border-b">

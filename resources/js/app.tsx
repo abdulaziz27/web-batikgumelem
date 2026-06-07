@@ -5,14 +5,18 @@ import '../css/app.css';
 import { AppProviders } from './AppProviders'; // <-- Tambahkan ini
 import { Toaster } from './components/ui/sonner';
 import { initializeTheme } from './hooks/use-appearance';
+import { initI18n } from './i18n';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Batik Gumelem';
+const appName = 'Batik Gumelem';
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => resolvePageComponent(`./pages/${name}.tsx`, import.meta.glob('./pages/**/*.tsx')),
     setup({ el, App, props }) {
         const root = createRoot(el);
+        // Init i18n from server-provided locale (Inertia shared prop)
+        // @ts-expect-error inertia page props are dynamic
+        initI18n(props?.initialPage?.props?.locale);
 
         root.render(
             <>

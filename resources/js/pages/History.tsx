@@ -1,17 +1,35 @@
 import Layout from '@/components/layout/Layout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 const History = () => {
+    const { t } = useTranslation();
+    const section1Paragraphs = t('history.section1Paragraphs', { returnObjects: true }) as string[];
+    const section2Paragraphs = t('history.section2Paragraphs', { returnObjects: true }) as string[];
+    const motifs = t('history.motifs', { returnObjects: true }) as {
+        key: string;
+        label: string;
+        title: string;
+        image: string;
+        alt: string;
+        paragraphs: string[];
+    }[];
+    const preservationCards = t('history.preservationCards', { returnObjects: true }) as {
+        title: string;
+        body: string;
+        image: string;
+        alt: string;
+    }[];
     return (
         <Layout>
             <div className="bg-batik-cream/30 batik-pattern py-10">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center">
                         <h1 className="text-batik-brown text-3xl font-bold tracking-tight sm:text-4xl">
-                            Sejarah Batik <span className="text-batik-indigo">Gumelem</span>
+                            {t('history.titlePrefix')} <span className="text-batik-indigo">{t('history.titleBrand')}</span>
                         </h1>
-                        <p className="mx-auto mt-4 max-w-xl text-base text-gray-600">Telusuri perjalanan panjang batik Gumelem dari masa ke masa</p>
+                        <p className="mx-auto mt-4 max-w-xl text-base text-gray-600">{t('history.subtitle')}</p>
                     </div>
                 </div>
             </div>
@@ -25,19 +43,12 @@ const History = () => {
                         viewport={{ once: true }}
                         className="order-2 lg:order-1"
                     >
-                        <h2 className="text-batik-brown mb-6 text-2xl font-bold md:text-3xl">Warisan Budaya dari Masa Kerajaan</h2>
-                        <p className="mb-4 text-gray-600">
-                            Sejarah batik Gumelem tidak lepas dari keberadaan Kadipaten Gumelem yang merupakan wilayah bawahan Kerajaan Mataram.
-                            Konon, batik Gumelem sudah ada sejak abad ke-17, pada masa pemerintahan Sultan Agung Hanyokrokusumo.
-                        </p>
-                        <p className="mb-4 text-gray-600">
-                            Pada masa itu, batik hanya dibuat oleh keluarga bangsawan atau raja, dan motif-motifnya sangat eksklusif. Motif-motif
-                            tersebut memiliki makna filosofis yang mendalam dan mencerminkan status sosial pemakainya.
-                        </p>
-                        <p className="text-gray-600">
-                            Seiring berjalannya waktu, batik mulai menyebar ke masyarakat umum dan berkembang menjadi industri rakyat seperti yang
-                            kita kenal sekarang. Meski demikian, keunikan dan kekhasan motif batik Gumelem tetap terjaga hingga kini.
-                        </p>
+                        <h2 className="text-batik-brown mb-6 text-2xl font-bold md:text-3xl">{t('history.section1Title')}</h2>
+                        {section1Paragraphs.map((p, idx) => (
+                            <p key={idx} className={idx === section1Paragraphs.length - 1 ? 'text-gray-600' : 'mb-4 text-gray-600'}>
+                                {p}
+                            </p>
+                        ))}
                     </motion.div>
                     <motion.div
                         initial={{ opacity: 0, x: 50 }}
@@ -51,7 +62,7 @@ const History = () => {
                                 <iframe
                                     className="h-full w-full"
                                     src="https://www.youtube.com//embed/SbFw3iD63dw"
-                                    title="Sejarah Batik Gumelem"
+                                    title={t('history.videoTitle')}
                                     frameBorder="0"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                     allowFullScreen
@@ -71,7 +82,7 @@ const History = () => {
                         <div className="relative">
                             <img
                                 src="images/product_image_3.png"
-                                alt="Proses pembuatan batik Gumelem"
+                                alt={t('history.makingAlt')}
                                 className="hero-image-shadow w-full rounded-xl shadow-lg"
                             />
                         </div>
@@ -82,20 +93,12 @@ const History = () => {
                         transition={{ duration: 0.8 }}
                         viewport={{ once: true }}
                     >
-                        <h2 className="text-batik-brown mb-6 text-2xl font-bold md:text-3xl">Teknik Pembuatan yang Diwariskan</h2>
-                        <p className="mb-4 text-gray-600">
-                            Teknik pembuatan batik Gumelem masih sangat tradisional dan memakan waktu yang lama. Proses pembuatan dimulai dari tahap
-                            persiapan kain, pembuatan pola, pencantingan, pewarnaan, hingga pelorodan (menghilangkan lilin).
-                        </p>
-                        <p className="mb-4 text-gray-600">
-                            Batik Gumelem dibuat dengan dua teknik utama, yaitu batik tulis dan batik cap. Batik tulis dibuat dengan menggambar motif
-                            menggunakan canting yang diisi dengan lilin (malam) panas, sementara batik cap menggunakan stempel dari tembaga untuk
-                            membuat pola.
-                        </p>
-                        <p className="text-gray-600">
-                            Pewarnaan batik Gumelem tradisional menggunakan bahan-bahan alami seperti kulit kayu, daun, dan akar tumbuhan. Proses ini
-                            membutuhkan ketelitian dan kesabaran, karena untuk mendapatkan warna yang sempurna, kain harus dicelup berulang kali.
-                        </p>
+                        <h2 className="text-batik-brown mb-6 text-2xl font-bold md:text-3xl">{t('history.section2Title')}</h2>
+                        {section2Paragraphs.map((p, idx) => (
+                            <p key={idx} className={idx === section2Paragraphs.length - 1 ? 'text-gray-600' : 'mb-4 text-gray-600'}>
+                                {p}
+                            </p>
+                        ))}
                     </motion.div>
                 </div>
 
@@ -107,139 +110,39 @@ const History = () => {
                     className="mb-20"
                 >
                     <div className="mb-12 text-center">
-                        <h2 className="text-batik-brown text-2xl font-bold md:text-3xl">Filosofi Motif Batik Gumelem</h2>
+                        <h2 className="text-batik-brown text-2xl font-bold md:text-3xl">{t('history.philosophyTitle')}</h2>
                         <p className="mx-auto mt-4 max-w-3xl text-gray-600">
-                            Setiap motif batik Gumelem mengandung makna filosofis mendalam yang mencerminkan pandangan hidup dan nilai-nilai
-                            masyarakat Banjarnegara
+                            {t('history.philosophySubtitle')}
                         </p>
                     </div>
 
                     <Tabs defaultValue="pring-sedapur" className="w-full">
                         <TabsList className="mb-8 grid w-full grid-cols-2 md:grid-cols-5">
-                            <TabsTrigger value="pring-sedapur">Pring Sedapur</TabsTrigger>
-                            <TabsTrigger value="sekar-jagad">Sekar Jagad</TabsTrigger>
-                            <TabsTrigger value="semen-rama">Semen Rama</TabsTrigger>
-                            <TabsTrigger value="parang-kusuma">Parang Kusuma</TabsTrigger>
-                            <TabsTrigger value="gilar-gilar">Gilar-gilar</TabsTrigger>
+                            {motifs.map((m) => (
+                                <TabsTrigger key={m.key} value={m.key}>
+                                    {m.label}
+                                </TabsTrigger>
+                            ))}
                         </TabsList>
 
                         <div className="overflow-hidden rounded-xl bg-white shadow-sm">
-                            <TabsContent value="pring-sedapur">
-                                <div className="grid grid-cols-1 md:grid-cols-2">
-                                    <div className="aspect-square overflow-hidden">
-                                        <img src="images/product_image_1.png" alt="Motif Pring Sedapur" className="h-full w-full object-cover" />
+                            {motifs.map((m) => (
+                                <TabsContent key={m.key} value={m.key}>
+                                    <div className="grid grid-cols-1 md:grid-cols-2">
+                                        <div className="aspect-square overflow-hidden">
+                                            <img src={m.image} alt={m.alt} className="h-full w-full object-cover" />
+                                        </div>
+                                        <div className="p-8">
+                                            <h3 className="text-batik-indigo mb-4 text-xl font-bold">{m.title}</h3>
+                                            {m.paragraphs.map((p, idx) => (
+                                                <p key={idx} className={idx === m.paragraphs.length - 1 ? 'text-gray-600' : 'mb-4 text-gray-600'}>
+                                                    {p}
+                                                </p>
+                                            ))}
+                                        </div>
                                     </div>
-                                    <div className="p-8">
-                                        <h3 className="text-batik-indigo mb-4 text-xl font-bold">Motif Pring Sedapur</h3>
-                                        <p className="mb-4 text-gray-600">
-                                            Motif yang menggambarkan rumpun bambu (pring) dalam satu kebun (sedapur). Bambu dipilih sebagai motif
-                                            karena memiliki filosofi yang mendalam dalam kehidupan masyarakat Jawa.
-                                        </p>
-                                        <p className="mb-4 text-gray-600">
-                                            Filosofi dari motif ini adalah semakin tinggi ilmu seseorang, semakin rendah hati dia. Seperti bambu yang
-                                            semakin tinggi semakin merunduk. Bambu juga melambangkan kemanfaatan yang tinggi, karena hampir seluruh
-                                            bagian bambu dapat dimanfaatkan.
-                                        </p>
-                                        <p className="text-gray-600">
-                                            Selain itu, rumpun bambu juga melambangkan kebersamaan dan gotong royong, karena bambu selalu tumbuh
-                                            berumpun, tidak pernah sendiri.
-                                        </p>
-                                    </div>
-                                </div>
-                            </TabsContent>
-
-                            <TabsContent value="sekar-jagad">
-                                <div className="grid grid-cols-1 md:grid-cols-2">
-                                    <div className="aspect-square overflow-hidden">
-                                        <img src="images/product_image_2.png" alt="Motif Sekar Jagad" className="h-full w-full object-cover" />
-                                    </div>
-                                    <div className="p-8">
-                                        <h3 className="text-batik-indigo mb-4 text-xl font-bold">Motif Sekar Jagad</h3>
-                                        <p className="mb-4 text-gray-600">
-                                            Sekar Jagad berarti "bunga dunia" atau "bunga semesta". Motif ini terdiri dari berbagai macam bentuk yang
-                                            menyerupai pulau-pulau yang dikelilingi ol h lautan, mewakili keberagaman dunia.
-                                        </p>
-                                        <p className="mb-4 text-gray-600">
-                                            Filosofi dari motif Sekar Jagad adalah keindahan dalam keberagaman. Motif ini melambangkan kesatuan dalam
-                                            perbedaan, seperti semboyan "Bhinneka Tunggal Ika" yang berarti berbeda-beda tetapi tetap satu.
-                                        </p>
-                                        <p className="text-gray-600">
-                                            Motif ini juga mengajarkan bahwa segala sesuatu di dunia ini saling terhubung dan saling melengkapi,
-                                            seperti keseimbangan alam semesta.
-                                        </p>
-                                    </div>
-                                </div>
-                            </TabsContent>
-
-                            <TabsContent value="semen-rama">
-                                <div className="grid grid-cols-1 md:grid-cols-2">
-                                    <div className="aspect-square overflow-hidden">
-                                        <img src="images/product_image_2.png" alt="Motif Semen Rama" className="h-full w-full object-cover" />
-                                    </div>
-                                    <div className="p-8">
-                                        <h3 className="text-batik-indigo mb-4 text-xl font-bold">Motif Semen Rama</h3>
-                                        <p className="mb-4 text-gray-600">
-                                            Kata "semen" berasal dari kata "semi" yang berarti tumbuh atau berkembang. Motif Semen Rama terinspirasi
-                                            dari kisah Ramawijaya dalam Epos Ramayana, seorang raja yang bijaksana dan adil.
-                                        </p>
-                                        <p className="mb-4 text-gray-600">
-                                            Filosofi dari motif ini melambangkan kesuburan dan kemakmuran. Motif ini juga mengandung ajaran tentang
-                                            kepemimpinan yang adil dan bijaksana, seperti yang dicontohkan oleh Raja Rama.
-                                        </p>
-                                        <p className="text-gray-600">
-                                            Motif Semen Rama biasanya terdiri dari ornamen gunung, tumbuhan, burung, dan hewan lainnya, yang
-                                            melambangkan harmoni antara manusia, alam, dan kosmos.
-                                        </p>
-                                    </div>
-                                </div>
-                            </TabsContent>
-
-                            <TabsContent value="parang-kusuma">
-                                <div className="grid grid-cols-1 md:grid-cols-2">
-                                    <div className="aspect-square overflow-hidden">
-                                        <img src="images/product_image_3.png" alt="Motif Parang Kusuma" className="h-full w-full object-cover" />
-                                    </div>
-                                    <div className="p-8">
-                                        <h3 className="text-batik-indigo mb-4 text-xl font-bold">Motif Parang Kusuma</h3>
-                                        <p className="mb-4 text-gray-600">
-                                            Parang berarti pisau atau senjata, sedangkan kusuma berarti bunga atau keindahan. Motif ini terdiri dari
-                                            bentuk-bentuk diagonal menyerupai pisau yang disusun berderet.
-                                        </p>
-                                        <p className="mb-4 text-gray-600">
-                                            Filosofi dari motif Parang Kusuma menggambarkan kebijaksanaan dan keteguhan dalam menghadapi berbagai
-                                            rintangan kehidupan. Motif ini juga melambangkan kekuatan dan kegigihan, seperti ombak laut yang tidak
-                                            pernah berhenti bergerak.
-                                        </p>
-                                        <p className="text-gray-600">
-                                            Dalam tradisi Jawa, motif parang merupakan salah satu motif tertua dan paling dihormati, yang pada masa
-                                            lalu hanya boleh dikenakan oleh kalangan bangsawan.
-                                        </p>
-                                    </div>
-                                </div>
-                            </TabsContent>
-
-                            <TabsContent value="gilar-gilar">
-                                <div className="grid grid-cols-1 md:grid-cols-2">
-                                    <div className="aspect-square overflow-hidden">
-                                        <img src="images/product_image_4.png" alt="Motif Gilar-gilar" className="h-full w-full object-cover" />
-                                    </div>
-                                    <div className="p-8">
-                                        <h3 className="text-batik-indigo mb-4 text-xl font-bold">Motif Gilar-gilar</h3>
-                                        <p className="mb-4 text-gray-600">
-                                            Gilar-gilar berarti "bersinar" atau "gemerlap". Motif ini terinspirasi dari gelang emas milik Kadipaten
-                                            Gumelem yang memancarkan cahaya gemerlap.
-                                        </p>
-                                        <p className="mb-4 text-gray-600">
-                                            Filosofi dari motif ini melambangkan kemakmuran, kemuliaan, dan harapan akan kehidupan yang lebih baik.
-                                            Motif ini juga mengandung makna keindahan dan keagungan.
-                                        </p>
-                                        <p className="text-gray-600">
-                                            Motif Gilar-gilar merupakan salah satu motif khas Gumelem yang tidak ditemukan di daerah penghasil batik
-                                            lainnya, sehingga menjadi identitas tersendiri bagi batik Gumelem.
-                                        </p>
-                                    </div>
-                                </div>
-                            </TabsContent>
+                                </TabsContent>
+                            ))}
                         </div>
                     </Tabs>
                 </motion.div>
@@ -251,51 +154,24 @@ const History = () => {
                     viewport={{ once: true }}
                 >
                     <div className="mb-12 text-center">
-                        <h2 className="text-batik-brown text-2xl font-bold md:text-3xl">Pelestarian Batik Gumelem</h2>
+                        <h2 className="text-batik-brown text-2xl font-bold md:text-3xl">{t('history.preservationTitle')}</h2>
                         <p className="mx-auto mt-4 max-w-3xl text-gray-600">
-                            Upaya yang dilakukan berbagai pihak untuk melestarikan dan mengembangkan batik Gumelem sebagai warisan budaya
+                            {t('history.preservationSubtitle')}
                         </p>
                     </div>
 
                     <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-                        <div className="hover-lift overflow-hidden rounded-xl bg-white shadow-sm">
-                            <div className="aspect-video overflow-hidden">
-                                <img src="images/batik-gumelem-pelatihan.jpeg" alt="Pelatihan batik" className="h-full w-full object-cover" />
+                        {preservationCards.map((c, idx) => (
+                            <div key={idx} className="hover-lift overflow-hidden rounded-xl bg-white shadow-sm">
+                                <div className="aspect-video overflow-hidden">
+                                    <img src={c.image} alt={c.alt} className="h-full w-full object-cover" />
+                                </div>
+                                <div className="p-6">
+                                    <h3 className="text-batik-indigo mb-2 text-lg font-semibold">{c.title}</h3>
+                                    <p className="text-gray-600">{c.body}</p>
+                                </div>
                             </div>
-                            <div className="p-6">
-                                <h3 className="text-batik-indigo mb-2 text-lg font-semibold">Pelatihan dan Pendidikan</h3>
-                                <p className="text-gray-600">
-                                    Berbagai program pelatihan dan pendidikan diadakan untuk mengajarkan teknik pembuatan batik Gumelem kepada
-                                    generasi muda, terutama di sekolah-sekolah dan komunitas lokal.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="hover-lift overflow-hidden rounded-xl bg-white shadow-sm">
-                            <div className="aspect-video overflow-hidden">
-                                <img src="images/batik-gumelem-festival.png" alt="Festival batik" className="h-full w-full object-cover" />
-                            </div>
-                            <div className="p-6">
-                                <h3 className="text-batik-indigo mb-2 text-lg font-semibold">Festival dan Pameran</h3>
-                                <p className="text-gray-600">
-                                    Festival Batik Gumelem diadakan secara rutin untuk mempromosikan dan memperkenalkan batik Gumelem kepada
-                                    masyarakat luas, baik dalam skala nasional maupun internasional.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="hover-lift overflow-hidden rounded-xl bg-white shadow-sm">
-                            <div className="aspect-video overflow-hidden">
-                                <img src="images/batik-gumelem-inovasi.jpeg" alt="Inovasi batik" className="h-full w-full object-cover" />
-                            </div>
-                            <div className="p-6">
-                                <h3 className="text-batik-indigo mb-2 text-lg font-semibold">Inovasi dan Pengembangan</h3>
-                                <p className="text-gray-600">
-                                    Para pengrajin batik Gumelem terus berinovasi dengan menciptakan motif-motif baru dan aplikasi batik pada berbagai
-                                    produk, sambil tetap menjaga kekhasan dan nilai-nilai tradisional.
-                                </p>
-                            </div>
-                        </div>
+                        ))}
                     </div>
 
                     <div className="mt-12 text-center">
@@ -303,7 +179,7 @@ const History = () => {
                             href="/about"
                             className="bg-batik-brown hover-lift hover:bg-batik-brown/90 inline-flex items-center justify-center rounded-lg px-6 py-3 text-white"
                         >
-                            Pelajari Lebih Lanjut tentang Komunitas Kami
+                            {t('history.ctaCommunity')}
                         </a>
                     </div>
                 </motion.div>

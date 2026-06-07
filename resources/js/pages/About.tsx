@@ -1,5 +1,6 @@
 import Layout from '@/components/layout/Layout';
 import { Clock, Mail, MapPin, Phone } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 // Mock data for team members
 const teamMembers = [
@@ -30,14 +31,16 @@ const teamMembers = [
 ];
 
 const About = () => {
+    const { t } = useTranslation();
+    const missionItems = t('aboutPage.missionItems', { returnObjects: true }) as string[];
     return (
         <Layout>
             <div className="bg-batik-cream/30 batik-pattern py-10">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center">
-                        <h1 className="text-batik-brown text-3xl font-bold tracking-tight sm:text-4xl">Tentang Kami</h1>
+                        <h1 className="text-batik-brown text-3xl font-bold tracking-tight sm:text-4xl">{t('aboutPage.title')}</h1>
                         <p className="mx-auto mt-4 max-w-xl text-base text-gray-600">
-                            Mengenal lebih dekat Komunitas Batik Amorista dan perjalanan kami melestarikan warisan budaya batik Gumelem
+                            {t('aboutPage.subtitle')}
                         </p>
                     </div>
                 </div>
@@ -47,11 +50,9 @@ const About = () => {
                 {/* Our Story */}
                 <div className="mb-20">
                     <div className="mx-auto max-w-4xl text-center">
-                        <h2 className="text-batik-brown mb-6 text-3xl font-bold">Perjalanan Kami</h2>
+                        <h2 className="text-batik-brown mb-6 text-3xl font-bold">{t('aboutPage.storyTitle')}</h2>
                         <p className="mb-8 text-lg text-gray-600">
-                            Komunitas Batik Amorista didirikan pada tahun 2010 oleh sekelompok pengrajin batik Gumelem yang memiliki visi untuk
-                            melestarikan dan mengembangkan batik tradisional Gumelem. Nama "Amorista" diambil dari kata "Amor" yang berarti cinta dan
-                            "Ista" yang berarti keinginan, mencerminkan kecintaan dan dedikasi kami terhadap seni batik.
+                            {t('aboutPage.storyP1')}
                         </p>
                     </div>
 
@@ -60,40 +61,19 @@ const About = () => {
                             <img src="images/dashboard_banner_image_4.png" alt="Proses pembuatan batik" className="rounded-xl shadow-lg" />
                         </div>
                         <div className="animate-fade-in" style={{ animationDelay: '200ms' }}>
-                            <h3 className="text-batik-indigo mb-4 text-2xl font-bold">Misi Kami</h3>
+                            <h3 className="text-batik-indigo mb-4 text-2xl font-bold">{t('aboutPage.missionTitle')}</h3>
                             <p className="mb-6 text-gray-600">
-                                Misi kami adalah melestarikan warisan budaya batik Gumelem dengan tetap membuka diri pada inovasi dan perkembangan
-                                zaman. Kami berkomitmen untuk:
+                                {t('aboutPage.missionIntro')}
                             </p>
                             <ul className="space-y-3">
-                                <li className="flex items-start">
-                                    <div className="bg-batik-brown flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full font-bold text-white">
-                                        1
-                                    </div>
-                                    <span className="ml-3 text-gray-600">Menjaga keaslian teknik dan motif tradisional batik Gumelem</span>
-                                </li>
-                                <li className="flex items-start">
-                                    <div className="bg-batik-brown flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full font-bold text-white">
-                                        2
-                                    </div>
-                                    <span className="ml-3 text-gray-600">
-                                        Memberdayakan pengrajin lokal dengan memberikan pelatihan dan lapangan kerja
-                                    </span>
-                                </li>
-                                <li className="flex items-start">
-                                    <div className="bg-batik-brown flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full font-bold text-white">
-                                        3
-                                    </div>
-                                    <span className="ml-3 text-gray-600">
-                                        Mengembangkan motif-motif baru yang tetap menghormati nilai-nilai filosofis batik Gumelem
-                                    </span>
-                                </li>
-                                <li className="flex items-start">
-                                    <div className="bg-batik-brown flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full font-bold text-white">
-                                        4
-                                    </div>
-                                    <span className="ml-3 text-gray-600">Memperkenalkan batik Gumelem ke pasar nasional dan internasional</span>
-                                </li>
+                                {missionItems.map((item, idx) => (
+                                    <li key={idx} className="flex items-start">
+                                        <div className="bg-batik-brown flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full font-bold text-white">
+                                            {idx + 1}
+                                        </div>
+                                        <span className="ml-3 text-gray-600">{item}</span>
+                                    </li>
+                                ))}
                             </ul>
                         </div>
                     </div>
@@ -179,9 +159,9 @@ const About = () => {
                 {/* Location and Contact */}
                 <div>
                     <div className="mb-12 text-center">
-                        <h2 className="text-batik-brown mb-4 text-3xl font-bold">Lokasi & Kontak</h2>
+                        <h2 className="text-batik-brown mb-4 text-3xl font-bold">{t('aboutPage.locationTitle')}</h2>
                         <p className="mx-auto max-w-3xl text-lg text-gray-600">
-                            Kami mengundang Anda untuk mengunjungi workshop batik kami dan menyaksikan langsung proses pembuatan batik Gumelem.
+                            {t('aboutPage.locationSubtitle')}
                         </p>
                     </div>
 
@@ -201,7 +181,7 @@ const About = () => {
 
                         <div className="animate-fade-in" style={{ animationDelay: '200ms' }}>
                             <div className="h-full rounded-xl bg-white p-8 shadow-sm">
-                                <h3 className="text-batik-brown mb-6 text-2xl font-bold">Informasi Kontak</h3>
+                                <h3 className="text-batik-brown mb-6 text-2xl font-bold">{t('aboutPage.contactInfoTitle')}</h3>
 
                                 <div className="space-y-6">
                                     <div className="flex">
@@ -211,7 +191,7 @@ const About = () => {
                                             </div>
                                         </div>
                                         <div className="ml-4">
-                                            <h4 className="text-batik-indigo text-lg font-semibold">Alamat</h4>
+                                            <h4 className="text-batik-indigo text-lg font-semibold">{t('aboutPage.addressLabel')}</h4>
                                             <p className="mt-1 text-gray-600">
                                                 Amorista, Desa Gumelem Kulon, Kecamatan Susukan
                                                 <br />
@@ -229,7 +209,7 @@ const About = () => {
                                             </div>
                                         </div>
                                         <div className="ml-4">
-                                            <h4 className="text-batik-indigo text-lg font-semibold">Telepon</h4>
+                                            <h4 className="text-batik-indigo text-lg font-semibold">{t('aboutPage.phoneLabel')}</h4>
                                             <p className="mt-1 text-gray-600">
                                                 +62 859 4460 8542
                                             </p>
@@ -243,7 +223,7 @@ const About = () => {
                                             </div>
                                         </div>
                                         <div className="ml-4">
-                                            <h4 className="text-batik-indigo text-lg font-semibold">Email</h4>
+                                            <h4 className="text-batik-indigo text-lg font-semibold">{t('aboutPage.emailLabel')}</h4>
                                             <p className="mt-1 text-gray-600">
                                                 info@batikgumelem.com
                                                 <br />
@@ -259,13 +239,13 @@ const About = () => {
                                             </div>
                                         </div>
                                         <div className="ml-4">
-                                            <h4 className="text-batik-indigo text-lg font-semibold">Jam Operasional</h4>
+                                            <h4 className="text-batik-indigo text-lg font-semibold">{t('aboutPage.hoursLabel')}</h4>
                                             <p className="mt-1 text-gray-600">
-                                                Senin - Jumat: 09.00 - 17.00 WIB
+                                                {t('aboutPage.hours.monFri')}
                                                 <br />
-                                                Sabtu: 09.00 - 15.00 WIB
+                                                {t('aboutPage.hours.sat')}
                                                 <br />
-                                                Minggu: Tutup
+                                                {t('aboutPage.hours.sun')}
                                             </p>
                                         </div>
                                     </div>

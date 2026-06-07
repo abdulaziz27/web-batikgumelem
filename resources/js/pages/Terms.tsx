@@ -1,13 +1,15 @@
 import Layout from '@/components/layout/Layout';
+import { useTranslation } from 'react-i18next';
 
 const Terms = () => {
+    const { t } = useTranslation();
     return (
         <Layout>
             <div className="bg-batik-cream/30 batik-pattern py-10">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center">
-                        <h1 className="text-batik-brown text-3xl font-bold tracking-tight sm:text-4xl">Syarat & Ketentuan</h1>
-                        <p className="mx-auto mt-4 max-w-xl text-base text-gray-600">Kebijakan penggunaan website dan layanan BatikGumelem.com</p>
+                        <h1 className="text-batik-brown text-3xl font-bold tracking-tight sm:text-4xl">{t('legal.termsTitle')}</h1>
+                        <p className="mx-auto mt-4 max-w-xl text-base text-gray-600">{t('legal.termsSubtitle')}</p>
                     </div>
                 </div>
             </div>
@@ -15,7 +17,7 @@ const Terms = () => {
             <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
                 <div className="mx-auto max-w-4xl rounded-xl bg-white p-8 shadow-sm">
                     <div className="prose prose-lg max-w-none text-gray-700">
-                        <p>Terakhir diperbarui: 1 Mei 2025</p>
+                        <p>{t('legal.lastUpdated')}: 1 Mei 2025</p>
 
                         <p>
                             Selamat datang di BatikGumelem.com. Syarat dan ketentuan ini mengatur penggunaan Anda atas website BatikGumelem.com dan

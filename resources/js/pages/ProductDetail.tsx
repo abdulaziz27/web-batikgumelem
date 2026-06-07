@@ -8,6 +8,7 @@ import { Link, router, usePage } from '@inertiajs/react';
 import { Minus, Plus, ShoppingCart } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 
 interface ProductImage {
     id: number;
@@ -48,8 +49,10 @@ interface ProductDetailProps {
 }
 
 const ProductDetail = () => {
-    const { product, relatedProducts } = usePage().props as unknown as ProductDetailProps;
+    const { product, relatedProducts, locale } = usePage().props as unknown as ProductDetailProps & { locale?: 'id' | 'en' };
     const { auth } = usePage().props as any;
+    const { t } = useTranslation();
+    const lang = locale === 'en' ? 'en' : 'id';
 
     // Automatically select the first available size with stock
     const getFirstAvailableSize = () => {
@@ -85,7 +88,7 @@ const ProductDetail = () => {
         if (isOutOfStock || quantity <= 0) return;
 
         if (!auth?.user) {
-            toast.error('Anda harus login untuk menambah produk ke keranjang. Silakan login terlebih dahulu.');
+            toast.error(t('product.mustLoginAddToCart'));
             router.visit('/login');
             return;
         }
@@ -103,7 +106,7 @@ const ProductDetail = () => {
                 },
                 {
                     onError: (errors) => {
-                        toast.error('Gagal menambahkan produk ke keranjang');
+                        toast.error(t('product.addToCartFailed'));
                         console.error('Add to cart error:', errors);
                     },
                     onFinish: () => {
@@ -113,7 +116,7 @@ const ProductDetail = () => {
             );
         } catch (error) {
             console.error('Error adding to cart:', error);
-            toast.error('Gagal menambahkan produk ke keranjang');
+            toast.error(t('product.addToCartFailed'));
             setIsLoading(false);
         }
     };
@@ -139,14 +142,14 @@ const ProductDetail = () => {
                         <ol className="inline-flex items-center space-x-1 md:space-x-3">
                             <li className="inline-flex items-center">
                                 <Link href="/" className="hover:text-batik-brown link-hover text-sm text-gray-500">
-                                    Beranda
+                                    {t('product.breadcrumbsHome')}
                                 </Link>
                             </li>
                             <li>
                                 <div className="flex items-center">
                                     <span className="mx-2 text-gray-400">/</span>
                                     <Link href="/products" className="hover:text-batik-brown link-hover text-sm text-gray-500">
-                                        Produk
+                                        {t('product.breadcrumbsProducts')}
                                     </Link>
                                 </div>
                             </li>
@@ -210,26 +213,29 @@ const ProductDetail = () => {
                             </div>
 
                             <div className="text-batik-brown animate-fade-in text-3xl font-bold" style={{ animationDelay: '200ms' }}>
-                                {formatRupiah(product.price)}
+                                {formatRupiah(product.price, lang)}
                             </div>
 
                             <div className="animate-fade-in" style={{ animationDelay: '300ms' }}>
-                                <h2 className="text-batik-brown text-sm font-medium">Deskripsi</h2>
+                                <h2 className="text-batik-brown text-sm font-medium">{t('product.description')}</h2>
                                 <p className="mt-2 text-sm text-gray-600">{product.description}</p>
                             </div>
 
                             <div className="animate-fade-in space-y-4" style={{ animationDelay: '400ms' }}>
                                 <div>
-                                    <h2 className="text-batik-brown text-sm font-medium">Ukuran</h2>
+                                    <h2 className="text-batik-brown text-sm font-medium">{t('product.size')}</h2>
                                     <div className="mt-2">
                                         <Select value={selectedSize} onValueChange={setSelectedSize}>
                                             <SelectTrigger className="w-40">
-                                                <SelectValue placeholder="Pilih Ukuran" />
+                                                <SelectValue placeholder={t('product.chooseSize')} />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 {product.sizes && product.sizes.map((size) => (
                                                     <SelectItem key={size.id} value={size.size} disabled={size.stock <= 0}>
-                                                        {size.size} {size.stock <= 0 ? '(Habis)' : `(${size.stock} tersedia)`}
+                                                        {size.size}{' '}
+                                                        {size.stock <= 0
+                                                            ? `(${t('product.outOfStock')})`
+                                                            : `(${t('product.availableFmt', { count: size.stock })})`}
                                                     </SelectItem>
                                                 ))}
                                             </SelectContent>
@@ -239,11 +245,11 @@ const ProductDetail = () => {
 
                                 <div>
                                     <div className="flex items-center justify-between">
-                                        <h2 className="text-batik-brown text-sm font-medium">Jumlah</h2>
+                                        <h2 className="text-batik-brown text-sm font-medium">{t('product.quantity')}</h2>
                                         <span className={`text-sm ${isOutOfStock ? 'text-red-500' : 'text-green-600'}`}>
                                             {isOutOfStock 
-                                                ? 'Stok habis untuk ukuran ini' 
-                                                : `Tersedia: ${stockForSelectedSize} item`
+                                                ? t('product.stockEmptyForSize')
+                                                : t('product.availableItemsFmt', { count: stockForSelectedSize })
                                             }
                                         </span>
                                     </div>
@@ -277,10 +283,10 @@ const ProductDetail = () => {
                                 >
                                     <ShoppingCart className="mr-2 h-5 w-5" />
                                     {isLoading 
-                                        ? 'Menambahkan...' 
+                                        ? t('product.adding')
                                         : isOutOfStock 
-                                            ? 'Stok Habis' 
-                                            : 'Tambahkan ke Keranjang'
+                                            ? t('product.stockEmpty')
+                                            : t('product.addToCart')
                                     }
                                 </Button>
                             </div>
@@ -291,8 +297,8 @@ const ProductDetail = () => {
                     <div className="animate-fade-in mt-12" style={{ animationDelay: '500ms' }}>
                         <Tabs defaultValue="details">
                             <TabsList className="grid w-full grid-cols-2">
-                                <TabsTrigger value="details">Detail Produk</TabsTrigger>
-                                <TabsTrigger value="care">Perawatan</TabsTrigger>
+                                <TabsTrigger value="details">{t('product.detailsTab')}</TabsTrigger>
+                                <TabsTrigger value="care">{t('product.careTab')}</TabsTrigger>
                             </TabsList>
 
                             <TabsContent value="details" className="mt-6 space-y-4">
@@ -300,19 +306,19 @@ const ProductDetail = () => {
                                     {product.details && (
                                         <>
                                             <div>
-                                                <h3 className="text-batik-brown text-sm font-medium">Bahan</h3>
+                                                <h3 className="text-batik-brown text-sm font-medium">{t('product.material')}</h3>
                                                 <p className="mt-1 text-sm text-gray-600">{product.details.material}</p>
                                             </div>
                                             <div>
-                                                <h3 className="text-batik-brown text-sm font-medium">Teknik Pembuatan</h3>
+                                                <h3 className="text-batik-brown text-sm font-medium">{t('product.technique')}</h3>
                                                 <p className="mt-1 text-sm text-gray-600">{product.details.technique}</p>
                                             </div>
                                             <div>
-                                                <h3 className="text-batik-brown text-sm font-medium">Dimensi</h3>
+                                                <h3 className="text-batik-brown text-sm font-medium">{t('product.dimensions')}</h3>
                                                 <p className="mt-1 text-sm text-gray-600">{product.details.dimensions}</p>
                                             </div>
                                             <div>
-                                                <h3 className="text-batik-brown text-sm font-medium">Warna</h3>
+                                                <h3 className="text-batik-brown text-sm font-medium">{t('product.colors')}</h3>
                                                 <p className="mt-1 text-sm text-gray-600">{product.details.colors}</p>
                                             </div>
                                         </>
@@ -322,15 +328,12 @@ const ProductDetail = () => {
 
                             <TabsContent value="care" className="mt-6">
                                 <div className="space-y-4">
-                                    <h3 className="text-batik-brown text-sm font-medium">Panduan Perawatan</h3>
+                                    <h3 className="text-batik-brown text-sm font-medium">{t('product.careGuide')}</h3>
                                     {product.details && product.details.care ? (
                                         <p className="text-sm text-gray-600">{product.details.care}</p>
                                     ) : (
                                         <p className="text-sm text-gray-600">
-                                            Jaga keindahan Batik Gumelem Anda: Cuci dengan tangan menggunakan sabun lembut (contohnya lerak) dan air
-                                            dingin. Hindari pemutih dan jangan diperas terlalu kuat. Jemur di tempat teduh, jauhkan dari sinar
-                                            matahari langsung. Setrika dengan suhu rendah pada bagian dalam kain atau gunakan kain pelapis. Simpan di
-                                            tempat yang sejuk dan kering.
+                                            {t('product.careFallback')}
                                         </p>
                                     )}
                                 </div>
@@ -341,7 +344,7 @@ const ProductDetail = () => {
                     {/* Related Products section */}
                     {relatedProducts && relatedProducts.length > 0 && (
                         <div className="mt-16">
-                            <h2 className="text-batik-brown mb-6 text-2xl font-bold">Produk Terkait</h2>
+                            <h2 className="text-batik-brown mb-6 text-2xl font-bold">{t('product.related')}</h2>
                             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                                 {relatedProducts.map((relatedProduct) => (
                                     <Link key={relatedProduct.id} href={`/products/${relatedProduct.slug}`} className="group product-card hover-lift">
@@ -354,7 +357,7 @@ const ProductDetail = () => {
                                         </div>
                                         <div className="p-4">
                                             <h3 className="text-batik-brown group-hover:text-batik-indigo font-medium">{relatedProduct.name}</h3>
-                                            <p className="text-batik-indigo mt-1">{formatRupiah(relatedProduct.price)}</p>
+                                            <p className="text-batik-indigo mt-1">{formatRupiah(relatedProduct.price, lang)}</p>
                                         </div>
                                     </Link>
                                 ))}

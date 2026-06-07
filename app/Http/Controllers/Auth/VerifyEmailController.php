@@ -10,14 +10,16 @@ use Illuminate\Http\RedirectResponse;
 class VerifyEmailController extends Controller
 {
     /**
-     * Mark the authenticated user's email address as verified.
+     * Menandai email user sebagai sudah diverifikasi.
      */
     public function __invoke(EmailVerificationRequest $request): RedirectResponse
     {
+        // Jika sudah diverifikasi, redirect ke home
         if ($request->user()->hasVerifiedEmail()) {
             return redirect()->intended('/?verified=1');
         }
 
+        // Tandai email sebagai diverifikasi
         if ($request->user()->markEmailAsVerified()) {
             /** @var \Illuminate\Contracts\Auth\MustVerifyEmail $user */
             $user = $request->user();

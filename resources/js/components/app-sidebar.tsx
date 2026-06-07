@@ -5,40 +5,23 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, Sid
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { BookOpen, LayoutGrid, MapPin, ShoppingCart } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import AppLogo from './app-logo';
 
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: '/dashboard',
-        icon: LayoutGrid,
-    },
-    {
-        title: 'Pesanan Saya',
-        href: '/orders',
-        icon: ShoppingCart,
-    },
-    {
-        title: 'Alamat Pengiriman',
-        href: '/addresses',
-        icon: MapPin,
-    },
-];
-
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Toko',
-        href: '/',
-        icon: ShoppingCart,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
-    },
-];
-
 export function AppSidebar() {
+    const { t } = useTranslation();
+
+    const mainNavItems: NavItem[] = [
+        { title: t('dashboard.nav.dashboard'), href: '/dashboard', icon: LayoutGrid },
+        { title: t('dashboard.nav.myOrders'), href: '/orders', icon: ShoppingCart },
+        { title: t('dashboard.nav.addresses'), href: '/addresses', icon: MapPin },
+    ];
+
+    const footerNavItems: NavItem[] = [
+        { title: t('dashboard.nav.store'), href: '/', icon: ShoppingCart },
+        { title: t('dashboard.nav.documentation'), href: 'https://laravel.com/docs/starter-kits#react', icon: BookOpen },
+    ];
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>

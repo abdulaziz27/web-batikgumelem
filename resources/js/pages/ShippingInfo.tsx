@@ -1,16 +1,18 @@
 import Layout from '@/components/layout/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Clock, Package, RotateCcw, ShieldCheck, Truck } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Shipping = () => {
+    const { t } = useTranslation();
     return (
         <Layout>
             <div className="bg-batik-cream/30 batik-pattern py-10">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center">
-                        <h1 className="text-batik-brown text-3xl font-bold tracking-tight sm:text-4xl">Pengiriman & Pengembalian</h1>
+                        <h1 className="text-batik-brown text-3xl font-bold tracking-tight sm:text-4xl">{t('shipping.title')}</h1>
                         <p className="mx-auto mt-4 max-w-xl text-base text-gray-600">
-                            Informasi lengkap mengenai pengiriman dan kebijakan pengembalian produk
+                            {t('shipping.subtitle')}
                         </p>
                     </div>
                 </div>
@@ -20,14 +22,13 @@ const Shipping = () => {
                 <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
                     {/* Shipping Information */}
                     <div className="animate-fade-in">
-                        <h2 className="text-batik-brown mb-6 text-2xl font-bold">Informasi Pengiriman</h2>
+                        <h2 className="text-batik-brown mb-6 text-2xl font-bold">{t('shipping.shippingInfoTitle')}</h2>
 
                         <div className="space-y-6">
                             <div className="rounded-xl bg-white p-6 shadow-sm">
-                                <h3 className="text-batik-indigo mb-4 text-lg font-semibold">Metode Pengiriman</h3>
+                                <h3 className="text-batik-indigo mb-4 text-lg font-semibold">{t('shipping.methodsTitle')}</h3>
                                 <p className="mb-4 text-gray-600">
-                                    Kami bekerja sama dengan berbagai jasa pengiriman terpercaya untuk memastikan produk Anda sampai dengan aman dan
-                                    tepat waktu:
+                                    {t('shipping.methodsBody')}
                                 </p>
                                 <ul className="space-y-3">
                                     <li className="flex items-start">
@@ -70,25 +71,22 @@ const Shipping = () => {
                             </div>
 
                             <div className="rounded-xl bg-white p-6 shadow-sm">
-                                <h3 className="text-batik-indigo mb-4 text-lg font-semibold">Biaya Pengiriman</h3>
+                                <h3 className="text-batik-indigo mb-4 text-lg font-semibold">{t('shipping.costTitle')}</h3>
                                 <p className="text-gray-600">
-                                    Biaya pengiriman dihitung berdasarkan berat paket, dimensi, dan alamat tujuan. Anda dapat melihat estimasi biaya
-                                    pengiriman pada halaman checkout setelah memasukkan alamat pengiriman.
+                                    {t('shipping.costBody1')}
                                 </p>
                                 <p className="mt-3 text-gray-600">
-                                    Untuk wilayah tertentu seperti Indonesia Timur dan daerah terpencil, mungkin dikenakan biaya tambahan dan waktu
-                                    pengiriman yang lebih lama.
+                                    {t('shipping.costBody2')}
                                 </p>
                             </div>
 
                             <div className="rounded-xl bg-white p-6 shadow-sm">
-                                <h3 className="text-batik-indigo mb-4 text-lg font-semibold">Pelacakan Pengiriman</h3>
+                                <h3 className="text-batik-indigo mb-4 text-lg font-semibold">{t('shipping.trackingTitle')}</h3>
                                 <p className="text-gray-600">
-                                    Setelah pesanan Anda dikirim, Anda akan menerima email konfirmasi pengiriman yang berisi nomor resi dan tautan
-                                    untuk melacak status pengiriman Anda.
+                                    {t('shipping.trackingBody1')}
                                 </p>
                                 <p className="mt-3 text-gray-600">
-                                    Anda juga dapat melacak pesanan Anda melalui halaman "Riwayat Pesanan" di akun Anda.
+                                    {t('shipping.trackingBody2')}
                                 </p>
                             </div>
                         </div>
@@ -96,39 +94,37 @@ const Shipping = () => {
 
                     {/* Returns Information */}
                     <div className="animate-fade-in" style={{ animationDelay: '200ms' }}>
-                        <h2 className="text-batik-brown mb-6 text-2xl font-bold">Kebijakan Pengembalian</h2>
+                        <h2 className="text-batik-brown mb-6 text-2xl font-bold">{t('shipping.returnsTitle')}</h2>
 
                         <div className="space-y-6">
                             <div className="rounded-xl bg-white p-6 shadow-sm">
-                                <h3 className="text-batik-indigo mb-4 text-lg font-semibold">Syarat Pengembalian</h3>
-                                <p className="mb-4 text-gray-600">Kami menerima pengembalian produk dengan ketentuan berikut:</p>
+                                <h3 className="text-batik-indigo mb-4 text-lg font-semibold">{t('shipping.returnRequirementsTitle')}</h3>
+                                <p className="mb-4 text-gray-600">{t('shipping.returnRequirementsIntro')}</p>
                                 <ul className="space-y-3">
                                     <li className="flex items-start">
                                         <span className="bg-batik-indigo/10 mt-1 mr-3 flex-shrink-0 rounded p-1">
                                             <Clock className="text-batik-indigo h-4 w-4" />
                                         </span>
-                                        <p className="text-gray-600">Pengembalian dilakukan dalam waktu 7 hari setelah produk diterima.</p>
+                                        <p className="text-gray-600">{t('shipping.returnReq1')}</p>
                                     </li>
                                     <li className="flex items-start">
                                         <span className="bg-batik-indigo/10 mt-1 mr-3 flex-shrink-0 rounded p-1">
                                             <Package className="text-batik-indigo h-4 w-4" />
                                         </span>
-                                        <p className="text-gray-600">
-                                            Produk belum dipakai, belum dicuci, masih dalam kondisi baru, dan masih memiliki label asli.
-                                        </p>
+                                        <p className="text-gray-600">{t('shipping.returnReq2')}</p>
                                     </li>
                                     <li className="flex items-start">
                                         <span className="bg-batik-indigo/10 mt-1 mr-3 flex-shrink-0 rounded p-1">
                                             <ShieldCheck className="text-batik-indigo h-4 w-4" />
                                         </span>
-                                        <p className="text-gray-600">Produk cacat, rusak saat pengiriman, atau tidak sesuai dengan deskripsi.</p>
+                                        <p className="text-gray-600">{t('shipping.returnReq3')}</p>
                                     </li>
                                 </ul>
                             </div>
 
                             <div className="rounded-xl bg-white p-6 shadow-sm">
-                                <h3 className="text-batik-indigo mb-4 text-lg font-semibold">Proses Pengembalian</h3>
-                                <p className="mb-4 text-gray-600">Untuk melakukan pengembalian produk, ikuti langkah-langkah berikut:</p>
+                                <h3 className="text-batik-indigo mb-4 text-lg font-semibold">{t('shipping.returnProcessTitle')}</h3>
+                                <p className="mb-4 text-gray-600">{t('shipping.returnProcessIntro')}</p>
                                 <ol className="list-decimal space-y-3 pl-5">
                                     <li className="text-gray-600">
                                         Hubungi Customer Service kami melalui email <span className="text-batik-indigo">admin@batikgumelem.com</span>{' '}
@@ -146,14 +142,12 @@ const Shipping = () => {
                             </div>
 
                             <div className="rounded-xl bg-white p-6 shadow-sm">
-                                <h3 className="text-batik-indigo mb-4 text-lg font-semibold">Pengembalian Dana</h3>
+                                <h3 className="text-batik-indigo mb-4 text-lg font-semibold">{t('shipping.refundTitle')}</h3>
                                 <p className="text-gray-600">
-                                    Pengembalian dana akan diproses dalam waktu 3-7 hari kerja setelah produk diterima dan diverifikasi oleh tim kami.
-                                    Dana akan dikembalikan melalui metode pembayaran yang sama saat Anda melakukan pembelian.
+                                    {t('shipping.refundBody1')}
                                 </p>
                                 <p className="mt-3 text-gray-600">
-                                    Biaya pengiriman untuk pengembalian produk ditanggung oleh pembeli, kecuali jika produk cacat atau tidak sesuai
-                                    dengan deskripsi.
+                                    {t('shipping.refundBody2')}
                                 </p>
                             </div>
                         </div>
@@ -162,7 +156,7 @@ const Shipping = () => {
 
                 {/* Shipping Features */}
                 <div className="animate-fade-in mt-16" style={{ animationDelay: '400ms' }}>
-                    <h2 className="text-batik-brown mb-8 text-center text-2xl font-bold">Layanan Pengiriman Kami</h2>
+                    <h2 className="text-batik-brown mb-8 text-center text-2xl font-bold">{t('shipping.serviceTitle')}</h2>
 
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
                         <Card className="hover-lift">
@@ -170,11 +164,11 @@ const Shipping = () => {
                                 <div className="bg-batik-indigo/10 mb-4 flex h-12 w-12 items-center justify-center rounded-full">
                                     <Truck className="text-batik-indigo h-6 w-6" />
                                 </div>
-                                <CardTitle className="text-lg">Pengiriman Nasional</CardTitle>
+                                <CardTitle className="text-lg">{t('shipping.serviceNationalTitle')}</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <p className="text-sm text-gray-600">
-                                    Melayani pengiriman ke seluruh wilayah Indonesia dengan berbagai pilihan jasa pengiriman.
+                                    {t('shipping.serviceNationalBody')}
                                 </p>
                             </CardContent>
                         </Card>
@@ -184,11 +178,11 @@ const Shipping = () => {
                                 <div className="bg-batik-indigo/10 mb-4 flex h-12 w-12 items-center justify-center rounded-full">
                                     <ShieldCheck className="text-batik-indigo h-6 w-6" />
                                 </div>
-                                <CardTitle className="text-lg">Kemasan Aman</CardTitle>
+                                <CardTitle className="text-lg">{t('shipping.serviceSecureTitle')}</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <p className="text-sm text-gray-600">
-                                    Produk dikemas dengan aman dan rapi untuk melindungi produk selama pengiriman.
+                                    {t('shipping.serviceSecureBody')}
                                 </p>
                             </CardContent>
                         </Card>
@@ -198,11 +192,11 @@ const Shipping = () => {
                                 <div className="bg-batik-indigo/10 mb-4 flex h-12 w-12 items-center justify-center rounded-full">
                                     <Clock className="text-batik-indigo h-6 w-6" />
                                 </div>
-                                <CardTitle className="text-lg">Pengiriman Cepat</CardTitle>
+                                <CardTitle className="text-lg">{t('shipping.serviceFastTitle')}</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <p className="text-sm text-gray-600">
-                                    Opsi pengiriman cepat tersedia untuk pengiriman dalam kota dan antar kota besar.
+                                    {t('shipping.serviceFastBody')}
                                 </p>
                             </CardContent>
                         </Card>
@@ -212,10 +206,10 @@ const Shipping = () => {
                                 <div className="bg-batik-indigo/10 mb-4 flex h-12 w-12 items-center justify-center rounded-full">
                                     <RotateCcw className="text-batik-indigo h-6 w-6" />
                                 </div>
-                                <CardTitle className="text-lg">Pengembalian Mudah</CardTitle>
+                                <CardTitle className="text-lg">{t('shipping.serviceEasyReturnTitle')}</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <p className="text-sm text-gray-600">Proses pengembalian yang mudah dan cepat jika terjadi masalah dengan produk.</p>
+                                <p className="text-sm text-gray-600">{t('shipping.serviceEasyReturnBody')}</p>
                             </CardContent>
                         </Card>
                     </div>

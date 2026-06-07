@@ -66,6 +66,15 @@ module.exports = {
                     sand: '#D2B48C',
                     navy: '#3E2723',
                 },
+                mejikuhibiniu: {
+                    red: '#FF0000',
+                    orange: '#FFA500',
+                    yellow: '#FFFF00',
+                    green: '#008000',
+                    blue: '#0000FF',
+                    nila: '#4B0082',
+                    purple: '#800080',
+                },
             },
             borderRadius: {
                 lg: 'var(--radius)',

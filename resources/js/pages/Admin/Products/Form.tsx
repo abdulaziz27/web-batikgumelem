@@ -11,6 +11,7 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import AdminLayout from '@/layouts/admin-layout';
 import { type BreadcrumbItem } from '@/types';
+import { useTranslation } from 'react-i18next';
 
 interface ProductImage {
     id?: number;
@@ -75,6 +76,7 @@ interface UseFormOptions {
 }
 
 export default function ProductForm({ product, isEdit = false }: ProductFormProps) {
+    const { t } = useTranslation();
     // Set up initial image previews from existing images
     const initialPreviews: ImagePreview[] =
         product?.images?.map((img) => ({
@@ -177,15 +179,15 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
 
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: 'Dasbor',
+            title: t('dashboard.nav.adminDashboard'),
             href: '/admin/dashboard',
         },
         {
-            title: 'Produk',
+            title: t('dashboard.nav.adminProducts'),
             href: '/admin/products',
         },
         {
-            title: isEdit ? 'Edit Produk' : 'Tambah Produk',
+            title: isEdit ? t('dashboard.pages.adminProductForm.editTitle') : t('dashboard.pages.adminProductForm.createTitle'),
             href: isEdit ? `/admin/products/${product?.id}/edit` : '/admin/products/create',
         },
     ];
@@ -365,21 +367,23 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
 
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
-            <Head title={isEdit ? 'Edit Produk' : 'Tambah Produk'} />
+            <Head title={isEdit ? t('dashboard.pages.adminProductForm.editHead') : t('dashboard.pages.adminProductForm.createHead')} />
 
             <div className="space-y-6 p-6">
                 <div className="flex items-center justify-between">
-                    <h1 className="text-2xl font-bold tracking-tight">{isEdit ? 'Edit Produk' : 'Tambah Produk'}</h1>
+                    <h1 className="text-2xl font-bold tracking-tight">
+                        {isEdit ? t('dashboard.pages.adminProductForm.editTitle') : t('dashboard.pages.adminProductForm.createTitle')}
+                    </h1>
                     <div className="flex space-x-2">
                         <Button variant="outline" asChild>
                             <Link href="/admin/products">
                                 <ArrowLeft className="mr-2 h-4 w-4" />
-                                Kembali ke Produk
+                                {t('dashboard.pages.adminProductForm.back')}
                             </Link>
                         </Button>
                         <Button type="submit" form="product-form">
                             <Save className="mr-2 h-4 w-4" />
-                            Simpan Produk
+                            {isEdit ? t('dashboard.pages.adminProductForm.update') : t('dashboard.pages.adminProductForm.save')}
                         </Button>
                     </div>
                 </div>
@@ -389,12 +393,12 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
                 <form id="product-form" onSubmit={handleSubmit} className="space-y-6">
                     <Card>
                         <CardHeader>
-                            <CardTitle>Informasi Dasar</CardTitle>
+                            <CardTitle>{t('dashboard.pages.adminProductForm.basicInfo')}</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="grid gap-4 md:grid-cols-2">
                                 <div className="space-y-2">
-                                    <Label htmlFor="name">Nama Produk</Label>
+                                    <Label htmlFor="name">{t('dashboard.pages.adminProductForm.name')}</Label>
                                     <div className="space-y-1">
                                         <Input
                                             id="name"
@@ -406,7 +410,7 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="slug">Slug</Label>
+                                    <Label htmlFor="slug">{t('dashboard.pages.adminProductForm.slug')}</Label>
                                     <div className="space-y-1">
                                         <div className="flex gap-2">
                                             <Input
@@ -423,7 +427,7 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="price">Harga</Label>
+                                    <Label htmlFor="price">{t('dashboard.pages.adminProductForm.price')}</Label>
                                     <div className="space-y-1">
                                         <Input
                                             id="price"
@@ -437,7 +441,7 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="description">Deskripsi</Label>
+                                <Label htmlFor="description">{t('dashboard.pages.adminProductForm.description')}</Label>
                                 <div className="space-y-1">
                                     <Textarea
                                         id="description"
@@ -454,14 +458,14 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
                                     checked={formData.is_active}
                                     onCheckedChange={(checked) => handleInputChange('is_active', checked)}
                                 />
-                                <Label htmlFor="is_active">Produk Aktif</Label>
+                                <Label htmlFor="is_active">{t('dashboard.pages.adminProductForm.active')}</Label>
                             </div>
                         </CardContent>
                     </Card>
 
                     <Card>
                         <CardHeader>
-                            <CardTitle>Gambar Produk</CardTitle>
+                            <CardTitle>{t('dashboard.pages.adminProductForm.images')}</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="flex items-center justify-center">
@@ -470,8 +474,8 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
                                     className="border-border hover:bg-muted flex h-32 w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed transition-colors"
                                 >
                                     <Upload className="h-8 w-8" />
-                                    <span className="text-muted-foreground text-sm">Klik untuk mengunggah gambar</span>
-                                    <span className="text-muted-foreground text-xs">PNG, JPG atau JPEG (maks. 2MB)</span>
+                                    <span className="text-muted-foreground text-sm">{t('dashboard.pages.adminProductForm.upload')}</span>
+                                    <span className="text-muted-foreground text-xs">PNG, JPG, JPEG</span>
                                 </Label>
                                 <Input
                                     id="images"
@@ -517,21 +521,21 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
                             <div>
-                                <CardTitle>Ukuran dan Stok</CardTitle>
+                                <CardTitle>{t('dashboard.pages.adminProductForm.sizes')}</CardTitle>
                                 <p className="text-sm text-muted-foreground mt-1">
                                     Semua produk harus memiliki minimal satu ukuran dengan stok
                                 </p>
                             </div>
                             <Button type="button" variant="outline" size="sm" onClick={addSizeField}>
                                 <Plus className="mr-1 h-4 w-4" />
-                                Tambah Ukuran
+                                {t('dashboard.pages.adminProductForm.addSize')}
                             </Button>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             {formData.sizes.map((size, index) => (
                                 <div key={index} className="flex items-end gap-4">
                                     <div className="flex-1 space-y-2">
-                                        <Label htmlFor={`size-${index}`}>Ukuran</Label>
+                                        <Label htmlFor={`size-${index}`}>{t('dashboard.pages.adminProductForm.size')}</Label>
                                         <Input
                                             id={`size-${index}`}
                                             type="text"
@@ -541,7 +545,7 @@ export default function ProductForm({ product, isEdit = false }: ProductFormProp
                                         />
                                     </div>
                                     <div className="flex-1 space-y-2">
-                                        <Label htmlFor={`stock-${index}`}>Stok</Label>
+                                        <Label htmlFor={`stock-${index}`}>{t('dashboard.pages.adminProductForm.stock')}</Label>
                                         <Input
                                             id={`stock-${index}`}
                                             type="number"

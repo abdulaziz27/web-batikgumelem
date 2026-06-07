@@ -2,6 +2,7 @@ import Layout from '@/components/layout/Layout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -22,6 +23,7 @@ interface LoginProps {
 
 export default function Login({ status, canResetPassword = true, success }: LoginProps) {
     const [showPassword, setShowPassword] = useState(false);
+    const { t } = useTranslation();
 
     const { data, setData, post, processing, errors } = useForm<LoginForm>({
         email: '',
@@ -41,17 +43,17 @@ export default function Login({ status, canResetPassword = true, success }: Logi
                     <div className="bg-card rounded-lg border p-6 shadow-sm">
                         <div className="mb-6 text-center">
                             <h1 className="text-batik-brown text-2xl font-bold tracking-tight">
-                                Masuk ke <span className="text-batik-indigo">Batik Gumelem</span>
+                                {t('auth.loginHeadingPrefix')} <span className="text-batik-indigo">{t('auth.brand')}</span>
                             </h1>
-                            <p className="text-muted-foreground mt-2 text-sm">Masuk untuk melihat pesanan dan melanjutkan belanja</p>
+                            <p className="text-muted-foreground mt-2 text-sm">{t('auth.loginSubheading')}</p>
                         </div>
 
-                        <Head title="Masuk" />
+                        <Head title={t('auth.loginTitle')} />
 
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="grid gap-4">
                                 <div>
-                                    <Label htmlFor="email">Email</Label>
+                                    <Label htmlFor="email">{t('auth.email')}</Label>
                                     <div className="relative">
                                         <Mail className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
                                         <Input
@@ -69,10 +71,10 @@ export default function Login({ status, canResetPassword = true, success }: Logi
 
                                 <div>
                                     <div className="flex items-center justify-between">
-                                        <Label htmlFor="password">Password</Label>
+                                        <Label htmlFor="password">{t('auth.password')}</Label>
                                         {canResetPassword && (
                                             <Link href={route('password.request')} className="text-batik-indigo text-sm hover:underline">
-                                                Lupa password?
+                                                {t('auth.forgotPassword')}
                                             </Link>
                                         )}
                                     </div>
@@ -99,7 +101,7 @@ export default function Login({ status, canResetPassword = true, success }: Logi
                                             ) : (
                                                 <Eye className="text-muted-foreground h-4 w-4" />
                                             )}
-                                            <span className="sr-only">{showPassword ? 'Sembunyikan password' : 'Tampilkan password'}</span>
+                                            <span className="sr-only">{showPassword ? t('auth.hidePassword') : t('auth.showPassword')}</span>
                                         </Button>
                                     </div>
                                     {errors.password && <p className="mt-1 text-sm text-red-500">{errors.password}</p>}
@@ -112,19 +114,19 @@ export default function Login({ status, canResetPassword = true, success }: Logi
                                         checked={data.remember}
                                         onCheckedChange={(checked) => setData('remember', checked === true)}
                                     />
-                                    <Label htmlFor="remember">Ingat saya</Label>
+                                    <Label htmlFor="remember">{t('auth.remember')}</Label>
                                 </div>
                             </div>
 
                             <Button type="submit" className="bg-batik-indigo hover:bg-batik-indigo/90 w-full" disabled={processing}>
-                                {processing ? 'Memproses...' : 'Masuk'}
+                                {processing ? t('auth.processing') : t('auth.signIn')}
                             </Button>
 
                             <div className="mt-6 text-center text-sm">
                                 <p>
-                                    Belum memiliki akun?{' '}
+                                    {t('auth.noAccount')}{' '}
                                     <Link href={route('register')} className="text-batik-indigo font-medium hover:underline">
-                                        Daftar sekarang
+                                        {t('auth.registerNow')}
                                     </Link>
                                 </p>
                             </div>

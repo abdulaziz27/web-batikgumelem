@@ -16,6 +16,7 @@ use App\Events\OrderStatusChanged;
 
 class CheckoutController extends Controller
 {
+    // Dependency injection untuk service yang dibutuhkan
     protected $cartService;
     protected $biteshipService;
     protected $midtransService;
@@ -31,7 +32,7 @@ class CheckoutController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Menampilkan halaman checkout dengan data keranjang, alamat, dan opsi pengiriman.
      */
     public function index()
     {
@@ -43,23 +44,20 @@ class CheckoutController extends Controller
         session()->forget('shippingOptions');
         $savedAddresses = [];
         if (auth()->check()) {
-            // Coba ambil alamat default
+            // Ambil alamat default atau terakhir user
             $defaultAddress = \App\Models\ShippingAddress::where('user_id', auth()->id())
                 ->where('is_default', true)
                 ->whereNotNull('user_id')
                 ->where('is_order_address', true)
                 ->first();
-
             if ($defaultAddress) {
                 $savedAddresses = [$defaultAddress];
             } else {
-                // Jika tidak ada alamat default, ambil alamat terakhir
                 $lastAddress = \App\Models\ShippingAddress::where('user_id', auth()->id())
                     ->whereNotNull('user_id')
                     ->where('is_order_address', false)
                     ->latest()
                     ->first();
-                
                 if ($lastAddress) {
                     $savedAddresses = [$lastAddress];
                 }
@@ -77,6 +75,9 @@ class CheckoutController extends Controller
         ]);
     }
 
+    /**
+     * Menghitung ongkos kirim berdasarkan alamat tujuan dan berat barang.
+     */
     public function calculateShipping(Request $request)
     {
         try {
@@ -84,31 +85,18 @@ class CheckoutController extends Controller
                 'city' => 'required|string',
                 'postal_code' => 'required|string',
             ]);
-
             $cart = $this->cartService->getCart();
-
             if (empty($cart['items'])) {
                 \Log::warning('Empty cart when calculating shipping');
                 return back()->with('error', 'Keranjang belanja kosong');
             }
-
-            // Calculate total weight (assuming 500g per item for example)
+            // Hitung total berat (misal 500g per item)
             $totalWeight = 0;
             foreach ($cart['items'] as $item) {
-                $totalWeight += 500 * $item['quantity']; // 500g per item
+                $totalWeight += 500 * $item['quantity'];
             }
-
-            // Convert to kg
             $weightInKg = $totalWeight / 1000;
-
-            \Log::info('Calculating shipping cost', [
-                'origin' => config('services.biteship.origin_postal_code'),
-                'destination' => $request->postal_code,
-                'weight' => $weightInKg,
-                'cart_items' => $cart['items']
-            ]);
-
-            // Get shipping options from Biteship
+            // Ambil opsi ongkir dari Biteship
             $shippingOptions = $this->biteshipService->getShippingCost(
                 config('services.biteship.origin_postal_code'),
                 $request->postal_code,
@@ -116,38 +104,24 @@ class CheckoutController extends Controller
                 null,
                 array_values($cart['items'])
             );
-
-            \Log::info('Shipping options response', ['response' => $shippingOptions]);
-
             if (!$shippingOptions['success']) {
                 return back()->with('error', $shippingOptions['message']);
             }
-
             // Simpan shippingOptions ke session
             session(['shippingOptions' => $shippingOptions['data']]);
-
-            // Redirect ke halaman checkout (GET)
             return redirect()->route('checkout.index');
         } catch (\Exception $e) {
             \Log::error('Shipping calculation error', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-
             return back()->with('error', 'Error calculating shipping cost: ' . $e->getMessage());
         }
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Proses pembuatan order dan pembayaran.
+     * (Penjelasan detail bisa ditambahkan sesuai kebutuhan Anda)
      */
     public function store(Request $request)
     {
