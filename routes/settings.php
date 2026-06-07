@@ -21,10 +21,10 @@ Route::middleware('auth')->group(function () {
 
     // Address settings - only for regular users (verification removed)
     Route::middleware(['role:user'])->group(function () {
-        Route::get('/settings/addresses', [ShippingAddressController::class, 'index'])->name('addresses.index');
-        Route::post('/settings/addresses', [ShippingAddressController::class, 'store'])->name('addresses.store');
-        Route::put('/settings/addresses/{address}', [ShippingAddressController::class, 'update'])->name('addresses.update');
-        Route::delete('/settings/addresses/{address}', [ShippingAddressController::class, 'destroy'])->name('addresses.destroy');
+        Route::get('/settings/addresses', [ShippingAddressController::class, 'index'])->name('settings.addresses.index');
+        Route::post('/settings/addresses', [ShippingAddressController::class, 'store'])->name('settings.addresses.store');
+        Route::put('/settings/addresses/{address}', [ShippingAddressController::class, 'update'])->name('settings.addresses.update');
+        Route::delete('/settings/addresses/{address}', [ShippingAddressController::class, 'destroy'])->name('settings.addresses.destroy');
     });
     
     // Admin-specific settings (commented out - controller not implemented yet)
